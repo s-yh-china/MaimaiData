@@ -2,6 +2,6 @@
 <paths>
     <external-files-path
         name="share_pic"
-        path="/" />
-    <external-cache-path name="external_cache" path="." />
+        path="/"/>
+    <external-cache-path name="external_cache" path="."/>
 </paths>

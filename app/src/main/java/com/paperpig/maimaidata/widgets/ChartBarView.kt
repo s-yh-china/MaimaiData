@@ -13,9 +13,7 @@ import androidx.core.content.ContextCompat
 import com.paperpig.maimaidata.utils.toDp
 import kotlin.math.max
 
-class ChartBarView(
-    context: Context, attrs: AttributeSet
-) : View(context, attrs) {
+class ChartBarView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private val labels = listOf("Total", "Tap", "Hold", "Slide", "Touch", "Break")
     private val values = mutableListOf(0, 0, 0, 0, 0, 0)
@@ -35,7 +33,6 @@ class ChartBarView(
 
     private val bgRect = RectF()
     private val barRect = RectF()
-
 
     private val noteTypePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
@@ -73,9 +70,7 @@ class ChartBarView(
         invalidate()
     }
 
-
     init {
-
         noteWidth = noteTypePaint.measureText("total")
         valueWidth = noteValuePaint.measureText("1400")
     }
@@ -86,7 +81,6 @@ class ChartBarView(
         }
         invalidate()
     }
-
 
     fun setBarColor(@ColorRes colorRes: Int) {
         barPaint.color = ContextCompat.getColor(context, colorRes)
@@ -113,8 +107,7 @@ class ChartBarView(
             canvas.drawText(labels[i], paddingLeft + noteWidth, centerY - textOffset, noteTypePaint)
 
             // 计算实际的柱状图宽度
-            val barWidth =
-                if (maxValues[i] > 0) (values[i].toFloat() / maxValues[i] * maxBarWidth) else 0f
+            val barWidth = if (maxValues[i] > 0) (values[i].toFloat() / maxValues[i] * maxBarWidth) else 0f
             // 如果柱状图宽度小于最小宽度，则使用最小宽度
             val adjustedBarWidth = barWidth.coerceIn(minBarWidth, maxBarWidth)
             val barTop = centerY - barHeight / 2

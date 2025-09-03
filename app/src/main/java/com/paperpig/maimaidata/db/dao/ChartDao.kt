@@ -29,10 +29,8 @@ interface ChartDao {
     )
     fun getMaxNotes(): LiveData<MaxNotesStats>
 
-
     @Insert
     fun insertAllCharts(chartList: List<ChartEntity>)
-
 
     @Query("DELETE FROM chart")
     fun clearCharts()

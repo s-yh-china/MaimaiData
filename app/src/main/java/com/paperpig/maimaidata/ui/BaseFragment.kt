@@ -9,10 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-
 abstract class BaseFragment<T : ViewBinding> : Fragment() {
     private var binding: ViewBinding? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -41,6 +39,4 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
         }
     }
-
-
 }

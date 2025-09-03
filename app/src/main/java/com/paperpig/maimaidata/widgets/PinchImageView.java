@@ -22,7 +22,6 @@ import java.util.Queue;
  */
 public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView {
 
-
     ////////////////////////////////配置参数////////////////////////////////
 
     /**
@@ -39,7 +38,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
      * 图片最大放大比例
      */
     private static final float MAX_SCALE = 2f;
-
 
     ////////////////////////////////监听器////////////////////////////////
 
@@ -59,16 +57,15 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-        //默认的click会在任何点击情况下都会触发，所以搞成自己的
+        // 默认的click会在任何点击情况下都会触发，所以搞成自己的
         mOnClickListener = l;
     }
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
-        //默认的long click会在任何长按情况下都会触发，所以搞成自己的
+        // 默认的long click会在任何长按情况下都会触发，所以搞成自己的
         mOnLongClickListener = l;
     }
-
 
     ////////////////////////////////公共状态获取////////////////////////////////
 
@@ -282,7 +279,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         }
     }
 
-
     ////////////////////////////////公共状态设置////////////////////////////////
 
     /**
@@ -375,7 +371,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         //重绘
         invalidate();
     }
-
 
     ////////////////////////////////对外广播事件////////////////////////////////
 
@@ -509,7 +504,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         }
     }
 
-
     ////////////////////////////////用于重载定制////////////////////////////////
 
     /**
@@ -551,7 +545,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         }
     }
 
-
     /// /////////////////////////////初始化////////////////////////////////
 
     public PinchImageView(Context context) {
@@ -579,7 +572,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
     public void setScaleType(ScaleType scaleType) {
     }
 
-
     /// /////////////////////////////绘制////////////////////////////////
 
     @Override
@@ -601,7 +593,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         }
     }
 
-
     ////////////////////////////////有效性判断////////////////////////////////
 
     /**
@@ -614,7 +605,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
     protected boolean isReady() {
         return getDrawable() != null && getDrawable().getIntrinsicWidth() > 0 && getDrawable().getIntrinsicHeight() > 0 && getWidth() > 0 && getHeight() > 0;
     }
-
 
     ////////////////////////////////mask动画处理////////////////////////////////
 
@@ -689,7 +679,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
             invalidate();
         }
     }
-
 
     ////////////////////////////////手势动画处理////////////////////////////////
 
@@ -1293,7 +1282,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
         }
     }
 
-
     ////////////////////////////////防止内存抖动复用对象////////////////////////////////
 
     /**
@@ -1422,7 +1410,6 @@ public class PinchImageView extends androidx.appcompat.widget.AppCompatImageView
             return obj;
         }
     }
-
 
     ////////////////////////////////数学计算工具类////////////////////////////////
 

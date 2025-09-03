@@ -17,15 +17,13 @@ import com.google.android.material.slider.Slider
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ItemSearchHistoryBinding
 import com.paperpig.maimaidata.databinding.LayoutSongSearchBinding
-import com.paperpig.maimaidata.model.SongData
-import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.utils.SpUtil
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), Slider.OnSliderTouchListener {
 
-class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs),
-    Slider.OnSliderTouchListener {
     private var listener: OnSearchListener? = null
     private val binding: LayoutSongSearchBinding =
         LayoutSongSearchBinding.inflate(LayoutInflater.from(context), this, true)
@@ -67,7 +65,6 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         binding.versionDx2025Checkbox
     )
 
-
     init {
         searchLevelString = levels[0]
         binding.levelText.text = context.getString(R.string.search_level_string, searchLevelString)
@@ -104,7 +101,6 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
             }
         }
 
-
         binding.searchButton.setOnClickListener {
             search()
         }
@@ -140,17 +136,14 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         binding.searchHistoryRecyclerView.apply {
             val searchHistory = SpUtil.getSearchHistory()
             setSearchHistoryGroupVisible(searchHistory.isNotEmpty())
-            adapter = HistoryAdapter(
-                searchHistory
-            ) { song ->
+            adapter = HistoryAdapter(searchHistory) { song ->
                 binding.searchEditText.setText(song)
                 search()
             }
             layoutManager = object : FlexboxLayoutManager(context) {
-
                 val fixMaxLine = 2
 
-                //超出2行的内容不显示
+                // 超出2行的内容不显示
                 override fun getFlexLinesInternal(): MutableList<FlexLine> {
                     val originList = super.getFlexLinesInternal()
                     val size = originList.size
@@ -163,10 +156,7 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         }
     }
 
-    fun setOnSearchResultListener(
-        list: List<SongWithChartsEntity>,
-        onSearchResultListener: OnSearchListener
-    ) {
+    fun setOnSearchResultListener(list: List<SongWithChartsEntity>, onSearchResultListener: OnSearchListener) {
         dataList = list
         listener = onSearchResultListener
     }
@@ -213,6 +203,7 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
             isFavor: Boolean
         )
     }
+
     private fun updateHistoryRecyclerView(searchText: String) {
         if (searchText.isNotEmpty()) {
             SpUtil.saveSearchHistory(searchText)
@@ -232,7 +223,6 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         (binding.searchHistoryRecyclerView.adapter as? HistoryAdapter)?.updateData(emptyList())
     }
 
-
     private fun setSearchHistoryGroupVisible(isShow: Boolean) {
         binding.searchLayout.apply {
             if (isShow == (binding.searchHistoryGroup.isVisible)) {
@@ -243,12 +233,7 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         }
     }
 
-    interface OnSearchResultListener {
-        fun onResult(list: List<SongData>)
-    }
-
     override fun onStartTrackingTouch(slider: Slider) {
-
     }
 
     override fun onStopTrackingTouch(slider: Slider) {
@@ -274,7 +259,7 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
         private val onItemClick: (String) -> Unit
     ) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
-        inner class HistoryViewHolder(binding: ItemSearchHistoryBinding) :
+        class HistoryViewHolder(binding: ItemSearchHistoryBinding) :
             RecyclerView.ViewHolder(binding.root) {
             val textView = binding.historyItemText
         }

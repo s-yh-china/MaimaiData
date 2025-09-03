@@ -1,14 +1,14 @@
 package com.paperpig.maimaidata.network.vpn.dns;
 
 public class DnsFlags {
-    public boolean QR;//1 bits
-    public int OpCode;//4 bits
-    public boolean AA;//1 bits
-    public boolean TC;//1 bits
-    public boolean RD;//1 bits
-    public boolean RA;//1 bits
-    public int Zero;//3 bits
-    public int Rcode;//4 bits
+    public boolean QR; // 1 bits
+    public int OpCode; // 4 bits
+    public boolean AA; // 1 bits
+    public boolean TC; // 1 bits
+    public boolean RD; // 1 bits
+    public boolean RA; // 1 bits
+    public int Zero; // 3 bits
+    public int Rcode; // 4 bits
 
     public static DnsFlags Parse(short value) {
         int m_Flags = value & 0xFFFF;

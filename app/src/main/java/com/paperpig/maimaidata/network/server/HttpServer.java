@@ -1,13 +1,10 @@
 package com.paperpig.maimaidata.network.server;
 
 import android.util.Log;
-
 import com.paperpig.maimaidata.crawler.CrawlerCaller;
-
-import java.io.IOException;
-
 import fi.iki.elonen.NanoHTTPD;
 
+import java.io.IOException;
 
 public class HttpServer extends NanoHTTPD {
     public static int Port = 8284;
@@ -26,25 +23,25 @@ public class HttpServer extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
         Log.d(TAG, "Serve request: " + session.getUri());
-        switch (session.getUri()) {
-            case "/auth":
-                return redirectToWechatAuthUrl(session);
-            default:
-                return redirectToAuthUrlWithRandomParm(session);
+        if (session.getUri().equals("/auth")) {
+            return redirectToWechatAuthUrl(session);
+        } else {
+            return redirectToAuthUrlWithRandomParm(session);
         }
     }
 
     // To avoid fu***ing cache of wechat webview client
-    private Response redirectToAuthUrlWithRandomParm(IHTTPSession session) {
+    private Response redirectToAuthUrlWithRandomParm(IHTTPSession ignore) {
         Response r = newFixedLengthResponse(Response.Status.REDIRECT, MIME_HTML, "");
         r.addHeader("Location", "http://127.0.0.1:8284/auth?random=" + System.currentTimeMillis());
         return r;
     }
 
-    private Response redirectToWechatAuthUrl(IHTTPSession session) {
+    private Response redirectToWechatAuthUrl(IHTTPSession ignore) {
         String url = CrawlerCaller.INSTANCE.getWechatAuthUrl();
-        if (url == null)
+        if (url == null) {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_HTML, "");
+        }
         Log.d(TAG, url);
 
         Response r = newFixedLengthResponse(Response.Status.REDIRECT, MIME_HTML, "");

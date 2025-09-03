@@ -10,8 +10,7 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import java.io.InputStream
 
-class OkHttpUrlLoader     // Public API.
-    (private val client: Call.Factory) : ModelLoader<GlideUrl, InputStream> {
+class OkHttpUrlLoader(private val client: Call.Factory) : ModelLoader<GlideUrl, InputStream> {
     override fun handles(url: GlideUrl): Boolean {
         return true
     }

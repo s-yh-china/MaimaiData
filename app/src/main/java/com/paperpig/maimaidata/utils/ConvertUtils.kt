@@ -1,7 +1,6 @@
 package com.paperpig.maimaidata.utils
 
 object ConvertUtils {
-
     /**
      * 通过定数和达成率计算单曲rating
      */
@@ -70,38 +69,7 @@ object ConvertUtils {
             else -> 0.0
         }
 
-
         val temp = achi.coerceAtMost(1005000) * level * i
         return (temp / 10000000).toInt()
-    }
-
-
-    fun getLevel(levelText: String): String {
-        return when (levelText) {
-            "LEVEL 1" -> return "1"
-            "LEVEL 2" -> return "2"
-            "LEVEL 3" -> return "3"
-            "LEVEL 4" -> return "4"
-            "LEVEL 5" -> return "5"
-            "LEVEL 6" -> return "6"
-            "LEVEL 7" -> return "7"
-            "LEVEL 7+" -> return "7+"
-            "LEVEL 8" -> return "8"
-            "LEVEL 8+" -> return "8+"
-            "LEVEL 9" -> return "9"
-            "LEVEL 9+" -> return "9+"
-            "LEVEL 10" -> return "10"
-            "LEVEL 10+" -> return "10+"
-            "LEVEL 11" -> return "11"
-            "LEVEL 11+" -> return "11+"
-            "LEVEL 12" -> return "12"
-            "LEVEL 12+" -> return "12+"
-            "LEVEL 13" -> return "13"
-            "LEVEL 13+" -> return "13+"
-            "LEVEL 14" -> return "14"
-            "LEVEL 14+" -> return "14+"
-            "LEVEL 15" -> return "15"
-            else -> "0"
-        }
     }
 }

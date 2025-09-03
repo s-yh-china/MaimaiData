@@ -2,12 +2,7 @@ package com.paperpig.maimaidata.widgets
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.BitmapShader
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Shader
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -19,7 +14,7 @@ class TilingImageView(context: Context, attrs: AttributeSet) : View(context, att
     private val paint = Paint()
     private var offsetX = 0f
     private var offsetY = 0f
-    private var animator:ValueAnimator? = null
+    private var animator: ValueAnimator? = null
 
     init {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.mmd_main_bg_pattern)

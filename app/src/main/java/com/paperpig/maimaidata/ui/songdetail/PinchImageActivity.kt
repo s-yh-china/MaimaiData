@@ -51,7 +51,6 @@ class PinchImageActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityPinchImageBinding.inflate(layoutInflater)
@@ -60,9 +59,7 @@ class PinchImageActivity : AppCompatActivity() {
         permissionHelper = PermissionHelper.with(this)
 
         val thumbnailUrl = intent.getStringExtra(IMAGE_URL)
-
         val largeImageId = intent.getStringExtra(COVER_ID)?.padStart(5, '0')
-
         val largeCoverUrl = "${MaimaiDataClient.DIVING_FISH_COVER_URL}$largeImageId.png"
 
         GlideApp.with(this)
@@ -71,12 +68,11 @@ class PinchImageActivity : AppCompatActivity() {
             .addListener(coverLoadListener())
             .into(binding.pinchImageView)
 
-        //图片保存
+        // 图片保存
         binding.saveCoverBtn.setDebouncedClickListener {
             coverDrawable?.apply {
                 permissionHelper.registerLauncher(requestPermissionLauncher)
-                    .checkStoragePermission(object :
-                        PermissionHelper.PermissionCallback {
+                    .checkStoragePermission(object : PermissionHelper.PermissionCallback {
                         override fun onAllGranted() {
                             lifecycleScope.launch {
                                 PictureUtils.savePicture(
@@ -96,12 +92,10 @@ class PinchImageActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-
                     })
-
             }
         }
-        //图片分享
+        // 图片分享
         binding.shareCoverBtn.setDebouncedClickListener {
             coverDrawable?.apply {
                 lifecycleScope.launch {
@@ -128,17 +122,14 @@ class PinchImageActivity : AppCompatActivity() {
                             )
                         )
                     }
-
                 }
             }
-
         }
 
         binding.pinchImageView.setOnClickListener {
             finishAfterTransition()
         }
     }
-
 
     /**
      * 网络图片加载监听
@@ -166,7 +157,7 @@ class PinchImageActivity : AppCompatActivity() {
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                //加载完成显示按钮
+                // 加载完成显示按钮
                 binding.coverButtonGroup.visibility = View.VISIBLE
                 coverDrawable = resource
                 return false
@@ -174,10 +165,8 @@ class PinchImageActivity : AppCompatActivity() {
         }
     }
 
-
     override fun finishAfterTransition() {
         binding.pinchImageView.reset()
         super.finishAfterTransition()
     }
-
 }

@@ -1,6 +1,5 @@
 package com.paperpig.maimaidata.network.vpn.dns;
 
-
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 
 public class ResourcePointer {
@@ -31,32 +30,16 @@ public class ResourcePointer {
         CommonMethods.writeShort(Data, Offset + offset_Type, value);
     }
 
-    public short getClass(short value) {
-        return CommonMethods.readShort(Data, Offset + offset_Class);
-    }
-
     public void setClass(short value) {
         CommonMethods.writeShort(Data, Offset + offset_Class, value);
-    }
-
-    public int getTTL() {
-        return CommonMethods.readInt(Data, Offset + offset_TTL);
     }
 
     public void setTTL(int value) {
         CommonMethods.writeInt(Data, Offset + offset_TTL, value);
     }
 
-    public short getDataLength() {
-        return CommonMethods.readShort(Data, Offset + offset_DataLength);
-    }
-
     public void setDataLength(short value) {
         CommonMethods.writeShort(Data, Offset + offset_DataLength, value);
-    }
-
-    public int getIP() {
-        return CommonMethods.readInt(Data, Offset + offset_IP);
     }
 
     public void setIP(int value) {

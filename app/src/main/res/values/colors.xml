@@ -18,7 +18,6 @@
     <color name="textColor">#333333</color>
     <color name="remaster_border">#EDD2F1</color>
 
-
     <color name="pop">#FF9C24</color>
     <color name="pop_stroke">#FFD21F</color>
     <color name="vocal">#12B4FF</color>
@@ -33,7 +32,6 @@
     <color name="gekichuni_stroke">#99D1FF</color>
     <color name="utage">#DC39B8</color>
     <color name="utage_stroke">#B12876</color>
-
 
     <color name="great">#F75EA3</color>
     <color name="good">#2FCA4C</color>

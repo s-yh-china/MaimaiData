@@ -21,7 +21,6 @@ class PermissionHelper private constructor(private val activity: Activity) {
     private var mPermissionLauncher: ActivityResultLauncher<Array<String>>? = null
     private lateinit var permissionCallback: PermissionCallback
 
-
     interface PermissionCallback {
         fun onAllGranted()
         fun onDenied(deniedPermissions: List<String>)
@@ -31,7 +30,6 @@ class PermissionHelper private constructor(private val activity: Activity) {
         mPermissionLauncher = launcher
         return this
     }
-
 
     fun checkStoragePermission(callback: PermissionCallback) {
         permissionCallback = callback

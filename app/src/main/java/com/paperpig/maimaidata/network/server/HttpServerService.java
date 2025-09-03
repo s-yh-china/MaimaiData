@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
@@ -19,8 +18,12 @@ public class HttpServerService extends Service {
         super.onCreate();
         Log.d("HttpService", "Http service on create");
         try {
-            if (this.httpServer != null) this.httpServer.stop();
-            if (this.httpRedirectServer != null) this.httpRedirectServer.stop();
+            if (this.httpServer != null) {
+                this.httpServer.stop();
+            }
+            if (this.httpRedirectServer != null) {
+                this.httpRedirectServer.stop();
+            }
             this.httpServer = new HttpServer();
             this.httpRedirectServer = new HttpRedirectServer();
         } catch (IOException e) {

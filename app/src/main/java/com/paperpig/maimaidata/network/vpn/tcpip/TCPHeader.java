@@ -1,5 +1,7 @@
 package com.paperpig.maimaidata.network.vpn.tcpip;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Locale;
 
 public class TCPHeader {
@@ -17,9 +19,7 @@ public class TCPHeader {
     static final int offset_ack = 8;
     static final byte offset_lenres = 12;
     static final byte offset_flag = 13;
-    static final short offset_win = 14;
     static final short offset_crc = 16;
-    static final short offset_urp = 18;
 
     public byte[] m_Data;
     public int m_Offset;
@@ -71,18 +71,18 @@ public class TCPHeader {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         // TODO Auto-generated method stub
         return String.format(Locale.ENGLISH, "%s%s%s%s%s%s%d->%d %s:%s",
-                (getFlags() & SYN) == SYN ? "SYN " : "",
-                (getFlags() & ACK) == ACK ? "ACK " : "",
-                (getFlags() & PSH) == PSH ? "PSH " : "",
-                (getFlags() & RST) == RST ? "RST " : "",
-                (getFlags() & FIN) == FIN ? "FIN " : "",
-                (getFlags() & URG) == URG ? "URG " : "",
-                getSourcePort() & 0xFFFF,
-                getDestinationPort() & 0xFFFF,
-                getSeqID(),
-                getAckID());
+            (getFlags() & SYN) == SYN ? "SYN " : "",
+            (getFlags() & ACK) == ACK ? "ACK " : "",
+            (getFlags() & PSH) == PSH ? "PSH " : "",
+            (getFlags() & RST) == RST ? "RST " : "",
+            (getFlags() & FIN) == FIN ? "FIN " : "",
+            (getFlags() & URG) == URG ? "URG " : "",
+            getSourcePort() & 0xFFFF,
+            getDestinationPort() & 0xFFFF,
+            getSeqID(),
+            getAckID());
     }
 }

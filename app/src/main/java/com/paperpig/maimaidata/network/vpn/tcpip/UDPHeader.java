@@ -1,5 +1,7 @@
 package com.paperpig.maimaidata.network.vpn.tcpip;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Locale;
 
 public class UDPHeader {
@@ -32,10 +34,6 @@ public class UDPHeader {
         CommonMethods.writeShort(m_Data, m_Offset + offset_dest_port, value);
     }
 
-    public int getTotalLength() {
-        return CommonMethods.readShort(m_Data, m_Offset + offset_tlen) & 0xFFFF;
-    }
-
     public void setTotalLength(int value) {
         CommonMethods.writeShort(m_Data, m_Offset + offset_tlen, (short) value);
     }
@@ -49,9 +47,8 @@ public class UDPHeader {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         // TODO Auto-generated method stub
-        return String.format(Locale.ENGLISH, "%d->%d", getSourcePort() & 0xFFFF,
-                getDestinationPort() & 0xFFFF);
+        return String.format(Locale.ENGLISH, "%d->%d", getSourcePort() & 0xFFFF, getDestinationPort() & 0xFFFF);
     }
 }

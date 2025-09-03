@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/history_item_text"
@@ -16,5 +16,5 @@
         android:lines="1"
         android:maxWidth="150dp"
         android:padding="4dp"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"/>
 </LinearLayout>

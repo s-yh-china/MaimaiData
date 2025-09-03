@@ -27,12 +27,4 @@ public class Question {
     public int Length() {
         return length;
     }
-
-    public void ToBytes(ByteBuffer buffer) {
-        this.offset = buffer.position();
-        DnsPacket.WriteDomain(this.Domain, buffer);
-        buffer.putShort(this.Type);
-        buffer.putShort(this.Class);
-        this.length = buffer.position() - this.offset;
-    }
 }

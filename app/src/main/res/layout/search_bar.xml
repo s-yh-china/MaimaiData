@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:padding="12dp">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:padding="12dp">
 
     <TextView
         android:layout_width="50dp"
@@ -13,7 +13,7 @@
         android:gravity="center"
         android:text="@string/song_title"
         android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"/>
 
     <com.paperpig.maimaidata.widgets.ClearEditText
         android:id="@+id/searchText"
@@ -24,8 +24,7 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:padding="6dp"
-        android:textSize="14sp" />
-
+        android:textSize="14sp"/>
 
     <Button
         android:textSize="14sp"
@@ -35,5 +34,5 @@
         android:layout_height="40dp"
         android:background="@drawable/search_bar_button_bg"
         android:text="@string/search"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"/>
 </LinearLayout>

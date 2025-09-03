@@ -10,7 +10,7 @@ import com.paperpig.maimaidata.model.Rating
 class RatingResultAdapter : RecyclerView.Adapter<RatingResultAdapter.ViewHolder>() {
     private var data = listOf<Rating>()
 
-    inner class ViewHolder(binding: ItemRatingReusltBinding) :
+    class ViewHolder(binding: ItemRatingReusltBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val innerLevel: TextView = binding.innerLevel
         val achievement: TextView = binding.achievement
@@ -19,7 +19,6 @@ class RatingResultAdapter : RecyclerView.Adapter<RatingResultAdapter.ViewHolder>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
             ItemRatingReusltBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
@@ -28,14 +27,12 @@ class RatingResultAdapter : RecyclerView.Adapter<RatingResultAdapter.ViewHolder>
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val ratingModel = data[position]
 
         holder.innerLevel.text = ratingModel.innerLevel.toString()
         holder.achievement.text = ratingModel.achi
         holder.rating.text = ratingModel.rating.toString()
         holder.totalRating.text = ratingModel.total.toString()
-
     }
 
     override fun getItemCount(): Int {

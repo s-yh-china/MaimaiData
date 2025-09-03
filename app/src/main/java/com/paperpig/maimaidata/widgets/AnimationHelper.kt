@@ -13,15 +13,12 @@ import com.paperpig.maimaidata.databinding.MmdMainStyleBgLayoutBinding
 import com.paperpig.maimaidata.utils.WindowsUtils
 import com.paperpig.maimaidata.utils.toDp
 
-
 /**
  * 复刻官网动画
  *
  * @property layoutInflater
  */
-class AnimationHelper(
-    private val layoutInflater: LayoutInflater,
-) {
+class AnimationHelper(private val layoutInflater: LayoutInflater) {
     private lateinit var rootView: ViewGroup
     private lateinit var bind: MmdMainStyleBgLayoutBinding
     private var animationList = mutableListOf<Animator>()
@@ -44,7 +41,7 @@ class AnimationHelper(
 
     private fun loadAnime() {
         with(bind) {
-            //设置云朵动画
+            // 设置云朵动画
             cloudBackLeftView.apply {
                 setTansXAnimation(this, 12000L, 253.toDp())
                 setAlphaAnimation(this, 12000L)
@@ -70,7 +67,7 @@ class AnimationHelper(
                 setAlphaAnimation(this, 19000L)
             }
 
-            //设置极光动画
+            // 设置极光动画
             auroraBackView.apply {
                 setTansXAnimation(
                     this,
@@ -96,7 +93,7 @@ class AnimationHelper(
                 )
             }
 
-            //设置流星动画
+            // 设置流星动画
             shootingStarView1.apply {
                 setTansXAnimation(this, 2000L, (-77).toDp())
                 setTansYAnimation(this, 2000L, 77.toDp())
@@ -119,7 +116,7 @@ class AnimationHelper(
                 setAlphaAnimation(this, 3000L)
             }
 
-            //设置闪光动画
+            // 设置闪光动画
             starYellowLeftView.apply {
                 setRotationAnimation(this)
                 setAlphaAnimation(this, 2000L, 0.45f, 0.55f)
@@ -199,8 +196,8 @@ class AnimationHelper(
      *
      * @param view 目标view
      */
-    private fun setFloatAnimation(view: View){
-        //角色浮动动画
+    private fun setFloatAnimation(view: View) {
+        // 角色浮动动画
         val floatAnimator = ObjectAnimator.ofFloat(
             view,
             "translationY",

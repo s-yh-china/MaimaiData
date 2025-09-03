@@ -40,7 +40,6 @@ interface ChartStatsDao {
     @Query("SELECT * FROM chart_stats WHERE song_id = :songId AND level_index = :index")
     fun getChartStatsBySongIdAndDifficultyIndex(songId: Int, index: Int): LiveData<ChartStatsEntity>
 
-
     @Insert
     fun insertAllChartStats(list: List<ChartStatsEntity>)
 

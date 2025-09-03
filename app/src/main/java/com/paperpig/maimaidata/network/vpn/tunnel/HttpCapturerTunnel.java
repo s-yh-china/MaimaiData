@@ -1,13 +1,11 @@
 package com.paperpig.maimaidata.network.vpn.tunnel;
 
 import android.util.Log;
-
 import com.paperpig.maimaidata.crawler.CrawlerCaller;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 import java.util.Locale;
 
 public class HttpCapturerTunnel extends Tunnel {
@@ -17,19 +15,17 @@ public class HttpCapturerTunnel extends Tunnel {
         super(serverAddress, selector);
     }
 
-    public HttpCapturerTunnel(SocketChannel innerChannel, Selector selector) throws Exception {
-        super(innerChannel, selector);
-    }
-
     @Override
     protected void onConnected(ByteBuffer buffer) throws Exception {
         onTunnelEstablished();
     }
 
     @Override
-    protected void beforeSend(ByteBuffer buffer) throws Exception {
+    protected void beforeSend(ByteBuffer buffer) {
         String body = new String(buffer.array());
-        if (!body.contains("HTTP")) return;
+        if (!body.contains("HTTP")) {
+            return;
+        }
 
         // Extract http target from http packet
         String[] lines = body.split("\r\n");
@@ -46,7 +42,9 @@ public class HttpCapturerTunnel extends Tunnel {
                 }
             }
         }
-        if (!path.startsWith("/")) path = "/" + path;
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
 
         String url = "http://" + host + path;
         Log.d(TAG, "HTTP url: " + url);
@@ -70,6 +68,5 @@ public class HttpCapturerTunnel extends Tunnel {
     @Override
     protected void onDispose() {
         // TODO Auto-generated method stub
-
     }
 }

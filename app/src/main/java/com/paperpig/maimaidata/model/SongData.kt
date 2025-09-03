@@ -1,68 +1,47 @@
 package com.paperpig.maimaidata.model
 
 import android.os.Parcelable
-import androidx.annotation.ColorRes
-import com.paperpig.maimaidata.R
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 
-
 @Parcelize
 data class SongData(
-    val basic_info: BasicInfo,
+    @SerializedName("basic_info")
+    val basicInfo: BasicInfo,
     val charts: List<Chart>,
     val ds: List<Double>,
-    var old_ds: List<Double>,
+    @SerializedName("old_ds")
+    var oldDs: List<Double>,
     val id: String,
     var level: List<String>,
-    val title: String,
-    var title_kana: String,
+    var title: String,
+    @SerializedName("title_kana")
+    var titleKana: String,
     val type: String,
     var alias: List<String>?,
 ) : Parcelable {
-    @ColorRes
-    fun getBgColor() =
-        when (basic_info.genre) {
-            "流行&动漫" -> R.color.pop
-            "niconico & VOCALOID" -> R.color.vocal
-            "东方Project" -> R.color.touhou
-            "其他游戏" -> R.color.variety
-            "舞萌" -> R.color.maimai
-            "宴会場" -> R.color.utage
-            else -> R.color.gekichuni
-        }
 
-    fun getStrokeColor() =
-        when (basic_info.genre) {
-            "流行&动漫" -> R.color.pop_stroke
-            "niconico & VOCALOID" -> R.color.vocal_stroke
-            "东方Project" -> R.color.touhou_stroke
-            "其他游戏" -> R.color.variety_stroke
-            "舞萌" -> R.color.maimai_stroke
-            "宴会場" -> R.color.utage_stroke
-            else -> R.color.gekichuni_stroke
-        }
-
-
-    inner class BasicInfo(
+    class BasicInfo(
         val artist: String,
         val bpm: Int,
         var from: String,
         var genre: String,
         var catcode: String,
-        val is_new: Boolean,
+        @SerializedName("is_new")
+        val isNew: Boolean,
         val title: String,
-        var image_url: String,
+        @SerializedName("image_url")
+        var imageUrl: String,
         var version: String,
         var kanji: String?,
         var comment: String?,
         var buddy: String?
     ) : Serializable
 
-    inner class Chart(
+    class Chart(
         val charter: String,
         val notes: List<Int>
     ) : Serializable
-
 }
 

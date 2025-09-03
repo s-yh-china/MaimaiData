@@ -8,7 +8,6 @@ import com.paperpig.maimaidata.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +27,6 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()

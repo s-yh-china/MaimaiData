@@ -5,7 +5,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class SongWithChartsEntity(
     @Embedded val songData: SongDataEntity,

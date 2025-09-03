@@ -6,10 +6,8 @@ import androidx.preference.PreferenceFragmentCompat
 import com.paperpig.maimaidata.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
-        findPreference<EditTextPreference>("nickname")?.summaryProvider =
-            EditTextPreference.SimpleSummaryProvider.getInstance()
+        findPreference<EditTextPreference>("nickname")?.summaryProvider = EditTextPreference.SimpleSummaryProvider.getInstance()
     }
 }

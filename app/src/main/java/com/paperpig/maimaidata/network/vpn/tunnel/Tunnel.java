@@ -2,7 +2,6 @@ package com.paperpig.maimaidata.network.vpn.tunnel;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
-
 import com.paperpig.maimaidata.network.vpn.core.Constant;
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService;
 import com.paperpig.maimaidata.network.vpn.core.ProxyConfig;
@@ -24,17 +23,19 @@ public abstract class Tunnel {
     public Tunnel m_BrotherTunnel;
     private boolean m_Disposed;
     private InetSocketAddress m_ServerEP;
+
     public Tunnel(SocketChannel innerChannel, Selector selector) throws IOException {
         this.m_InnerChannel = innerChannel;
-        this.m_InnerChannel.socket().setSoTimeout(1000*30);
+        this.m_InnerChannel.socket().setSoTimeout(1000 * 30);
         this.m_Selector = selector;
         SessionCount++;
     }
+
     public Tunnel(InetSocketAddress serverAddress, Selector selector) throws IOException {
         SocketChannel innerChannel = SocketChannel.open();
         innerChannel.configureBlocking(false);
         this.m_InnerChannel = innerChannel;
-        this.m_InnerChannel.socket().setSoTimeout(1000*30);
+        this.m_InnerChannel.socket().setSoTimeout(1000 * 30);
         this.m_Selector = selector;
         this.m_ServerEP = serverAddress;
         SessionCount++;
@@ -70,7 +71,6 @@ public abstract class Tunnel {
         }
         m_InnerChannel.register(m_Selector, SelectionKey.OP_READ, this);
     }
-
 
     protected boolean write(ByteBuffer buffer, boolean copyRemainData) throws Exception {
         int bytesSent;
@@ -129,8 +129,9 @@ public abstract class Tunnel {
                     m_BrotherTunnel.beforeSend(buffer);
                     if (!m_BrotherTunnel.write(buffer, true)) {
                         key.cancel();
-                        if (ProxyConfig.IS_DEBUG)
+                        if (ProxyConfig.IS_DEBUG) {
                             Log.d(Constant.TAG, m_ServerEP + "can not read more.");
+                        }
                     }
                 }
             } else if (bytesRead < 0) {

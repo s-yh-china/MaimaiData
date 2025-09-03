@@ -11,10 +11,8 @@ import com.bumptech.glide.Glide
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.model.Version
 
-
 class VersionArrayAdapter(context: Context?, resource: Int, val list: List<Version>?) :
     ArrayAdapter<Version>(context!!, resource, list!!) {
-
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return initView(position, convertView, parent)
@@ -25,12 +23,9 @@ class VersionArrayAdapter(context: Context?, resource: Int, val list: List<Versi
     }
 
     private fun initView(position: Int, convertView: View?, parent: ViewGroup): View {
-
         var view = convertView
         if (view == null) {
-            view =
-                LayoutInflater.from(context).inflate(R.layout.item_spinner_version, parent, false)
-
+            view = LayoutInflater.from(context).inflate(R.layout.item_spinner_version, parent, false)
         }
         val versionImage = view!!.findViewById<ImageView>(R.id.versionImage)
         val versionName = view.findViewById<TextView>(R.id.versionName)
@@ -38,6 +33,4 @@ class VersionArrayAdapter(context: Context?, resource: Int, val list: List<Versi
         versionName.text = getItem(position)?.versionName
         return view
     }
-
-
 }

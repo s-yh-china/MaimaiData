@@ -1,7 +1,6 @@
 package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.Log;
-
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 import com.paperpig.maimaidata.network.vpn.tunnel.Tunnel;
 
@@ -25,7 +24,7 @@ public class TcpProxyServer implements Runnable {
     public TcpProxyServer(int port) throws IOException {
         m_Selector = Selector.open();
         m_ServerSocketChannel = ServerSocketChannel.open();
-        m_ServerSocketChannel.socket().setSoTimeout(1000*30);
+        m_ServerSocketChannel.socket().setSoTimeout(1000 * 30);
         m_ServerSocketChannel.configureBlocking(false);
         m_ServerSocketChannel.socket().bind(new InetSocketAddress(port));
         m_ServerSocketChannel.register(m_Selector, SelectionKey.OP_ACCEPT);
@@ -101,10 +100,11 @@ public class TcpProxyServer implements Runnable {
         NatSession session = NatSessionManager.getSession(portKey);
         if (session != null) {
             if (ProxyConfig.Instance.needProxy(session.RemoteIP)) {
-                if (ProxyConfig.IS_DEBUG)
+                if (ProxyConfig.IS_DEBUG) {
                     Log.d(Constant.TAG, String.format("%d/%d:[PROXY] %s=>%s:%d", NatSessionManager.getSessionCount(),
-                            Tunnel.SessionCount, session.RemoteHost,
-                            CommonMethods.ipIntToString(session.RemoteIP), session.RemotePort & 0xFFFF));
+                        Tunnel.SessionCount, session.RemoteHost,
+                        CommonMethods.ipIntToString(session.RemoteIP), session.RemotePort & 0xFFFF));
+                }
                 return InetSocketAddress.createUnresolved(session.RemoteHost, session.RemotePort & 0xFFFF);
             } else {
                 return new InetSocketAddress(localChannel.socket().getInetAddress(), session.RemotePort & 0xFFFF);
@@ -113,7 +113,7 @@ public class TcpProxyServer implements Runnable {
         return null;
     }
 
-    void onAccepted(SelectionKey key) {
+    void onAccepted(SelectionKey ignore) {
         Tunnel localTunnel = null;
         try {
             SocketChannel localChannel = m_ServerSocketChannel.accept();
@@ -128,23 +128,18 @@ public class TcpProxyServer implements Runnable {
                 if (destAddress.getPort() == 80 && destAddress.getHostName().endsWith("wahlap.com")) {
                     destAddress = new InetSocketAddress("192.168.1.3", 3000);
                     remoteTunnel.connect(destAddress);
-                }
-                else {
+                } else {
                     remoteTunnel.connect(destAddress);
                 }
 
             } else {
-//                 LocalVpnService.Instance.writeLog("Error: socket(%s:%d) target host is null.",
-//                        localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort());
                 localTunnel.dispose();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-//            LocalVpnService.Instance.writeLog("Error: remote socket create failed: %s", e.toString());
+            Log.d(Constant.TAG, "TcpServer onAccepted", e);
             if (localTunnel != null) {
                 localTunnel.dispose();
             }
         }
     }
-
 }

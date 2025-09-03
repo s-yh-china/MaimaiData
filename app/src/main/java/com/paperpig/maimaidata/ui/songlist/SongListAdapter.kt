@@ -25,18 +25,15 @@ import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.Constants
 import com.paperpig.maimaidata.utils.toDp
 
-
 class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
     companion object {
         const val TYPE_NORMAL = 0
         const val TYPE_UTAGE = 1
     }
 
-
     private var list = listOf<SongWithChartsEntity>()
 
-    inner class NormalViewHolder(binding: ItemNormalSongBinding) :
-        ViewHolder(binding.root) {
+    class NormalViewHolder(binding: ItemNormalSongBinding) : ViewHolder(binding.root) {
         val songJacket: ImageView = binding.songJacket
         val songTitle: TextView = binding.songTitle
         val songArtist: TextView = binding.songArtist
@@ -49,8 +46,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
         val songType: ImageView = binding.songType
     }
 
-    inner class UtageViewHolder(binding: ItemUtageSongBinding) :
-        ViewHolder(binding.root) {
+    class UtageViewHolder(binding: ItemUtageSongBinding) : ViewHolder(binding.root) {
         val songJacket: ImageView = binding.songJacket
         val songTitle: TextView = binding.songTitle
         val songArtist: TextView = binding.songArtist
@@ -101,7 +97,6 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             ).show()
             true
         }
-
 
         val bgColor =
             ((holder.itemView.background as LayerDrawable).getDrawable(0) as LayerDrawable).findDrawableByLayerId(
@@ -166,14 +161,12 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
                 holder.songType.setImageResource(R.drawable.ic_deluxe)
             } else {
                 holder.songType.setImageResource(R.drawable.ic_standard)
-
             }
         } else if (holder is UtageViewHolder) {
             holder.songGenre.text = songData.genre
-            val genreBg =
-                ((holder.songGenre.background as LayerDrawable).getDrawable(0) as LayerDrawable).findDrawableByLayerId(
-                    R.id.song_genre_bg
-                ) as GradientDrawable
+            val genreBg = ((holder.songGenre.background as LayerDrawable)
+                .getDrawable(0) as LayerDrawable)
+                .findDrawableByLayerId(R.id.song_genre_bg) as GradientDrawable
             genreBg.setColor(ContextCompat.getColor(holder.itemView.context, songData.bgColor))
 
 
@@ -193,18 +186,12 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             holder.songLevelUtage.text = charts[0].level
             holder.songUtageKanji.text = songData.kanji
             holder.songComment.text = songData.comment
-            holder.songUtagePartyMark.visibility =
-                if (songData.buddy != null) View.VISIBLE else View.GONE
-
-
+            holder.songUtagePartyMark.visibility = if (songData.buddy != null) View.VISIBLE else View.GONE
         }
-
     }
-
 
     fun setData(list: List<SongWithChartsEntity>) {
         this.list = list
         notifyDataSetChanged()
     }
-
 }

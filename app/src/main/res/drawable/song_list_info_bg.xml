@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#55FFFFFF">
+        android:color="#55FFFFFF">
     <item>
         <layer-list>
 
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="#ffffff" />
-                    <corners android:radius="14dp" />
+                    <solid android:color="#ffffff"/>
+                    <corners android:radius="14dp"/>
                 </shape>
             </item>
 
@@ -18,10 +18,10 @@
                 android:right="1dp"
                 android:top="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="#09C8D4" />
+                    <solid android:color="#09C8D4"/>
                     <corners
                         android:topLeftRadius="12dp"
-                        android:topRightRadius="12dp" />
+                        android:topRightRadius="12dp"/>
                 </shape>
             </item>
 
@@ -32,20 +32,19 @@
                 android:right="6dp"
                 android:top="6dp">
                 <shape android:shape="rectangle">
-                    <corners android:radius="8dp" />
+                    <corners android:radius="8dp"/>
                     <stroke
                         android:width="4dp"
-                        android:color="#09C8D4" />
+                        android:color="#09C8D4"/>
                 </shape>
             </item>
 
-
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:radius="12dp" />
+                    <corners android:radius="12dp"/>
                     <stroke
                         android:width="2dp"
-                        android:color="#FFFFFF" />
+                        android:color="#FFFFFF"/>
                 </shape>
             </item>
 
@@ -56,10 +55,10 @@
                 android:right="2dp"
                 android:top="2dp">
                 <shape android:shape="rectangle">
-                    <corners android:radius="10dp" />
+                    <corners android:radius="10dp"/>
                     <stroke
                         android:width="4dp"
-                        android:color="#09C8D4" />
+                        android:color="#09C8D4"/>
                 </shape>
             </item>
 
@@ -69,10 +68,10 @@
                 android:right="5dp"
                 android:top="5dp">
                 <shape android:shape="rectangle">
-                    <corners android:radius="8dp" />
+                    <corners android:radius="8dp"/>
                     <stroke
                         android:width="1dp"
-                        android:color="#FFFFFF" />
+                        android:color="#FFFFFF"/>
                 </shape>
             </item>
         </layer-list>

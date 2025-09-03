@@ -11,13 +11,13 @@ data class AppUpdateModel(
      * apk version string
      */
     @SerializedName("apk_version")
-    var version: String? = null,
+    var version: String,
 
     /**
      * newest apk url
      */
     @SerializedName("apk_url")
-    var url: String? = null,
+    var url: String,
 
     /**
      * update info
@@ -26,28 +26,14 @@ data class AppUpdateModel(
     var info: String? = null,
 
     /**
-     * dx2024 json data version string
-     */
-    @SerializedName("data_version_2")
-    var dataVersion2: String? = null,
-
-    /**
-     * dx2024 json url
-     */
-    @SerializedName("data_url_2")
-    var dataUrl2: String? = null,
-
-    /**
      * dx2025 json data version string
      */
-    @SerializedName("data_version_3")
-    var dataVersion3: String? = null,
+    @SerializedName("data_version")
+    var dataVersion: String,
 
     /**
      * dx2025 json url
      */
-    @SerializedName("data_url_3")
-    var dataUrl3: String? = null
-
-
+    @SerializedName("data_url")
+    var dataUrl: String
 )

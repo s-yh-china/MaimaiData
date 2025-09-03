@@ -2,20 +2,11 @@ package com.paperpig.maimaidata.ui.rating
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.MenuProvider
@@ -32,14 +23,11 @@ import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.ui.about.SettingsActivity
 import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
-import com.paperpig.maimaidata.ui.finaletodx.FinaleToDxActivity
-import com.paperpig.maimaidata.ui.maimaidxprober.LoginActivity
-import com.paperpig.maimaidata.ui.maimaidxprober.ProberActivity
 import com.paperpig.maimaidata.utils.ConvertUtils
-import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.getInt
+import com.paperpig.maimaidata.widgets.Settings
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -52,7 +40,6 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     private val proberUpdateDialog by lazy { ProberUpdateDialog(requireContext()) }
     private lateinit var proberUpdateTipsDialog: MaterialDialog
-
 
     private val httpServiceIntent by lazy {
         Intent(requireContext(), HttpServerService::class.java)
@@ -68,11 +55,9 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            RatingFragment()
+        fun newInstance() = RatingFragment()
 
         const val TAG = "RatingFragment"
-
     }
 
     override fun getViewBinding(container: ViewGroup?): FragmentRatingBinding {
@@ -82,23 +67,8 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     override fun onResume() {
         super.onResume()
-        if (SpUtil.getUserName().isEmpty()) {
-            binding.accountText.setText(R.string.no_logged_in)
-            binding.proberQueryBtn.visibility = View.GONE
-            binding.proberLoginBtn.setText(R.string.login)
-            binding.proberLoginBtn.layoutParams = binding.proberLoginBtn.layoutParams.apply {
-                width = (260 * binding.root.context.resources.displayMetrics.density).toInt()
-            }
-        } else {
-            binding.accountText.text = SpUtil.getUserName()
-            binding.proberQueryBtn.visibility = View.VISIBLE
-            binding.proberLoginBtn.setText(R.string.change_account)
-            binding.proberLoginBtn.layoutParams = binding.proberLoginBtn.layoutParams.apply {
-                width = (120 * binding.root.context.resources.displayMetrics.density).toInt()
-            }
-        }
+        binding.accountText.setText(Settings.getNickname())
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,18 +76,6 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
             resultAdapter = RatingResultAdapter()
             layoutManager = LinearLayoutManager(context)
             adapter = resultAdapter
-        }
-
-        binding.proberLoginBtn.setOnClickListener {
-            startActivity(Intent(context, LoginActivity::class.java))
-        }
-
-        binding.proberQueryBtn.setOnClickListener {
-            startActivity(Intent(context, ProberActivity::class.java))
-        }
-
-        binding.proberLoginBtn.setOnClickListener {
-            startActivity(Intent(context, LoginActivity::class.java))
         }
 
         binding.proberLevelCheckBtn.setOnClickListener {
@@ -128,31 +86,22 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
             startActivity(Intent(context, VersionCheckActivity::class.java))
         }
 
-        binding.proberFinaleToDxBtn.setOnClickListener {
-            startActivity(Intent(context, FinaleToDxActivity::class.java))
-        }
-
         binding.calculateBtn.setOnClickListener {
             hideKeyboard(view)
             onCalculate(binding.targetRatingEdit.text.toString())
         }
 
-        binding.inputSongLevel.addTextChangedListener(object : TextWatcher {
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 文本变化前
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // 文本变化时
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // 文本变化后
-                val songLevel = s.toString()
-                val songAchievementText = binding.inputSongAchievement.text.toString()
-                if (songAchievementText.isNotEmpty() && songAchievementText != "."
-                    && songLevel.isNotEmpty() && songLevel != "."
-                ) {
+                val songLevel = binding.inputSongLevel.text.toString()
+                val songAchievement = binding.inputSongAchievement.text.toString()
+                if (songAchievement.isNotEmpty() && songAchievement != "." && songLevel.isNotEmpty() && songLevel != ".") {
                     binding.outputSingleRating.text = ConvertUtils.achievementToRating(
                         (binding.inputSongLevel.text.toString().toFloat() * 10).toInt(),
                         (binding.inputSongAchievement.text.toString().toFloat() * 10000).toInt()
@@ -161,33 +110,10 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                     binding.outputSingleRating.text = "0"
                 }
             }
-        })
+        }
 
-        binding.inputSongAchievement.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 文本变化前
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // 文本变化时
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // 文本变化后
-                val songAchievement = s.toString()
-                val songLevelText = binding.inputSongLevel.text.toString()
-                if (songAchievement.isNotEmpty() && songAchievement != "."
-                    && songLevelText.isNotEmpty() && songLevelText != "."
-                ) {
-                    binding.outputSingleRating.text = ConvertUtils.achievementToRating(
-                        (binding.inputSongLevel.text.toString().toFloat() * 10).toInt(),
-                        (binding.inputSongAchievement.text.toString().toFloat() * 10000).toInt()
-                    ).toString()
-                } else {
-                    binding.outputSingleRating.text = "0"
-                }
-            }
-        })
+        binding.inputSongLevel.addTextChangedListener(textWatcher)
+        binding.inputSongAchievement.addTextChangedListener(textWatcher)
 
         CrawlerCaller.setOnWechatCrawlerListener(this)
         LocalVpnService.addOnStatusChangedListener(this)
@@ -232,25 +158,15 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                 }
                 return false
             }
-
         })
     }
 
     private fun startProxyServices() {
-        if (SpUtil.getUserName().isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.vpn_please_login),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
         startVPNService()
         startHttpService()
         createLinkUrl()
         getWechatApi()
     }
-
 
     private fun createLinkUrl() {
         val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -318,13 +234,9 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
         val list = mutableListOf<Rating>()
 
         for (i in 150 downTo minLv) {
-
             when (val reachableAchievement = getReachableAchievement(i, rating)) {
-                800000, 900000, 940000 ->
-                    map[reachableAchievement] = i
-
-                in 970000..1010000 ->
-                    map[reachableAchievement] = i
+                800000, 900000, 940000 -> map[reachableAchievement] = i
+                in 970000..1010000 -> map[reachableAchievement] = i
             }
         }
 
@@ -340,7 +252,6 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
         }
 
         resultAdapter.setData(list)
-
     }
 
     override fun onStatusChanged(status: String, isRunning: Boolean) {
@@ -349,15 +260,13 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     @SuppressLint("SetTextI18n")
     override fun onLogReceived(logString: String) {
-        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis())
+        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
         proberUpdateDialog.appendText("[$timestamp] $logString\n")
     }
 
     @SuppressLint("SetTextI18n")
     override fun onMessageReceived(logString: String) {
-        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis())
+        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
         proberUpdateDialog.appendText("[$timestamp] $logString\n")
         binding.proberProxySimpleText.text = "[$timestamp] $logString"
     }
@@ -375,8 +284,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     @SuppressLint("SetTextI18n")
     override fun onError(e: Exception) {
-        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-            .format(System.currentTimeMillis())
+        val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(System.currentTimeMillis())
         proberUpdateDialog.appendText("[$timestamp] $e\n")
         binding.proberProxySimpleText.text = "[$timestamp] $e"
         binding.proberProxyIndicator.visibility = View.INVISIBLE
@@ -393,11 +301,10 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
         if (::proberUpdateTipsDialog.isInitialized) {
             proberUpdateTipsDialog.show()
         } else {
-            var helpStringBuilder = ""
-            helpStringBuilder = getString(R.string.prober_update_content_step1) + "\n" +
-                    getString(R.string.prober_update_content_step2) + "\n" +
-                    getString(R.string.prober_update_content_step3) + "\n" +
-                    getString(R.string.prober_update_content_step4) + "\n"
+            val helpStringBuilder = getString(R.string.prober_update_content_step1) + "\n" +
+                getString(R.string.prober_update_content_step2) + "\n" +
+                getString(R.string.prober_update_content_step3) + "\n" +
+                getString(R.string.prober_update_content_step4) + "\n"
 
             proberUpdateTipsDialog = MaterialDialog.Builder(requireContext())
                 .title(getString(R.string.prober_update_help))
@@ -407,7 +314,6 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
         }
     }
 }
-
 
 private fun getReachableLevel(rating: Int): Int {
     for (i in 10..150) {
@@ -422,7 +328,6 @@ private fun getReachableAchievement(level: Int, rating: Int): Int {
     var maxAchi = 1010000
     var minAchi = 0
     var tempAchi: Int
-
 
     if (ConvertUtils.achievementToRating(level, 1005000) < rating)
         return 1010001

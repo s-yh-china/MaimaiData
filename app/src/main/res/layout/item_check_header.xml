@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_margin="12dp"
-    android:background="@drawable/mmd_checklist_top_bg"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="12dp">
+              android:layout_width="match_parent"
+              android:layout_height="100dp"
+              android:layout_margin="12dp"
+              android:background="@drawable/mmd_checklist_top_bg"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:padding="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,23 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_sss" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_fc" />
-
+                android:src="@drawable/mmd_player_rtsong_sss"/>
 
         </LinearLayout>
 
@@ -53,8 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_ap" />
-
+                android:src="@drawable/mmd_player_rtsong_fc"/>
 
         </LinearLayout>
 
@@ -68,8 +51,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_fsd" />
+                android:src="@drawable/mmd_player_rtsong_ap"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/mmd_player_rtsong_fsd"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -84,27 +80,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/fcCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/apCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/fsdCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
     </LinearLayout>
 </LinearLayout>

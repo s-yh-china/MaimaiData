@@ -9,17 +9,11 @@ import com.bumptech.glide.load.HttpException
 import com.bumptech.glide.load.data.DataFetcher
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.util.ContentLengthInputStream
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.*
 import java.io.IOException
 import java.io.InputStream
 
-class OkHttpStreamFetcher     // Public API.
-    (private val client: Call.Factory, private val url: GlideUrl) : DataFetcher<InputStream>,
-    Callback {
+class OkHttpStreamFetcher(private val client: Call.Factory, private val url: GlideUrl) : DataFetcher<InputStream>, Callback {
     private var stream: InputStream? = null
     private var responseBody: ResponseBody? = null
     private var callback: DataFetcher.DataCallback<in InputStream>? = null
@@ -65,8 +59,7 @@ class OkHttpStreamFetcher     // Public API.
             if (stream != null) {
                 stream!!.close()
             }
-        } catch (e: IOException) {
-            // Ignored
+        } catch (_: IOException) {
         }
         if (responseBody != null) {
             responseBody!!.close()

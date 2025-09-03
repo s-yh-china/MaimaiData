@@ -20,9 +20,7 @@ import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
 
-class VersionCheckAdapter(
-    val context: Context
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     //0为显示完成率标识，1为显示FC/AP标识，2为显示FDX标识
     private var displayMode = 0
 
@@ -38,10 +36,8 @@ class VersionCheckAdapter(
     private var groupData: Map<String, List<SongWithChartsEntity>> = mapOf()
 
     private fun getFormatData(): Map<String, List<SongWithChartsEntity>> {
-        return dataList.filter { it.songData.from == versionSelect }
-            .sortedByDescending { it.charts[3].ds }.groupBy { it.charts[3].level }
+        return dataList.filter { it.songData.from == versionSelect }.sortedByDescending { it.charts[3].ds }.groupBy { it.charts[3].level }
     }
-
 
     companion object {
         const val TYPE_HEADER = 0
@@ -49,21 +45,18 @@ class VersionCheckAdapter(
         const val TYPE_NORMAL = 2
     }
 
-    inner class HeaderViewHolder(binding: ItemCheckHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class HeaderViewHolder(binding: ItemCheckHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         val tripleSCount = binding.tripleSCount
         val fcCount = binding.fcCount
         val apCount = binding.apCount
         val fsdCount = binding.fsdCount
     }
 
-    inner class LevelHolder(binding: ItemLevelHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class LevelHolder(binding: ItemLevelHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         val levelTitle = binding.levelTitle
     }
 
-    inner class ViewHolder(binding: ItemSongCheckBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(binding: ItemSongCheckBinding) : RecyclerView.ViewHolder(binding.root) {
         val songJacket = binding.songJacket
         val songRecordMark = binding.songRecordMark
     }
@@ -72,9 +65,7 @@ class VersionCheckAdapter(
         return when (viewType) {
             TYPE_HEADER -> HeaderViewHolder(
                 ItemCheckHeaderBinding.inflate(
-                    LayoutInflater.from(
-                        context
-                    ), parent, false
+                    LayoutInflater.from(context), parent, false
                 )
             )
 
@@ -86,14 +77,11 @@ class VersionCheckAdapter(
 
             else -> ViewHolder(
                 ItemSongCheckBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
+                    LayoutInflater.from(parent.context), parent, false
                 )
             )
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -193,7 +181,6 @@ class VersionCheckAdapter(
         }
     }
 
-
     override fun getItemCount(): Int {
         return groupData.size + groupData.values.sumOf { it.size } + 1
     }
@@ -218,24 +205,18 @@ class VersionCheckAdapter(
         notifyDataSetChanged()
     }
 
-    fun setData(
-        newSongData: List<SongWithChartsEntity>,
-        newRecordList: List<RecordEntity>,
-    ) {
+    fun setData(newSongData: List<SongWithChartsEntity>, newRecordList: List<RecordEntity>) {
         dataList = newSongData
         recordList = newRecordList
         groupData = getFormatData()
     }
 
-    fun updateData(
-        version: String
-    ) {
+    fun updateData(version: String) {
         versionSelect = version
         groupData = getFormatData()
         notifyDataSetChanged()
 
     }
-
 
     private fun getSongAt(position: Int): SongWithChartsEntity {
         var count = 0
@@ -250,5 +231,4 @@ class VersionCheckAdapter(
         }
         throw IllegalArgumentException()
     }
-
 }

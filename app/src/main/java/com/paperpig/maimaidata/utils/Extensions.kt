@@ -17,17 +17,6 @@ fun String.getInt(): Int {
     }
 }
 
-fun List<String>.versionCheck(string: String): Boolean {
-    for (i in this) {
-        if (i == "maimai") {
-            if (string == "maimai" || string == "maimai PLUS") return true
-        } else if (i == "舞萌DX") {
-            if (string == "舞萌DX") return true
-        } else if (string.contains(i)) return true
-    }
-    return false
-}
-
 fun Int.toDp(): Float {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
@@ -61,6 +50,7 @@ fun View.setShrinkOnTouch(
                     .setDuration(duration)
                     .start()
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 v.animate()
                     .scaleX(1f)

@@ -40,7 +40,6 @@ interface RecordDao {
     @Query("SELECT * FROM record WHERE level_index = :index")
     fun getRecordsByDifficultyIndex(index: Int): LiveData<List<RecordEntity>>
 
-
     /**
      * 根据歌曲ID获取记录表
      * @param songId 歌曲ID

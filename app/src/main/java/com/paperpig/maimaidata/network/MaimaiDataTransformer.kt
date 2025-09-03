@@ -5,7 +5,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-
 /**
  * @author BBS
  * @since  2021-05-13

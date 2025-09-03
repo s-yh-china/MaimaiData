@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:elevation="6dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="18dp"
-    android:background="@drawable/song_list_info_bg"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:orientation="vertical">
+              android:elevation="6dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="18dp"
+              android:background="@drawable/song_list_info_bg"
+              android:clipChildren="false"
+              android:clipToPadding="false"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/songGenre"
@@ -22,7 +22,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="18dp"
-            android:padding="2dp" />
+            android:padding="2dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical">
 
-
                 <TextView
                     android:id="@+id/songTitle"
                     android:layout_width="wrap_content"
@@ -58,7 +57,7 @@
                     android:ellipsize="end"
                     android:lines="1"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
@@ -76,7 +75,7 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/artist"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -90,21 +89,18 @@
                         android:ellipsize="end"
                         android:lines="2"
                         android:textColor="@color/white"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"/>
 
                     <ImageView
                         android:id="@+id/songType"
                         android:layout_width="80dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="4dp"
-                        android:src="@drawable/ic_standard" />
+                        android:src="@drawable/ic_standard"/>
                 </LinearLayout>
-
 
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -124,7 +120,7 @@
             android:background="@drawable/level_basic_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/levelAdvanced"
@@ -134,7 +130,7 @@
             android:background="@drawable/level_advanced_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/levelExpert"
@@ -144,7 +140,7 @@
             android:background="@drawable/level_expert_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/levelMaster"
@@ -154,7 +150,7 @@
             android:background="@drawable/level_master_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/levelRemaster"
@@ -164,10 +160,8 @@
             android:background="@drawable/level_remaster_bg"
             android:gravity="center"
             android:textColor="@color/remaster"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"/>
 
     </LinearLayout>
-
 
 </LinearLayout>

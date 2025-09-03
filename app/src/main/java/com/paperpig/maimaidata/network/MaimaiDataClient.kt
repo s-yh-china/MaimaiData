@@ -22,7 +22,6 @@ class MaimaiDataClient private constructor() {
         const val BASE_URL = "https://www.diving-fish.com"
         const val IMAGE_BASE_URL = "https://maimaidx.jp/maimai-mobile/img/Music/"
         const val DIVING_FISH_COVER_URL = "https://www.diving-fish.com/covers/"
-
     }
 
     /**
@@ -54,12 +53,10 @@ class MaimaiDataClient private constructor() {
                         val originalRequest: Request = chain.request()
                         val oldUrl: HttpUrl = originalRequest.url
                         val builder: Request.Builder = originalRequest.newBuilder()
-                        val urlNameList: List<String> =
-                            originalRequest.headers("urlName")
+                        val urlNameList: List<String> = originalRequest.headers("urlName")
                         return@addInterceptor if (urlNameList.isNotEmpty()) {
                             builder.removeHeader("urlName")
-                            val baseURL: HttpUrl = urlNameList[0].toHttpUrlOrNull()
-                                ?: return@addInterceptor chain.proceed(originalRequest)
+                            val baseURL: HttpUrl = urlNameList[0].toHttpUrlOrNull() ?: return@addInterceptor chain.proceed(originalRequest)
                             val newHttpUrl = oldUrl.newBuilder()
                                 .scheme(baseURL.scheme)
                                 .host(baseURL.host)
@@ -70,10 +67,8 @@ class MaimaiDataClient private constructor() {
                         } else {
                             chain.proceed(originalRequest)
                         }
-                    }
-                    .build()
-            )
-            .build()
+                    }.build()
+            ).build()
     }
 
     /**

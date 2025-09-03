@@ -27,11 +27,8 @@ class MaimaiDataApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         Settings.init(this)
-
         SpUtil.init(this)
-
         AppDataBase.init(this)
     }
 }

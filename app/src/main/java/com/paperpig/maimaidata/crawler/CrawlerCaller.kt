@@ -1,7 +1,9 @@
 package com.paperpig.maimaidata.crawler
 
+import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
-import com.paperpig.maimaidata.utils.SpUtil
+import com.paperpig.maimaidata.repository.RecordRepository
+import com.paperpig.maimaidata.repository.SongWithChartRepository
 import com.paperpig.maimaidata.widgets.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +15,7 @@ object CrawlerCaller {
 
     fun getWechatAuthUrl(): String? {
         return try {
-            val crawler = WechatCrawler()
-            crawler.getWechatAuthUrl()
+            WechatCrawler.getWechatAuthUrl()
         } catch (error: IOException) {
             writeLog("获取微信登录url时出现错误:")
             onError(error)
@@ -60,10 +61,8 @@ object CrawlerCaller {
                 onError(e)
             }
             try {
-                val crawler = WechatCrawler()
-                crawler.fetchAndUploadData(
-                    SpUtil.getUserName(),
-                    SpUtil.getPassword(),
+                val crawler = WechatCrawler(RecordRepository.getInstance(AppDataBase.getInstance().recordDao()), SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()))
+                crawler.startFetch(
                     getDifficulties(),
                     authUrl
                 )

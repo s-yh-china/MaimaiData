@@ -2,7 +2,6 @@ package com.paperpig.maimaidata.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import com.paperpig.maimaidata.MaimaiDataApplication
 import com.paperpig.maimaidata.db.dao.SongWithChartsDao
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.model.DifficultyType
@@ -48,6 +47,9 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         return songChartDao.getAllSongsWithCharts(includeUtage, ascending)
     }
 
+    fun searchSongsWithTitle(title: String): List<SongWithChartsEntity> {
+        return songChartDao.searchSongsByTitle(title)
+    }
 
     /**
      * 根据搜索文本、歌曲类型、版本、难度等级、流派和 定数 值搜索歌曲及其谱面信息。
@@ -107,7 +109,6 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         }
     }
 
-
     private fun getDifficultyPrefix(sequencing: String?): DifficultyType? {
         if (sequencing == null) return null
         return when {
@@ -118,11 +119,9 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         }
     }
 
-
     private fun expandFromList(versionList: List<String>): List<String> {
         val result = mutableListOf<String>()
         for (item in versionList) {
-
             if (item == "maimai") {
                 result.add(item)
                 result.add("$item PLUS")
@@ -148,8 +147,6 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
     }
 
     private val remasterAscComparator = remasterComparator.thenBy { it.charts.getOrNull(4)?.ds }
-    private val remasterDescComparator =
-        remasterComparator.thenByDescending { it.charts.getOrNull(4)?.ds }
-
+    private val remasterDescComparator = remasterComparator.thenByDescending { it.charts.getOrNull(4)?.ds }
 }
 

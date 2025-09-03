@@ -3,8 +3,8 @@ package com.paperpig.maimaidata.ui.checklist
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MediatorLiveData
 import androidx.core.view.isVisible
+import androidx.lifecycle.MediatorLiveData
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -42,12 +42,9 @@ class LevelCheckActivity : AppCompatActivity() {
         var songs: List<SongWithChartsEntity>? = null
         var records: List<RecordEntity>? = null
         //获取所有的歌曲
-        val allSongs = SongWithChartRepository.getInstance(
-            AppDataBase.getInstance().songWithChartDao(),
-        ).getAllSongWithCharts()
+        val allSongs = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).getAllSongWithCharts()
         //获取所有的记录
-        val allRecords =
-            RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getAllRecord()
+        val allRecords = RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getAllRecord()
         //使用MediatorLiveData来监听两个LiveData的变化
         MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
             addSource(allSongs) { newSongs ->
@@ -59,7 +56,7 @@ class LevelCheckActivity : AppCompatActivity() {
             addSource(allRecords) { newRecords ->
                 records = newRecords
                 if (songs != null && records != null) {
-                    value = Pair(songs!!, records!!)
+                    value = Pair(songs, records)
                 }
             }
             observe(this@LevelCheckActivity) { (songs, records) ->
@@ -72,18 +69,15 @@ class LevelCheckActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        //删除ALL等级标记
-        val levelArrays =
-            resources.getStringArray(R.array.dxp_song_level).toMutableList()
-                .apply { removeAt(0) }
+        val levelArrays = resources.getStringArray(R.array.dxp_song_level).toMutableList().apply { removeAt(0) }
         binding.levelText.text = getString(R.string.search_level_string, levelArrays[0])
 
-        fun refreshText(index: Int){
+        fun refreshText(index: Int) {
             searchLevelString = levelArrays.getOrNull(index) ?: "UNKNOWN"
-            if (binding.levelSlider.value.toInt() == levelArrays.size - 1){
+            if (binding.levelSlider.value.toInt() == levelArrays.size - 1) {
                 binding.btnRight.isVisible = false
                 binding.btnLeft.isVisible = true
-            } else if (binding.levelSlider.value.toInt() == 0){
+            } else if (binding.levelSlider.value.toInt() == 0) {
                 binding.btnRight.isVisible = true
                 binding.btnLeft.isVisible = false
             } else {
@@ -98,8 +92,7 @@ class LevelCheckActivity : AppCompatActivity() {
             addOnChangeListener { _, value, _ ->
                 val index = value.toInt()
                 refreshText(index)
-                binding.levelText.text =
-                    context.getString(R.string.search_level_string, searchLevelString)
+                binding.levelText.text = context.getString(R.string.search_level_string, searchLevelString)
                 (binding.levelCheckRecycler.adapter as LevelCheckAdapter).updateData(
                     searchLevelString
                 )
@@ -109,8 +102,7 @@ class LevelCheckActivity : AppCompatActivity() {
             setLabelFormatter { value ->
                 val index = value.toInt()
                 getString(
-                    R.string.search_level_string,
-                    levelArrays.getOrNull(index) ?: "UNKNOWN"
+                    R.string.search_level_string, levelArrays.getOrNull(index) ?: "UNKNOWN"
                 )
             }
         }
@@ -132,7 +124,7 @@ class LevelCheckActivity : AppCompatActivity() {
         }
 
         binding.btnLeft.setOnClickListener {
-            if (binding.levelSlider.value.toInt() == 0){
+            if (binding.levelSlider.value.toInt() == 0) {
                 // ignored
             } else {
                 binding.levelSlider.value -= 1f
@@ -141,7 +133,7 @@ class LevelCheckActivity : AppCompatActivity() {
         }
 
         binding.btnRight.setOnClickListener {
-            if (binding.levelSlider.value.toInt() == levelArrays.size - 1){
+            if (binding.levelSlider.value.toInt() == levelArrays.size - 1) {
                 // ignored
             } else {
                 binding.levelSlider.value += 1f
@@ -150,12 +142,10 @@ class LevelCheckActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
         }
         return true
     }
-
 }

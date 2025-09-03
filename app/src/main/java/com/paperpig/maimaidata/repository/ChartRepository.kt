@@ -22,5 +22,4 @@ class ChartRepository private constructor(private val chartDao: ChartDao) {
     fun getMaxNotes(): LiveData<MaxNotesStats> {
         return chartDao.getMaxNotes()
     }
-
 }

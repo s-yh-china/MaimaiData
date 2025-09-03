@@ -1,16 +1,18 @@
 package com.paperpig.maimaidata.crawler;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
-
 public class SimpleCookieJar implements CookieJar {
-    private final Map<String, List<Cookie>> cookieStore = new HashMap<String, List<Cookie>>();
+
+    private final Map<String, List<Cookie>> cookieStore = new HashMap<>();
     private final Object lock = new Object();
 
     @Override
@@ -29,7 +31,7 @@ public class SimpleCookieJar implements CookieJar {
                     map.put(cookie.name(), cookie);
                 }
             }
-            List<Cookie> mergedList = new ArrayList<Cookie>();
+            List<Cookie> mergedList = new ArrayList<>();
             for (Map.Entry<String, Cookie> pair : map.entrySet()) {
                 mergedList.add(pair.getValue());
             }
@@ -38,10 +40,10 @@ public class SimpleCookieJar implements CookieJar {
     }
 
     @Override
-    public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+    public @NotNull List<Cookie> loadForRequest(HttpUrl httpUrl) {
         synchronized (lock) {
             List<Cookie> cookies = cookieStore.get(httpUrl.host());
-            return cookies != null ? cookies : new ArrayList<Cookie>();
+            return cookies != null ? cookies : new ArrayList<>();
         }
     }
 

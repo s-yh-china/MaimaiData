@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="18dp"
-    android:background="@drawable/song_list_info_bg"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:elevation="6dp"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="18dp"
+              android:background="@drawable/song_list_info_bg"
+              android:clipChildren="false"
+              android:clipToPadding="false"
+              android:elevation="6dp"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/songGenre"
@@ -22,7 +22,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="18dp"
-            android:padding="2dp" />
+            android:padding="2dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical">
 
-
                 <TextView
                     android:id="@+id/songTitle"
                     android:layout_width="wrap_content"
@@ -58,8 +57,7 @@
                     android:ellipsize="end"
                     android:lines="1"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
-
+                    android:textSize="18sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -76,7 +74,7 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/artist"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp" tools:ignore="SmallSp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -90,22 +88,18 @@
                         android:ellipsize="end"
                         android:lines="2"
                         android:textColor="@color/white"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"/>
 
                     <ImageView
                         android:src="@drawable/mmd_song_utage_party"
                         android:id="@+id/songUtagePartyMark"
                         android:layout_marginEnd="8dp"
                         android:layout_width="24dp"
-                        android:layout_height="24dp" />
+                        android:layout_height="24dp"/>
 
                 </LinearLayout>
-
-
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -129,7 +123,7 @@
             android:gravity="center_vertical"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/songUtageKanji"
@@ -139,7 +133,7 @@
             android:background="@drawable/level_utage_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/songLevelUtage"
@@ -149,10 +143,7 @@
             android:background="@drawable/level_utage_bg"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"/>
 
     </LinearLayout>
-
-
 </LinearLayout>

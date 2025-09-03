@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="dxp_song_level">
         <item>ALL</item>
         <item>1</item>
@@ -174,6 +173,7 @@
         <item>EXPERT</item>
         <item>MASTER</item>
         <item>RE:MASTER</item>
+        <item>宴·会·场</item>
     </string-array>
 
     <string-array name="difficulty_values">
@@ -182,6 +182,7 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>10</item>
     </string-array>
 
     <string-array name="difficulty_default">
@@ -189,6 +190,4 @@
         <item>3</item>
         <item>4</item>
     </string-array>
-
-
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_layout"
@@ -40,7 +40,7 @@
                     android:layout_marginTop="12dp"
                     android:transitionName="shared_image"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageView
                     android:id="@+id/song_type"
@@ -48,7 +48,7 @@
                     android:layout_height="24dp"
                     app:layout_constraintBottom_toTopOf="@+id/song_jacket"
                     app:layout_constraintStart_toStartOf="@+id/song_jacket"
-                    app:layout_constraintTop_toTopOf="@+id/song_jacket" />
+                    app:layout_constraintTop_toTopOf="@+id/song_jacket"/>
 
                 <TextView
                     android:id="@+id/song_bpm_label"
@@ -60,7 +60,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/song_jacket"
-                    app:layout_constraintTop_toTopOf="@+id/song_jacket" />
+                    app:layout_constraintTop_toTopOf="@+id/song_jacket"/>
 
                 <TextView
                     android:id="@+id/song_bpm"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="6dp"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@+id/song_bpm_label"
-                    app:layout_constraintTop_toBottomOf="@+id/song_bpm_label" />
+                    app:layout_constraintTop_toBottomOf="@+id/song_bpm_label"/>
 
                 <TextView
                     android:id="@+id/song_genre_label"
@@ -82,7 +82,7 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/song_bpm_label"
                     app:layout_constraintStart_toEndOf="@+id/song_bpm_label"
-                    app:layout_constraintTop_toTopOf="@+id/song_bpm_label" />
+                    app:layout_constraintTop_toTopOf="@+id/song_bpm_label"/>
 
                 <TextView
                     android:id="@+id/song_genre"
@@ -94,7 +94,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/song_bpm"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/song_genre_label"
-                    app:layout_constraintTop_toTopOf="@+id/song_bpm" />
+                    app:layout_constraintTop_toTopOf="@+id/song_bpm"/>
 
                 <TextView
                     android:id="@+id/song_add_version_label"
@@ -106,7 +106,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@+id/song_bpm_label"
-                    app:layout_constraintTop_toBottomOf="@+id/song_bpm" />
+                    app:layout_constraintTop_toBottomOf="@+id/song_bpm"/>
 
                 <ImageView
                     android:id="@+id/song_add_version"
@@ -118,7 +118,7 @@
                     android:maxHeight="45dp"
                     android:scaleType="centerInside"
                     app:layout_constraintStart_toStartOf="@+id/song_add_version_label"
-                    app:layout_constraintTop_toBottomOf="@+id/song_add_version_label" />
+                    app:layout_constraintTop_toBottomOf="@+id/song_add_version_label"/>
 
                 <ImageView
                     android:id="@+id/song_add_cn_version"
@@ -130,7 +130,7 @@
                     android:scaleType="centerInside"
                     app:layout_constraintBottom_toBottomOf="@id/song_add_version"
                     app:layout_constraintStart_toEndOf="@+id/song_add_version"
-                    app:layout_constraintTop_toTopOf="@+id/song_add_version" />
+                    app:layout_constraintTop_toTopOf="@+id/song_add_version"/>
 
                 <TextView
                     android:id="@+id/song_id_label"
@@ -141,7 +141,7 @@
                     android:text="@string/song_id"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/song_jacket" />
+                    app:layout_constraintTop_toBottomOf="@id/song_jacket"/>
 
                 <TextView
                     android:id="@+id/song_id_text"
@@ -153,7 +153,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/song_id_label"
                     app:layout_constraintStart_toEndOf="@id/song_id_label"
                     app:layout_constraintTop_toTopOf="@id/song_id_label"
-                    tools:text="100" />
+                    tools:text="100"/>
 
                 <TextView
                     android:id="@+id/alias_label"
@@ -163,7 +163,7 @@
                     android:text="@string/song_alias"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/song_jacket"
-                    app:layout_constraintTop_toBottomOf="@id/song_id_label" />
+                    app:layout_constraintTop_toBottomOf="@id/song_id_label"/>
 
                 <androidx.constraintlayout.helper.widget.Flow
                     android:id="@+id/song_alias_flow"
@@ -180,7 +180,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/song_id_label" />
+                    app:layout_constraintTop_toBottomOf="@id/song_id_label"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -193,7 +193,6 @@
                 android:paddingBottom="8dp"
                 app:layout_collapseMode="pin"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -213,7 +212,7 @@
                         app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="ガラテアの螺旋" />
+                        tools:text="ガラテアの螺旋"/>
 
                     <TextView
                         android:id="@+id/song_artist"
@@ -230,7 +229,7 @@
                         app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/song_title"
-                        tools:text="sasakure.UK." />
+                        tools:text="sasakure.UK."/>
 
                     <ImageView
                         android:id="@+id/fav_button"
@@ -242,11 +241,10 @@
                         android:src="@drawable/mmd_favorite_checked"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.appcompat.widget.Toolbar>
-
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -254,13 +252,12 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabRippleColor="@color/white" />
+            app:tabRippleColor="@color/white"/>
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,11 +1,9 @@
 package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.Log;
-
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 
 import java.util.Locale;
-
 
 public class HttpHostHeaderParser {
 
@@ -24,8 +22,7 @@ public class HttpHostHeaderParser {
                     return getSNI(buffer, offset, count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            // LocalVpnService.Instance.writeLog("Error: parseHost:%s", e);
+            Log.e(Constant.TAG, "Error: parseHost:%s", e);
         }
         return null;
     }
@@ -51,22 +48,28 @@ public class HttpHostHeaderParser {
 
     static String getSNI(byte[] buffer, int offset, int count) {
         int limit = offset + count;
-        if (count > 43 && buffer[offset] == 0x16) {//TLS Client Hello
-            offset += 43;//skip 43 bytes header
+        if (count > 43 && buffer[offset] == 0x16) { // TLS Client Hello
+            offset += 43;// skip 43 bytes header
 
-            //read sessionID:
-            if (offset + 1 > limit) return null;
+            // read sessionID:
+            if (offset + 1 > limit) {
+                return null;
+            }
             int sessionIDLength = buffer[offset++] & 0xFF;
             offset += sessionIDLength;
 
-            //read cipher suites:
-            if (offset + 2 > limit) return null;
+            // read cipher suites:
+            if (offset + 2 > limit) {
+                return null;
+            }
             int cipherSuitesLength = CommonMethods.readShort(buffer, offset) & 0xFFFF;
             offset += 2;
             offset += cipherSuitesLength;
 
-            //read Compression method:
-            if (offset + 1 > limit) return null;
+            // read Compression method:
+            if (offset + 1 > limit) {
+                return null;
+            }
             int compressionMethodLength = buffer[offset++] & 0xFF;
             offset += compressionMethodLength;
 
@@ -75,8 +78,10 @@ public class HttpHostHeaderParser {
                 return null;
             }
 
-            //read Extensions:
-            if (offset + 2 > limit) return null;
+            // read Extensions:
+            if (offset + 2 > limit) {
+                return null;
+            }
             int extensionsLength = CommonMethods.readShort(buffer, offset) & 0xFFFF;
             offset += 2;
 
@@ -91,13 +96,16 @@ public class HttpHostHeaderParser {
                 int length = CommonMethods.readShort(buffer, offset) & 0xFFFF;
                 offset += 2;
 
-                if (type0 == 0x00 && type1 == 0x00 && length > 5) { //have SNI
-                    offset += 5;//skip SNI header.
-                    length -= 5;//SNI size;
-                    if (offset + length > limit) return null;
+                if (type0 == 0x00 && type1 == 0x00 && length > 5) { // have SNI
+                    offset += 5; // skip SNI header.
+                    length -= 5; // SNI size;
+                    if (offset + length > limit) {
+                        return null;
+                    }
                     String serverName = new String(buffer, offset, length);
-                    if (ProxyConfig.IS_DEBUG)
+                    if (ProxyConfig.IS_DEBUG) {
                         Log.d(Constant.TAG, "SNI: " + serverName);
+                    }
                     return serverName;
                 } else {
                     offset += length;

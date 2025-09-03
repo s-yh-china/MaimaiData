@@ -5,20 +5,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.DialogProberUpdateBinding
 
-class ProberUpdateDialog(context: Context) :
-    BottomSheetDialog(context, R.style.Theme_Material3_Light_BottomSheetDialog) {
-    private val binding: DialogProberUpdateBinding =
-        DialogProberUpdateBinding.inflate(layoutInflater)
+class ProberUpdateDialog(context: Context) : BottomSheetDialog(context, R.style.Theme_Material3_Light_BottomSheetDialog) {
+    private val binding: DialogProberUpdateBinding = DialogProberUpdateBinding.inflate(layoutInflater)
 
     init {
         setContentView(binding.root)
         setCanceledOnTouchOutside(true)
         setCancelable(true)
-    }
-
-
-    fun clearText() {
-        binding.proberUpdateStatusText.text = ""
     }
 
     fun appendText(text: String) {
@@ -31,7 +24,6 @@ class ProberUpdateDialog(context: Context) :
             binding.proberUpdateStatusScroll.scrollTo(0, binding.proberUpdateStatusText.bottom)
         }
     }
-
 
     override fun onStart() {
         super.onStart()

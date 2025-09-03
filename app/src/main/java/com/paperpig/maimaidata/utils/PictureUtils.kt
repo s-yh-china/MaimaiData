@@ -16,6 +16,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object PictureUtils {
+
     private const val IMAGE_ROOT_DIR = "maimaidata_image"
     private const val COVER_SUB_DIR = "cover"
 
@@ -24,15 +25,13 @@ object PictureUtils {
     val imagePath = "${Environment.DIRECTORY_PICTURES}/$IMAGE_ROOT_DIR/"
     val coverPath = "$imagePath$COVER_SUB_DIR/"
 
-
     suspend fun savePicture(context: Context, bitmap: Bitmap, filePath: String, fileName: String) {
         withContext(Dispatchers.IO) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-                //检查是否已存在相同路径和文件名的图片
-                val selection =
-                    "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=?"
+                // 检查是否已存在相同路径和文件名的图片
+                val selection = "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=?"
                 val selectionArgs = arrayOf(filePath, "${fileName}.png")
 
                 val cursor = context.contentResolver.query(
@@ -47,11 +46,7 @@ object PictureUtils {
 
                 if (fileExists) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.file_saved_to_path, filePath),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, context.getString(R.string.file_saved_to_path, filePath), Toast.LENGTH_SHORT).show()
                     }
                     return@withContext
                 }
@@ -72,28 +67,23 @@ object PictureUtils {
                             flush()
                             close()
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.file_saved_to_path, filePath),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(context, context.getString(R.string.file_saved_to_path, filePath), Toast.LENGTH_SHORT).show()
                             }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        Toast.makeText(
-                            context, R.string.image_generation_error, Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, R.string.image_generation_error, Toast.LENGTH_SHORT).show()
                     }
                 }
-
 
             } else {
                 val outputDir = Environment.getExternalStoragePublicDirectory(filePath)
                 val imageFile = File(
                     outputDir, "${fileName}.png"
                 )
-                if (!outputDir.exists()) outputDir.mkdirs()
+                if (!outputDir.exists()) {
+                    outputDir.mkdirs()
+                }
                 try {
                     FileOutputStream(imageFile).use {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 90, it)
@@ -103,19 +93,13 @@ object PictureUtils {
                             context, arrayOf(imageFile.path), null, null
                         )
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.file_saved_to_path, filePath),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(context, context.getString(R.string.file_saved_to_path, filePath), Toast.LENGTH_SHORT).show()
                         }
                     }
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(
-                        context, R.string.image_generation_error, Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context, R.string.image_generation_error, Toast.LENGTH_SHORT).show()
                 }
 
             }

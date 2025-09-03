@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    id("com.google.devtools.ksp") version "2.1.10-1.0.29"
 }
 
 android {
@@ -11,33 +11,36 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.paperpig.maimaidata"
+        applicationId = "com.paperpig.maimaidata.local"
         minSdk = 24
         targetSdk = 34
         versionCode = 60
-        versionName = "2.6.0"
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
 
     buildFeatures {
         viewBinding = true
     }
 
-    buildTypes {
-        named("release") {
-            setMinifyEnabled(false)
-            proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-            )
+    signingConfigs {
+        "release" {
+            storeFile file("../keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
         }
+    }
+
+    buildTypes {
         named("debug") {
-            setDebuggable(true)
-            applicationIdSuffix = ".debug"
+            minifyEnabled false
+            debuggable true
+            applicationIdSuffix ".debug"
+        }
+        named("release") {
+            minifyEnabled false
+            signingConfig signingConfigs.release
         }
     }
 
@@ -55,10 +58,8 @@ android {
     }
 }
 
-
-
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.10")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
@@ -90,6 +91,7 @@ dependencies {
     implementation("com.liulishuo.okdownload:okdownload:1.0.7")
 
     implementation("org.nanohttpd:nanohttpd:2.2.0")
+    implementation ("org.jsoup:jsoup:1.15.3")
 
     //room
     def room_version = "2.7.0"

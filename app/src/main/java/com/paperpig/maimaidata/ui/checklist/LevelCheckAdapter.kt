@@ -22,9 +22,7 @@ import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.Constants
 import com.paperpig.maimaidata.utils.toDp
 
-class LevelCheckAdapter(
-    val context: Context
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     //0为显示完成率标识，1为显示FC/AP标识，2为显示FDX标识
     private var displayMode = 0
 
@@ -66,21 +64,18 @@ class LevelCheckAdapter(
         const val TYPE_NORMAL = 2
     }
 
-    inner class HeaderViewHolder(binding: ItemCheckHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class HeaderViewHolder(binding: ItemCheckHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         val tripleSCount = binding.tripleSCount
         val fcCount = binding.fcCount
         val apCount = binding.apCount
         val fsdCount = binding.fsdCount
     }
 
-    inner class LevelViewHolder(binding: ItemLevelHeaderBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class LevelViewHolder(binding: ItemLevelHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         val levelTitle = binding.levelTitle
     }
 
-    inner class ItemViewHolder(binding: ItemSongCheckBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class ItemViewHolder(binding: ItemSongCheckBinding) : RecyclerView.ViewHolder(binding.root) {
         val songJacket = binding.songJacket
         val songRecordMark = binding.songRecordMark
         val songType = binding.songType
@@ -109,7 +104,6 @@ class LevelCheckAdapter(
             )
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -223,25 +217,19 @@ class LevelCheckAdapter(
         notifyDataSetChanged()
     }
 
-    fun setData(
-        dataList: List<SongWithChartsEntity>,
-        recordList: List<RecordEntity>
-    ) {
+    fun setData(dataList: List<SongWithChartsEntity>, recordList: List<RecordEntity>) {
         this.dataList = dataList
         this.recordList = recordList
         groupData = getFormatData()
         notifyDataSetChanged()
     }
 
-    fun updateData(
-        newLevelSelect: String
-    ) {
+    fun updateData(newLevelSelect: String) {
         levelSelect = newLevelSelect
         groupData = getFormatData()
         notifyDataSetChanged()
 
     }
-
 
     override fun getItemCount(): Int {
         return groupData.size + groupData.values.sumOf { it.size } + 1

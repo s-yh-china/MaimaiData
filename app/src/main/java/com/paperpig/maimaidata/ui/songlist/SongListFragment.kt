@@ -2,11 +2,7 @@ package com.paperpig.maimaidata.ui.songlist
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -23,7 +19,6 @@ import com.paperpig.maimaidata.widgets.AnimationHelper
 import com.paperpig.maimaidata.widgets.SearchLayout
 import com.paperpig.maimaidata.widgets.Settings
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-
 
 class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     private lateinit var binding: FragmentSongListBinding
@@ -55,19 +50,16 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     private var isShowingSearchLayout = false
 
     companion object {
-
         @JvmStatic
         fun newInstance() = SongListFragment()
 
         const val TAG = "SongListFragment"
     }
 
-
     override fun getViewBinding(container: ViewGroup?): FragmentSongListBinding {
         binding = FragmentSongListBinding.inflate(layoutInflater, container, false)
         return binding
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -103,7 +95,6 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                 }
                 return false
             }
-
         })
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -118,11 +109,9 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
         loadData()
     }
 
-
     fun loadData() {
         SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao())
             .getAllSongWithCharts().observe(requireActivity()) {
-
                 songAdapter.setData(it.filterNot { it.songData.genre == Constants.GENRE_UTAGE })
 
                 binding.searchLayout.setOnSearchResultListener(it, object :
@@ -136,9 +125,7 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                         ds: Double?,
                         isFavor: Boolean
                     ) {
-                        val repository = SongWithChartRepository.getInstance(
-                            AppDataBase.getInstance().songWithChartDao()
-                        )
+                        val repository = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao())
                         repository.searchSongsWithCharts(
                             searchText,
                             genreList,
@@ -150,12 +137,11 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                             Settings.getEnableAliasSearch(),
                             Settings.getEnableCharterSearch(),
                             true
-                        )
-                            .observe(requireActivity()) {
-                                songAdapter.setData(it)
-                                showOrHideSearchBar()
-                                hideKeyboard(view)
-                            }
+                        ).observe(requireActivity()) {
+                            songAdapter.setData(it)
+                            showOrHideSearchBar()
+                            hideKeyboard(view)
+                        }
                     }
                 })
             }
@@ -179,7 +165,6 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
         isShowingSearchLayout = !isShowingSearchLayout
     }
 
-
     override fun onResume() {
         super.onResume()
         animationHelper.resumeAnimation()
@@ -194,5 +179,4 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
         super.onDestroy()
         animationHelper.stopAnimation()
     }
-
 }

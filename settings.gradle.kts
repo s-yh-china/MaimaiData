@@ -1,2 +1,2 @@
 include(":app")
-rootProject.name = "MaimaiData"
+rootProject.name = "MaimaiDataLocal"

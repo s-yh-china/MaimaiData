@@ -1,12 +1,8 @@
 package com.paperpig.maimaidata.utils
 
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.reflect.TypeToken
 import com.paperpig.maimaidata.db.entity.AliasEntity
 import com.paperpig.maimaidata.db.entity.ChartEntity
 import com.paperpig.maimaidata.db.entity.ChartStatsEntity
-import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongDataEntity
 import com.paperpig.maimaidata.model.ChartsResponse
 import com.paperpig.maimaidata.model.DifficultyType
@@ -18,25 +14,25 @@ object JsonConvertToDb {
             SongDataEntity(
                 song.id.toInt(),
                 song.title,
-                song.title_kana,
-                song.basic_info.artist,
-                song.basic_info.image_url,
-                song.basic_info.genre,
-                song.basic_info.catcode,
-                song.basic_info.bpm,
-                song.basic_info.from,
+                song.titleKana,
+                song.basicInfo.artist,
+                song.basicInfo.imageUrl,
+                song.basicInfo.genre,
+                song.basicInfo.catcode,
+                song.basicInfo.bpm,
+                song.basicInfo.from,
                 song.type,
-                song.basic_info.version,
-                song.basic_info.is_new,
-                song.basic_info.kanji,
-                song.basic_info.comment,
-                song.basic_info.buddy
+                song.basicInfo.version,
+                song.basicInfo.isNew,
+                song.basicInfo.kanji,
+                song.basicInfo.comment,
+                song.basicInfo.buddy
             )
         }
 
         val chartList = list.flatMap { song ->
             song.charts.mapIndexed { i, chart ->
-                val difficultyType = getDifficultyType(song.basic_info.genre, i)
+                val difficultyType = getDifficultyType(song.basicInfo.genre, i)
 
                 val notes = chart.notes
                 val totalNotes = notes.sum()
@@ -52,7 +48,7 @@ object JsonConvertToDb {
                     difficultyType,
                     song.type,
                     song.ds[i],
-                    song.old_ds.getOrNull(i),
+                    song.oldDs.getOrNull(i),
                     song.level[i],
                     chart.charter,
                     note1,
@@ -65,7 +61,6 @@ object JsonConvertToDb {
             }
         }
 
-
         val aliasList = list.flatMap { song ->
             song.alias?.map { alias ->
                 AliasEntity(0, song.id.toInt(), alias)
@@ -73,12 +68,6 @@ object JsonConvertToDb {
         }
 
         return ConversionResult(songList, chartList, aliasList)
-    }
-
-    fun convertRecord(json: JsonElement): List<RecordEntity> {
-        val gson = Gson()
-        val type = object : TypeToken<List<RecordEntity>>() {}.type
-        return gson.fromJson(json, type)
     }
 
     fun convertChatStats(response: ChartsResponse): List<ChartStatsEntity> {
@@ -100,7 +89,6 @@ object JsonConvertToDb {
             }
         }
     }
-
 
     private fun getDifficultyType(genre: String, index: Int): DifficultyType {
         return if (genre == Constants.GENRE_UTAGE) {

@@ -32,13 +32,8 @@ object SpUtil {
     private const val PREF_SONG_INFO = "songInfo"
     private const val PREF_SEARCH_HISTORY = "searchHistory"
 
-    private const val KEY_USERNAME = "username"
-    private const val KEY_PASSWORD = "password"
-    private const val KEY_COOKIE = "cookie"
-    private const val KEY_ACCOUNT_HISTORY = "account_history"
     private const val KEY_LAST_QUERY_LEVEL = "last_query_level"
     private const val KEY_LAST_QUERY_VERSION = "last_query_version"
-    private const val KEY_DIVING_FISH_NICKNAME = "diving_fish_nickname"
 
     private const val KEY_VERSION = "db_version"
     private const val KEY_LAST_UPDATE_TIME = "chart_stats_db_last_update_time"
@@ -60,43 +55,6 @@ object SpUtil {
         return application.getSharedPreferences(name, Context.MODE_PRIVATE)
     }
 
-    // ================= USER INFO =================
-
-    fun getUserName(): String = userInfoPrefs.getString(KEY_USERNAME, "") ?: ""
-
-    fun getPassword(): String = userInfoPrefs.getString(KEY_PASSWORD, "") ?: ""
-
-    fun getCookie(): String = userInfoPrefs.getString(KEY_COOKIE, "") ?: ""
-
-    fun putLoginInfo(username: String, password: String, cookie: String) {
-        userInfoPrefs.edit {
-            putString(KEY_USERNAME, username)
-            putString(KEY_PASSWORD, password)
-            putString(KEY_COOKIE, cookie)
-        }
-        saveAccountToHistory(username, password)
-    }
-
-    fun saveAccountToHistory(username: String, password: String) {
-        val history = getAccountHistory().toMutableList()
-        if (history.none { it.first == username }) {
-            history.add(Pair(username, password))
-            userInfoPrefs.edit { putString(KEY_ACCOUNT_HISTORY, Gson().toJson(history)) }
-        }
-    }
-
-    fun getAccountHistory(): List<Pair<String, String>> {
-        val json = userInfoPrefs.getString(KEY_ACCOUNT_HISTORY, "[]") ?: "[]"
-        val type = object : TypeToken<List<Pair<String, String>>>() {}.type
-        return Gson().fromJson(json, type)
-    }
-
-    fun removeAccount(username: String) {
-        val history = getAccountHistory().toMutableList()
-        history.removeAll { it.first == username }
-        userInfoPrefs.edit { putString(KEY_ACCOUNT_HISTORY, Gson().toJson(history)) }
-    }
-
     fun saveLastQueryLevel(level: Float) {
         userInfoPrefs.edit { putFloat(KEY_LAST_QUERY_LEVEL, level) }
     }
@@ -108,14 +66,6 @@ object SpUtil {
     }
 
     fun getLastQueryVersion(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION, 0)
-
-    fun saveDivingFishNickname(nickname: String) {
-        userInfoPrefs.edit { putString(KEY_DIVING_FISH_NICKNAME, nickname) }
-    }
-
-    fun getDivingFishNickname(): String {
-        return userInfoPrefs.getString(KEY_DIVING_FISH_NICKNAME, "") ?: ""
-    }
 
     // ================= SONG INFO =================
 
@@ -153,7 +103,9 @@ object SpUtil {
             history.remove(query) // 如果已存在，先移除
         }
         history.add(0, query) // 新记录添加到最前面
-        if (history.size > 30) history.removeAt(history.lastIndex) // 限制最多存储 30 条记录
+        if (history.size > 30) {
+            history.removeAt(history.lastIndex)
+        } // 限制最多存储 30 条记录
         searchHistoryPrefs.edit { putString(KEY_SEARCH_HISTORY, Gson().toJson(history)) }
     }
 

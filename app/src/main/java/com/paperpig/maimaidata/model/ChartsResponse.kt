@@ -2,7 +2,6 @@ package com.paperpig.maimaidata.model
 
 import com.google.gson.annotations.SerializedName
 
-
 data class ChartsResponse(
     @SerializedName("charts")
     val charts: Map<String, List<ChartData>>

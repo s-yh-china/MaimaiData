@@ -3,9 +3,6 @@ package com.paperpig.maimaidata.network.vpn.tcpip;
 import java.util.Locale;
 
 public class IPHeader {
-
-    public static final short IP = 0x0800;
-    public static final byte ICMP = 1;
     public static final byte TCP = 6;
     public static final byte UDP = 17;
     public static final byte offset_proto = 9; // 9: Protocol
@@ -18,7 +15,6 @@ public class IPHeader {
     static final short offset_flags_fo = 6; // 6: Flags (3 bits) + Fragment offset (13 bits)
     static final byte offset_ttl = 8; // 8: Time to live
     static final short offset_crc = 10; // 10: Header checksum
-    static final int offset_op_pad = 20; // 20: Option + Padding
 
     public byte[] m_Data;
     public int m_Offset;
@@ -49,10 +45,6 @@ public class IPHeader {
         m_Data[m_Offset + offset_ver_ihl] = (byte) ((4 << 4) | (value / 4));
     }
 
-    public byte getTos() {
-        return m_Data[m_Offset + offset_tos];
-    }
-
     public void setTos(byte value) {
         m_Data[m_Offset + offset_tos] = value;
     }
@@ -65,24 +57,12 @@ public class IPHeader {
         CommonMethods.writeShort(m_Data, m_Offset + offset_tlen, (short) value);
     }
 
-    public int getIdentification() {
-        return CommonMethods.readShort(m_Data, m_Offset + offset_identification) & 0xFFFF;
-    }
-
     public void setIdentification(int value) {
         CommonMethods.writeShort(m_Data, m_Offset + offset_identification, (short) value);
     }
 
-    public short getFlagsAndOffset() {
-        return CommonMethods.readShort(m_Data, m_Offset + offset_flags_fo);
-    }
-
     public void setFlagsAndOffset(short value) {
         CommonMethods.writeShort(m_Data, m_Offset + offset_flags_fo, value);
-    }
-
-    public byte getTTL() {
-        return m_Data[m_Offset + offset_ttl];
     }
 
     public void setTTL(byte value) {
@@ -125,5 +105,4 @@ public class IPHeader {
     public String toString() {
         return String.format(Locale.ENGLISH, "%s->%s Pro=%s,HLen=%d", CommonMethods.ipIntToString(getSourceIP()), CommonMethods.ipIntToString(getDestinationIP()), getProtocol(), getHeaderLength());
     }
-
 }

@@ -3,8 +3,6 @@ package com.paperpig.maimaidata.repository
 import androidx.lifecycle.LiveData
 import com.paperpig.maimaidata.db.dao.RecordDao
 import com.paperpig.maimaidata.db.entity.RecordEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class RecordRepository private constructor(private val recordDao: RecordDao) {
     companion object {
@@ -19,14 +17,11 @@ class RecordRepository private constructor(private val recordDao: RecordDao) {
         }
     }
 
-
     /**
      * 更新本地成绩数据库
      */
-    suspend fun replaceAllRecord(list: List<RecordEntity>): Boolean {
-        return withContext(Dispatchers.IO) {
-            recordDao.replaceAllRecord(list)
-        }
+    fun replaceAllRecord(list: List<RecordEntity>): Boolean {
+        return recordDao.replaceAllRecord(list)
     }
 
     /**
@@ -45,7 +40,6 @@ class RecordRepository private constructor(private val recordDao: RecordDao) {
         return recordDao.getRecordsByDifficultyIndex(index)
     }
 
-
     /**
      * 根据歌曲ID获取成绩
      * @param songId 歌曲ID
@@ -54,5 +48,4 @@ class RecordRepository private constructor(private val recordDao: RecordDao) {
     fun getRecordsBySongId(songId: Int): LiveData<List<RecordEntity>> {
         return recordDao.getRecordsBySongId(songId)
     }
-
 }

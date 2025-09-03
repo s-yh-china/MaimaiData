@@ -7,11 +7,9 @@ import com.paperpig.maimaidata.db.entity.SongDataEntity
 
 @Dao
 interface SongDao {
-
     @Insert
     fun insertAllSongs(songDataList: List<SongDataEntity>)
 
     @Query("DELETE FROM song_data")
     fun clearSongData()
-
 }

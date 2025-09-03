@@ -47,7 +47,6 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         }
     }
 
-
     /**
      * 获取所有歌曲及其关联的谱面信息。
      * @param includeUtage 是否包含宴曲目（`genre != UTAGE`）。
@@ -67,7 +66,6 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         includeUtage: Boolean = true,
         ascending: Boolean = false
     ): LiveData<List<SongWithChartsEntity>>
-
 
     /**
      * 根据指定的筛选条件搜索歌曲数据，并获取其关联的谱面信息。
@@ -215,5 +213,12 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         isMatchSongId: Boolean
     ): LiveData<List<SongWithChartsEntity>>
 
-
+    @Query(
+        """
+        SELECT * 
+        FROM song_data 
+        WHERE title LIKE '%' || :searchText || '%'
+        """
+    )
+    fun searchSongsByTitle(searchText: String): List<SongWithChartsEntity>
 }

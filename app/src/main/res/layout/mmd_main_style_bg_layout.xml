@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/mmd_main_bg_gradient">
-
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@drawable/mmd_main_bg_gradient">
 
     <ImageView
         android:id="@+id/aurora_back_View"
@@ -14,7 +13,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/mmd_main_bg_aurora"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/aurora_front_view"
@@ -24,12 +23,12 @@
         android:scaleType="centerCrop"
         android:src="@drawable/mmd_main_bg_aurora"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.paperpig.maimaidata.widgets.TilingImageView
         android:id="@+id/tiling_imageview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/cloud_back_left_view"
@@ -38,7 +37,7 @@
         android:layout_marginStart="-82dp"
         android:src="@drawable/mmd_main_bg_back_left"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud_back_right_view"
@@ -48,7 +47,7 @@
         android:layout_marginEnd="50dp"
         android:src="@drawable/mmd_main_bg_back_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud_back_center_view"
@@ -57,8 +56,7 @@
         android:layout_marginTop="324dp"
         android:src="@drawable/mmd_main_bg_back_center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud_front_left_view"
@@ -68,7 +66,7 @@
         android:layout_marginTop="268dp"
         android:src="@drawable/mmd_main_bg_front_left"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud_front_right_view"
@@ -77,7 +75,7 @@
         android:layout_marginTop="146dp"
         android:src="@drawable/mmd_main_bg_front_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/cloud_front_center_view"
@@ -87,7 +85,7 @@
         android:layout_marginEnd="20dp"
         android:src="@drawable/mmd_main_bg_front_center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/moon_image_view"
@@ -96,7 +94,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/mmd_main_bg_moon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/star_yellow_left_view"
@@ -105,7 +103,7 @@
         android:layout_marginStart="12dp"
         android:src="@drawable/mmd_main_bg_star_yellow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/moon_image_view" />
+        app:layout_constraintTop_toBottomOf="@id/moon_image_view"/>
 
     <ImageView
         android:id="@+id/star_yellow_right_view"
@@ -115,7 +113,7 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/mmd_main_bg_star_yellow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/star_white_view"
@@ -125,8 +123,7 @@
         android:layout_marginEnd="20dp"
         android:src="@drawable/mmd_main_bg_star_white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.paperpig.maimaidata.widgets.ShootingStarView
         android:id="@+id/shooting_star_view1"
@@ -135,7 +132,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="-46dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.paperpig.maimaidata.widgets.ShootingStarView
         android:id="@+id/shooting_star_view2"
@@ -144,7 +141,7 @@
         android:layout_marginTop="-44dp"
         android:layout_marginEnd="-30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.paperpig.maimaidata.widgets.ShootingStarView
         android:id="@+id/shooting_star_view3"
@@ -153,7 +150,7 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="46dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.paperpig.maimaidata.widgets.ShootingStarView
         android:id="@+id/shooting_star_view4"
@@ -161,15 +158,14 @@
         android:layout_height="232dp"
         android:layout_marginTop="256dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.9"/>
 
     <ImageView
         android:id="@+id/rainbow_view"
@@ -180,7 +176,7 @@
         android:src="@drawable/mmd_main_bg_rainbow"
         app:layout_constraintBottom_toTopOf="@+id/rainbow_bottom_view"
         app:layout_constraintEnd_toEndOf="@+id/rainbow_bottom_view"
-        app:layout_constraintStart_toStartOf="@+id/rainbow_bottom_view" />
+        app:layout_constraintStart_toStartOf="@+id/rainbow_bottom_view"/>
 
     <ImageView
         android:id="@+id/rainbow_bottom_view"
@@ -198,7 +194,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/mmd_main_bg_shines"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/chara_view"
@@ -210,7 +206,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintWidth_percent="0.8"/>
 
     <ImageView
         android:id="@+id/laundry_view"
@@ -218,5 +214,5 @@
         android:layout_height="wrap_content"
         android:src="@drawable/mmd_laundry"
         app:layout_constraintBottom_toBottomOf="@+id/chara_view"
-        app:layout_constraintEnd_toEndOf="@+id/chara_view" />
+        app:layout_constraintEnd_toEndOf="@+id/chara_view"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

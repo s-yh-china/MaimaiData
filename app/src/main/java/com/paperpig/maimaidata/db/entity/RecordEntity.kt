@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.paperpig.maimaidata.R
-import com.paperpig.maimaidata.utils.Constants
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "record")
@@ -19,10 +18,6 @@ data class RecordEntity(
     // 完成率
     @ColumnInfo(name = "achievements")
     val achievements: Double,
-
-    // 定数
-    @ColumnInfo(name = "ds")
-    val ds: Double,
 
     // DX分数
     @ColumnInfo(name = "dx_score")
@@ -45,15 +40,6 @@ data class RecordEntity(
     @ColumnInfo(name = "level_index")
     val levelIndex: Int,
 
-    // 等级标签
-    @SerializedName("level_label")
-    @ColumnInfo(name = "level_label")
-    val levelLabel: String,
-
-    // Rating值
-    @ColumnInfo(name = "ra")
-    val ra: Int,
-
     // 评级
     @ColumnInfo(name = "rate")
     val rate: String,
@@ -62,14 +48,6 @@ data class RecordEntity(
     @SerializedName("song_id")
     @ColumnInfo(name = "song_id", index = true)
     val songId: Int,
-
-    // 歌曲标题
-    @ColumnInfo(name = "title")
-    val title: String,
-
-    // 标准 or DX
-    @ColumnInfo(name = "type")
-    val type: String
 ) : Parcelable {
     fun getFcIcon() = when (fc) {
         "fc" -> R.drawable.mmd_player_rtsong_fc
@@ -85,31 +63,6 @@ data class RecordEntity(
         "fsd" -> R.drawable.mmd_player_rtsong_fsd
         "fsdp" -> R.drawable.mmd_player_rtsong_fsdp
         else -> R.drawable.mmd_player_rtsong_stub
-    }
-
-    fun getDifficultyDiff() = when (levelIndex) {
-        0 -> R.drawable.mmd_player_rtsong_diff_bsc
-        1 -> R.drawable.mmd_player_rtsong_diff_adv
-        2 -> R.drawable.mmd_player_rtsong_diff_exp
-        3 -> R.drawable.mmd_player_rtsong_diff_mst
-        else -> R.drawable.mmd_player_rtsong_diff_rem
-    }
-
-    fun getBackgroundColor() = when (levelIndex) {
-        0 -> R.color.mmd_player_rtsong_bsc_main
-        1 -> R.color.mmd_player_rtsong_adv_main
-        2 -> R.color.mmd_player_rtsong_exp_main
-        3 -> R.color.mmd_player_rtsong_mst_main
-        else -> R.color.mmd_player_rtsong_rem_main
-    }
-
-
-    fun getShadowColor() = when (levelIndex) {
-        0 -> R.color.mmd_player_rtsong_bsc_dark
-        1 -> R.color.mmd_player_rtsong_adv_dark
-        2 -> R.color.mmd_player_rtsong_exp_dark
-        3 -> R.color.mmd_player_rtsong_mst_dark
-        else -> R.color.mmd_player_rtsong_rem_dark
     }
 
     fun getRankIcon() = when (rate) {
@@ -128,29 +81,6 @@ data class RecordEntity(
         "sss" -> R.drawable.mmd_player_rtsong_sss
         "sssp" -> R.drawable.mmd_player_rtsong_sssp
         else -> R.drawable.mmd_player_rtsong_d
-    }
-
-
-    fun getTypeIcon(): Int {
-        return if (type == Constants.CHART_TYPE_DX)
-            R.drawable.mmd_player_rtsong_icon_dx
-        else R.drawable.mmd_player_rtsong_icon_standard
-    }
-
-    fun getRatingBoard(): Int = when (levelIndex) {
-        0 -> R.drawable.mmd_rating_board_bsc
-        1 -> R.drawable.mmd_rating_board_adv
-        2 -> R.drawable.mmd_rating_board_exp
-        3 -> R.drawable.mmd_rating_board_mas
-        else -> R.drawable.mmd_rating_board_rem
-    }
-
-    fun getRatingDiff() = when (levelIndex) {
-        0 -> R.drawable.mmd_rating_diff_basic
-        1 -> R.drawable.mmd_rating_diff_advanced
-        2 -> R.drawable.mmd_rating_diff_expert
-        3 -> R.drawable.mmd_rating_diff_master
-        else -> R.drawable.mmd_rating_diff_remaster
     }
 }
 

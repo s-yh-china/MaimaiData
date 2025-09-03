@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".ui.songdetail.PinchImageActivity">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/main"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/black"
+                                                   tools:context=".ui.songdetail.PinchImageActivity">
 
     <com.paperpig.maimaidata.widgets.PinchImageView
         android:id="@+id/pinch_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transitionName="shared_image" />
+        android:transitionName="shared_image"/>
 
     <androidx.constraintlayout.widget.Group
         android:visibility="gone"
@@ -29,7 +29,7 @@
         android:layout_marginBottom="50dp"
         android:src="@drawable/mmd_cover_save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
         android:id="@+id/share_cover_btn"
@@ -39,5 +39,5 @@
         android:layout_marginBottom="50dp"
         android:src="@drawable/mmd_cover_share"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/save_cover_btn" />
+        app:layout_constraintEnd_toStartOf="@+id/save_cover_btn"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

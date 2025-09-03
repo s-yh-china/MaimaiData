@@ -5,6 +5,6 @@ data class MaxNotesStats(
     val hold: Int,
     val slide: Int,
     val touch: Int,
-    val break_: Int,   // break 是关键字
+    @Suppress("PropertyName") val break_: Int,
     val total: Int
 )

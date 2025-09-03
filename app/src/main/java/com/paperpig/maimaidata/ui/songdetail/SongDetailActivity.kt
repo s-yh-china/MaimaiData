@@ -1,19 +1,15 @@
 package com.paperpig.maimaidata.ui.songdetail
 
 import android.app.ActivityOptions
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -32,15 +28,8 @@ import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.repository.AliasRepository
 import com.paperpig.maimaidata.repository.RecordRepository
-import com.paperpig.maimaidata.utils.Constants
-import com.paperpig.maimaidata.utils.SpUtil
-import com.paperpig.maimaidata.utils.setCopyOnLongClick
-import com.paperpig.maimaidata.utils.setShrinkOnTouch
-import com.paperpig.maimaidata.utils.toDp
+import com.paperpig.maimaidata.utils.*
 import com.paperpig.maimaidata.widgets.Settings
-import com.paperpig.maimaidata.utils.setCopyOnLongClick
-import com.paperpig.maimaidata.utils.setShrinkOnTouch
-
 
 class SongDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySongDetailBinding
@@ -75,7 +64,7 @@ class SongDetailActivity : AppCompatActivity() {
             data = intent.getParcelableExtra<SongWithChartsEntity>(EXTRA_DATA_KEY)!!
             val songData = data.songData
 
-            //设置背景颜色
+            // 设置背景颜色
             appbarLayout.setBackgroundColor(
                 ContextCompat.getColor(
                     this@SongDetailActivity,
@@ -107,7 +96,7 @@ class SongDetailActivity : AppCompatActivity() {
                 )
             )
 
-            //显示歌曲信息
+            // 显示歌曲信息
             songTitle.apply {
                 text = songData.title
 
@@ -126,36 +115,42 @@ class SongDetailActivity : AppCompatActivity() {
             songBpm.text = songData.bpm.toString()
             songGenre.text = songData.genre
             GlideApp.with(this@SongDetailActivity).apply {
-                if (songData.type == Constants.CHART_TYPE_DX) {
-                    load(R.drawable.ic_deluxe).into(binding.songType)
-                } else {
-                    load(R.drawable.ic_standard).into(binding.songType)
+                when (songData.type) {
+                    Constants.CHART_TYPE_DX -> {
+                        load(R.drawable.ic_deluxe).into(binding.songType)
+                    }
+                    Constants.CHART_TYPE_SD -> {
+                        load(R.drawable.ic_standard).into(binding.songType)
+                    }
+                    Constants.CHART_TYPE_UTAGE -> {
+                        // load(R.drawable.ic_utage).into(binding.songType) TODO find a utage icon
+                    }
                 }
             }
             setVersionImage(songAddVersion, songData.version)
             setCnVersionImage(songAddCnVersion, songData.from)
 
-                val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
-                    if (isFavor) {
-                        0
-                    } else {
-                        Color.WHITE
-                    }
+            val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
+                if (isFavor) {
+                    0
+                } else {
+                    Color.WHITE
                 }
-                favButton.apply {
-                    setColorFilter(colorFilter.invoke(SpUtil.isFavorite(songData.id.toString())))
-                    setOnClickListener {
-                        val isFavor = SpUtil.isFavorite(songData.id.toString())
-                        SpUtil.setFavorite(songData.id.toString(), !isFavor)
-                        setColorFilter(colorFilter.invoke(!isFavor))
-                    }
+            }
+            favButton.apply {
+                setColorFilter(colorFilter.invoke(SpUtil.isFavorite(songData.id.toString())))
+                setOnClickListener {
+                    val isFavor = SpUtil.isFavorite(songData.id.toString())
+                    SpUtil.setFavorite(songData.id.toString(), !isFavor)
+                    setColorFilter(colorFilter.invoke(!isFavor))
                 }
+            }
 
-            //显示别名
+            // 显示别名
             if (Settings.getEnableShowAlias()) {
                 AliasRepository.getInstance(AppDataBase.getInstance().aliasDao())
                     .getAliasListBySongId(songData.id).observe(this@SongDetailActivity) {
-                        //对添加的别名进行flow约束
+                        // 对添加的别名进行flow约束
                         if (it.isNotEmpty()) {
                             val aliasViewIds = songAliasFlow.referencedIds.toMutableList()
                             it.forEachIndexed { _, item ->
@@ -191,7 +186,7 @@ class SongDetailActivity : AppCompatActivity() {
                 aliasLabel.visibility = View.GONE
             }
 
-            //打开歌曲大图
+            // 打开歌曲大图
             songJacket.setOnClickListener {
                 val options: ActivityOptions = ActivityOptions
                     .makeSceneTransitionAnimation(
@@ -207,7 +202,7 @@ class SongDetailActivity : AppCompatActivity() {
                 )
             }
 
-            //设置收藏
+            // 设置收藏
             favButton.apply {
                 val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
                     if (isFavor) {
@@ -224,11 +219,9 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            //获取成绩数据
+            // 获取成绩数据
             RecordRepository.getInstance(AppDataBase.getInstance().recordDao())
-                .getRecordsBySongId(songData.id).observe(this@SongDetailActivity) {
-                    setupFragments(it)
-                }
+                .getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
         }
     }
 
@@ -239,7 +232,7 @@ class SongDetailActivity : AppCompatActivity() {
             val position = data.charts.size - i
             list.add(SongLevelFragment.newInstance(data, position, recordList.find {
                 it.songId == data.songData.id &&
-                        it.levelIndex == position
+                    it.levelIndex == position
             }))
         }
 
@@ -247,13 +240,11 @@ class SongDetailActivity : AppCompatActivity() {
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
-
-    inner class LevelDataFragmentAdapter(
+    class LevelDataFragmentAdapter(
         fragmentManager: FragmentManager,
         behavior: Int,
         private val list: List<Fragment>
-    ) :
-        FragmentPagerAdapter(fragmentManager, behavior) {
+    ) : FragmentPagerAdapter(fragmentManager, behavior) {
 
         override fun getItem(position: Int): Fragment {
             return list[position]
@@ -265,15 +256,14 @@ class SongDetailActivity : AppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence {
             return when (count) {
-                //1个难度显示标签为宴会場
-                1 -> arrayOf("宴会場")[position]
-                //2个难度显示便签为宴会場1p和2p
+                // 1个难度显示标签为宴·会·场
+                1 -> arrayOf("宴·会·场")[position]
+                // 2个难度显示便签为宴·会·场1p和2p
                 2 -> arrayOf("1p", "2p")[position]
                 4 -> arrayOf("MAS", "EXP", "ADV", "BAS")[position]
                 else -> arrayOf("Re:MAS", "MAS", "EXP", "ADV", "BAS")[position]
             }
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

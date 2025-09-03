@@ -24,7 +24,6 @@ class VersionCheckActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVersionCheckBinding
     private var searchVersionString = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,13 +45,9 @@ class VersionCheckActivity : AppCompatActivity() {
         var songs: List<SongWithChartsEntity>? = null
         var records: List<RecordEntity>? = null
         //获取所有的歌曲
-        val allSongs = SongWithChartRepository.getInstance(
-            AppDataBase.getInstance().songWithChartDao(),
-        ).getAllSongWithCharts()
+        val allSongs = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).getAllSongWithCharts()
         //获取MASTER难度记录
-        val allRecords =
-            RecordRepository.getInstance(AppDataBase.getInstance().recordDao())
-                .getRecordsByDifficultyIndex(3)
+        val allRecords = RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getRecordsByDifficultyIndex(3)
         //使用MediatorLiveData来监听两个LiveData的变化
         MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
             addSource(allSongs) { newSongs ->
@@ -64,7 +59,7 @@ class VersionCheckActivity : AppCompatActivity() {
             addSource(allRecords) { newRecords ->
                 records = newRecords
                 if (songs != null && records != null) {
-                    value = Pair(songs!!, records!!)
+                    value = Pair(songs, records)
                 }
             }
             observe(this@VersionCheckActivity) { (songs, records) ->
@@ -76,12 +71,10 @@ class VersionCheckActivity : AppCompatActivity() {
         }
     }
 
-
     private fun initView() {
         val lastSelectedPosition = SpUtil.getLastQueryVersion()
         val versionList = getVersionList()
         searchVersionString = versionList[lastSelectedPosition].versionName
-
 
         //设置spinner适配器
         binding.versionSpn.apply {
@@ -102,11 +95,8 @@ class VersionCheckActivity : AppCompatActivity() {
                         id: Long
                     ) {
                         SpUtil.saveLastQueryVersion(position)
-                        searchVersionString =
-                            (parent?.getItemAtPosition(position) as Version).versionName
-                        (binding.versionCheckRecycler.adapter as VersionCheckAdapter).updateData(
-                            searchVersionString
-                        )
+                        searchVersionString = (parent?.getItemAtPosition(position) as Version).versionName
+                        (binding.versionCheckRecycler.adapter as VersionCheckAdapter).updateData(searchVersionString)
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -160,5 +150,4 @@ class VersionCheckActivity : AppCompatActivity() {
         }
         return true
     }
-
 }

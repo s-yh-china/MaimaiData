@@ -24,10 +24,7 @@ class ChartStatsRepository private constructor(val chartStatsDao: ChartStatsDao)
         }
     }
 
-    fun getChartStatsBySongIdAndDifficultyIndex(
-        songId: Int,
-        index: Int
-    ): LiveData<ChartStatsEntity> {
+    fun getChartStatsBySongIdAndDifficultyIndex(songId: Int, index: Int): LiveData<ChartStatsEntity> {
         return chartStatsDao.getChartStatsBySongIdAndDifficultyIndex(songId, index)
     }
 }

@@ -2,10 +2,8 @@ package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.Log;
 import android.util.SparseArray;
-
 import com.paperpig.maimaidata.network.vpn.dns.DnsPacket;
 import com.paperpig.maimaidata.network.vpn.dns.Question;
-import com.paperpig.maimaidata.network.vpn.dns.Resource;
 import com.paperpig.maimaidata.network.vpn.dns.ResourcePointer;
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 import com.paperpig.maimaidata.network.vpn.tcpip.IPHeader;
@@ -18,25 +16,20 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public class DnsProxy implements Runnable {
 
-    private static final ConcurrentHashMap<Integer, String> IPDomainMaps = new ConcurrentHashMap<Integer, String>();
-    private static final ConcurrentHashMap<String, Integer> DomainIPMaps = new ConcurrentHashMap<String, Integer>();
+    private static final ConcurrentHashMap<Integer, String> IPDomainMaps = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Integer> DomainIPMaps = new ConcurrentHashMap<>();
     private final long QUERY_TIMEOUT_NS = 10 * 1000000000L;
     public boolean Stopped;
     private DatagramSocket m_Client;
     private Thread m_ReceivedThread;
     private short m_QueryID;
-    private SparseArray<QueryState> m_QueryArray;
+    private final SparseArray<QueryState> m_QueryArray;
 
     public DnsProxy() throws IOException {
-        m_QueryArray = new SparseArray<QueryState>();
+        m_QueryArray = new SparseArray<>();
         m_Client = new DatagramSocket(0);
-    }
-
-    public static String reverseLookup(int ip) {
-        return IPDomainMaps.get(ip);
     }
 
     public synchronized void start() {
@@ -96,17 +89,6 @@ public class DnsProxy implements Runnable {
         }
     }
 
-    private int getFirstIP(DnsPacket dnsPacket) {
-        for (int i = 0; i < dnsPacket.Header.ResourceCount; i++) {
-            Resource resource = dnsPacket.Resources[i];
-            if (resource.Type == 1) {
-                int ip = CommonMethods.readInt(resource.Data, 0);
-                return ip;
-            }
-        }
-        return 0;
-    }
-
     private void tamperDnsResponse(byte[] rawPacket, DnsPacket dnsPacket, int newIP) {
         Question question = dnsPacket.Questions[0];
 
@@ -141,7 +123,7 @@ public class DnsProxy implements Runnable {
     }
 
     private void OnDnsResponseReceived(IPHeader ipHeader, UDPHeader udpHeader, DnsPacket dnsPacket) {
-        QueryState state = null;
+        QueryState state;
         synchronized (m_QueryArray) {
             state = m_QueryArray.get(dnsPacket.Header.ID);
             if (state != null) {
@@ -163,30 +145,23 @@ public class DnsProxy implements Runnable {
         }
     }
 
-    private int getIPFromCache(String domain) {
-        Integer ip = DomainIPMaps.get(domain);
-        if (ip == null) {
-            return 0;
-        } else {
-            return ip;
-        }
-    }
-
     private boolean interceptDns(IPHeader ipHeader, UDPHeader udpHeader, DnsPacket dnsPacket) {
         Question question = dnsPacket.Questions[0];
 
-        if (ProxyConfig.IS_DEBUG)
+        if (ProxyConfig.IS_DEBUG) {
             Log.d(Constant.TAG, "DNS Query " + question.Domain);
+        }
 
         if (question.Type == 1) {
             if (ProxyConfig.Instance.needProxy(question.Domain)) {
                 int fakeIP = getOrCreateFakeIP(question.Domain);
                 tamperDnsResponse(ipHeader.m_Data, dnsPacket, fakeIP);
 
-                if (ProxyConfig.IS_DEBUG)
+                if (ProxyConfig.IS_DEBUG) {
                     Log.d(Constant.TAG, "interceptDns FakeDns: " +
-                            question.Domain + " " +
-                            CommonMethods.ipIntToString(fakeIP));
+                        question.Domain + " " +
+                        CommonMethods.ipIntToString(fakeIP));
+                }
 
                 int sourceIP = ipHeader.getSourceIP();
                 short sourcePort = udpHeader.getSourcePort();
@@ -247,7 +222,7 @@ public class DnsProxy implements Runnable {
         }
     }
 
-    private class QueryState {
+    private static class QueryState {
         public short ClientQueryID;
         public long QueryNanoTime;
         public int ClientIP;

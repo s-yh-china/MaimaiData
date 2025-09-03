@@ -1,14 +1,11 @@
 package com.paperpig.maimaidata.network.vpn.dns;
 
-
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 
 import java.nio.ByteBuffer;
 
 public class DnsHeader {
     static final short offset_ID = 0;
-    static final short offset_Flags = 2;
-    static final short offset_QuestionCount = 4;
     static final short offset_ResourceCount = 6;
     static final short offset_AResourceCount = 8;
     static final short offset_EResourceCount = 10;
@@ -46,48 +43,16 @@ public class DnsHeader {
         buffer.putShort(this.EResourceCount);
     }
 
-    public short getID() {
-        return CommonMethods.readShort(Data, Offset + offset_ID);
-    }
-
     public void setID(short value) {
         CommonMethods.writeShort(Data, Offset + offset_ID, value);
-    }
-
-    public short getFlags() {
-        return CommonMethods.readShort(Data, Offset + offset_Flags);
-    }
-
-    public void setFlags(short value) {
-        CommonMethods.writeShort(Data, Offset + offset_Flags, value);
-    }
-
-    public short getQuestionCount() {
-        return CommonMethods.readShort(Data, Offset + offset_QuestionCount);
-    }
-
-    public void setQuestionCount(short value) {
-        CommonMethods.writeShort(Data, Offset + offset_QuestionCount, value);
-    }
-
-    public short getResourceCount() {
-        return CommonMethods.readShort(Data, Offset + offset_ResourceCount);
     }
 
     public void setResourceCount(short value) {
         CommonMethods.writeShort(Data, Offset + offset_ResourceCount, value);
     }
 
-    public short getAResourceCount() {
-        return CommonMethods.readShort(Data, Offset + offset_AResourceCount);
-    }
-
     public void setAResourceCount(short value) {
         CommonMethods.writeShort(Data, Offset + offset_AResourceCount, value);
-    }
-
-    public short getEResourceCount() {
-        return CommonMethods.readShort(Data, Offset + offset_EResourceCount);
     }
 
     public void setEResourceCount(short value) {

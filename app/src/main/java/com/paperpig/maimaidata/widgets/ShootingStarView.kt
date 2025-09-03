@@ -13,18 +13,16 @@ import androidx.core.graphics.drawable.toBitmap
 import com.paperpig.maimaidata.R
 
 class ShootingStarView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    //流星头bitmap
-    private val starHeadBitmap =
-        AppCompatResources.getDrawable(context, R.drawable.mmd_shooting_star_head)?.toBitmap()
+    // 流星头bitmap
+    private val starHeadBitmap = AppCompatResources.getDrawable(context, R.drawable.mmd_shooting_star_head)?.toBitmap()
 
-    //流星尾bitmap
-    private val starTailBitmap =
-        AppCompatResources.getDrawable(context, R.drawable.mmd_shooting_star_tail)?.toBitmap()
+    // 流星尾bitmap
+    private val starTailBitmap = AppCompatResources.getDrawable(context, R.drawable.mmd_shooting_star_tail)?.toBitmap()
 
-    //流星头绘制区域
+    // 流星头绘制区域
     private var starHeadRect = RectF()
 
-    //流星尾绘制区域
+    // 流星尾绘制区域
     private var starTailRect = RectF()
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -49,7 +47,6 @@ class ShootingStarView(context: Context, attrs: AttributeSet) : View(context, at
             start()
         }
     }
-
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -87,7 +84,6 @@ class ShootingStarView(context: Context, attrs: AttributeSet) : View(context, at
         )
 
     }
-
 
     fun pauseAnimation() {
         rotationAnimator?.pause()

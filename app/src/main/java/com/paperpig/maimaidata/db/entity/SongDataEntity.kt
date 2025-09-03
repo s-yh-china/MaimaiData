@@ -72,7 +72,7 @@ data class SongDataEntity(
         "东方Project" -> R.color.touhou
         "其他游戏" -> R.color.variety
         "舞萌" -> R.color.maimai
-        "宴会場" -> R.color.utage
+        "宴·会·场" -> R.color.utage
         else -> R.color.gekichuni
     }
 
@@ -86,7 +86,7 @@ data class SongDataEntity(
             "东方Project" -> R.color.touhou_stroke
             "其他游戏" -> R.color.variety_stroke
             "舞萌" -> R.color.maimai_stroke
-            "宴会場" -> R.color.utage_stroke
+            "宴·会·场" -> R.color.utage_stroke
             else -> R.color.gekichuni_stroke
         }
 }

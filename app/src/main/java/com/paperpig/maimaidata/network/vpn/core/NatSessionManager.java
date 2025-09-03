@@ -1,15 +1,13 @@
 package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.SparseArray;
-
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
-
 
 public class NatSessionManager {
 
     static final int MAX_SESSION_COUNT = 4096;
     static final long SESSION_TIMEOUT_NS = 120 * 1000000000L;
-    static final SparseArray<NatSession> Sessions = new SparseArray<NatSession>();
+    static final SparseArray<NatSession> Sessions = new SparseArray<>();
 
     public static NatSession getSession(int portKey) {
         return Sessions.get(portKey);
@@ -42,10 +40,6 @@ public class NatSessionManager {
         session.LastNanoTime = System.nanoTime();
         session.RemoteIP = remoteIP;
         session.RemotePort = remotePort;
-
-//        if (ProxyConfig.isFakeIP(remoteIP)) {
-//            session.RemoteHost = DnsProxy.reverseLookup(remoteIP);
-//        }
 
         if (session.RemoteHost == null) {
             session.RemoteHost = CommonMethods.ipIntToString(remoteIP);
