@@ -170,7 +170,7 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
 
         if (chart.type == Constants.CHART_TYPE_DX) {
             binding.finaleGroup.visibility = View.GONE
-        } else {
+        } else if (chart.type == Constants.CHART_TYPE_SD) {
             binding.finaleGroup.visibility = View.VISIBLE
             binding.finaleAchievement.text =
                 String.format(
