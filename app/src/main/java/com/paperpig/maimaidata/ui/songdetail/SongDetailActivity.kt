@@ -119,9 +119,11 @@ class SongDetailActivity : AppCompatActivity() {
                     Constants.CHART_TYPE_DX -> {
                         load(R.drawable.ic_deluxe).into(binding.songType)
                     }
+
                     Constants.CHART_TYPE_SD -> {
                         load(R.drawable.ic_standard).into(binding.songType)
                     }
+
                     Constants.CHART_TYPE_UTAGE -> {
                         // load(R.drawable.ic_utage).into(binding.songType) TODO find a utage icon
                     }
@@ -220,8 +222,7 @@ class SongDetailActivity : AppCompatActivity() {
             }
 
             // 获取成绩数据
-            RecordRepository.getInstance(AppDataBase.getInstance().recordDao())
-                .getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
+            RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
         }
     }
 
@@ -231,8 +232,7 @@ class SongDetailActivity : AppCompatActivity() {
         (1..data.charts.size).forEach { i ->
             val position = data.charts.size - i
             list.add(SongLevelFragment.newInstance(data, position, recordList.find {
-                it.songId == data.songData.id &&
-                    it.levelIndex == position
+                it.songId == data.songData.id && it.levelIndex == position
             }))
         }
 
@@ -275,7 +275,6 @@ class SongDetailActivity : AppCompatActivity() {
     }
 
     private fun setVersionImage(view: ImageView, addVersion: String) {
-
         @DrawableRes var versionDrawable = 0
         with(addVersion) {
             when {
@@ -311,16 +310,15 @@ class SongDetailActivity : AppCompatActivity() {
     }
 
     private fun setCnVersionImage(view: ImageView, addVersion: String) {
-
-        @DrawableRes var versionDrawable = 0
-        with(addVersion) {
+        @DrawableRes val versionDrawable = with(addVersion) {
             when {
-                equals("舞萌DX") -> versionDrawable = R.drawable.maimaidx_cn
-                equals("舞萌DX 2021") -> versionDrawable = R.drawable.maimaidx_2021
-                equals("舞萌DX 2022") -> versionDrawable = R.drawable.maimaidx_2022
-                equals("舞萌DX 2023") -> versionDrawable = R.drawable.maimaidx_2023
-                equals("舞萌DX 2024") -> versionDrawable = R.drawable.maimaidx_2024
-                equals("舞萌DX 2025") -> versionDrawable = R.drawable.maimaidx_2025
+                equals("舞萌DX") -> R.drawable.maimaidx_cn
+                equals("舞萌DX 2021") -> R.drawable.maimaidx_2021
+                equals("舞萌DX 2022") -> R.drawable.maimaidx_2022
+                equals("舞萌DX 2023") -> R.drawable.maimaidx_2023
+                equals("舞萌DX 2024") -> R.drawable.maimaidx_2024
+                equals("舞萌DX 2025") -> R.drawable.maimaidx_2025
+                else -> 0
             }
         }
         Glide.with(view.context)

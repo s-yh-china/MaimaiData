@@ -213,12 +213,19 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         isMatchSongId: Boolean
     ): LiveData<List<SongWithChartsEntity>>
 
+    /**
+     * 根据歌曲标题精确匹配歌曲
+     *
+     * @param songTitle 歌曲标题
+     *
+     * @return 歌曲列表，可能包含不同类型的铺面
+     */
     @Query(
         """
         SELECT * 
         FROM song_data 
-        WHERE title LIKE '%' || :searchText || '%'
+        WHERE title = :songTitle
         """
     )
-    fun searchSongsByTitle(searchText: String): List<SongWithChartsEntity>
+    fun searchSongsByTitle(songTitle: String): List<SongWithChartsEntity>
 }

@@ -21,7 +21,6 @@ data class SongData(
     val type: String,
     var alias: List<String>?,
 ) : Parcelable {
-
     class BasicInfo(
         val artist: String,
         val bpm: Int,

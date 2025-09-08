@@ -1,5 +1,6 @@
 package com.paperpig.maimaidata.utils
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -36,6 +37,7 @@ fun View.setDebouncedClickListener(debounceTime: Long = 2000L, action: (view: Vi
     }
 }
 
+@SuppressLint("ClickableViewAccessibility")
 fun View.setShrinkOnTouch(
     scale: Float = 0.9f,
     duration: Long = 100L,

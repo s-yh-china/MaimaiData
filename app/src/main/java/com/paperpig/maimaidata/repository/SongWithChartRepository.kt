@@ -47,8 +47,15 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         return songChartDao.getAllSongsWithCharts(includeUtage, ascending)
     }
 
-    fun searchSongsWithTitle(title: String): List<SongWithChartsEntity> {
-        return songChartDao.searchSongsByTitle(title)
+    /**
+     * 根据歌曲标题精确匹配歌曲
+     *
+     * @param songTitle 歌曲标题
+     *
+     * @return 匹配的歌曲列表，可能包含不同类型的铺面
+     */
+    fun searchSongsWithTitle(songTitle: String): List<SongWithChartsEntity> {
+        return songChartDao.searchSongsByTitle(songTitle)
     }
 
     /**

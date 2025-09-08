@@ -70,7 +70,7 @@ public class WechatCrawler {
         this.songWithChartRepository = songWithChartRepository;
     }
 
-    private void batchFetchAndUploadData(Set<Integer> difficulties) {
+    private int batchFetchAndUploadData(Set<Integer> difficulties) {
         List<CompletableFuture<List<RecordEntity>>> tasks = new ArrayList<>();
         List<RecordEntity> allRecords = new ArrayList<>();
         for (Integer diff : difficulties) {
@@ -81,6 +81,7 @@ public class WechatCrawler {
         }
         Log.d(TAG, "共获取到" + allRecords.size() + "条数据");
         recordRepository.replaceAllRecord(allRecords);
+        return allRecords.size();
     }
 
     private List<RecordEntity> fetchAndUploadData(Integer diff, Integer retryCount) {
@@ -106,6 +107,7 @@ public class WechatCrawler {
     }
 
     private List<RecordEntity> parsePageToRecordList(String pageData) {
+        Pattern diffPattern = Pattern.compile("diff_(.*)\\.png");
         List<RecordEntity> records = new ArrayList<>();
         Document doc = Jsoup.parse(pageData);
 
@@ -121,6 +123,9 @@ public class WechatCrawler {
                 }
 
                 Element parentRow = nameElement.parent();
+                if (parentRow == null) {
+                    continue;
+                }
                 Elements siblings = parentRow.children();
 
                 Element diffImg = null;
@@ -137,7 +142,6 @@ public class WechatCrawler {
                 }
 
                 String diffSrc = diffImg.attr("src");
-                Pattern diffPattern = Pattern.compile("diff_(.*)\\.png");
                 Matcher diffMatcher = diffPattern.matcher(diffSrc);
                 if (!diffMatcher.find()) {
                     continue;
@@ -196,8 +200,6 @@ public class WechatCrawler {
 
                 double achievements = Double.parseDouble(achievementText.replace("%", ""));
                 int dxScore = Integer.parseInt(dxScoreText.split("/")[0].replace(",", "").replace(" ", ""));
-
-                // Log.d(TAG, "发现数据 " + title + " " + diffName);
 
                 String rate;
                 double rateAchievements = isBuddy ? achievements / 2 : achievements;
@@ -314,12 +316,13 @@ public class WechatCrawler {
         return null;
     }
 
+    private static final Pattern icoPattern = Pattern.compile("_icon_(.*)\\.png");
+
     private static String extractFromIcon(String iconSrc) {
         if (iconSrc == null) {
             return "";
         }
-        Pattern p = Pattern.compile("_icon_(.*)\\.png");
-        Matcher m = p.matcher(iconSrc);
+        Matcher m = icoPattern.matcher(iconSrc);
         return m.find() ? m.group(1) : "";
     }
 
@@ -368,8 +371,8 @@ public class WechatCrawler {
 
         // Fetch maimai data
         try {
-            this.fetchMaimaiData(difficulties);
-            writeLog("maimai 数据更新完成");
+            int dataSize = this.fetchMaimaiData(difficulties);
+            writeLog("maimai 数据更新完成，共加载了 " + dataSize + "条数据");
             finishUpdate();
         } catch (Exception error) {
             writeLog("maimai 数据更新时出现错误:");
@@ -377,9 +380,9 @@ public class WechatCrawler {
         }
     }
 
-    private void fetchMaimaiData(Set<Integer> difficulties) {
+    private int fetchMaimaiData(Set<Integer> difficulties) {
         buildHttpClient(false);
-        batchFetchAndUploadData(difficulties);
+        return batchFetchAndUploadData(difficulties);
     }
 
     private void loginWechat(String wechatAuthUrl) throws Exception {
@@ -392,15 +395,13 @@ public class WechatCrawler {
         Call call = client.newCall(request);
         Response response = call.execute();
 
-        try {
-            String responseBody = response.body().string();
-            Log.d(TAG, responseBody);
-        } catch (NullPointerException error) {
-            onError(error);
+        if (response.body() != null) {
+            response.body().string();
         }
+        Log.d(TAG, "登陆成功");
 
         int code = response.code();
-        writeLog(String.valueOf(code));
+        writeLog("登陆状态 " + code);
         if (code >= 400) {
             Exception exception = new Exception("登陆时出现错误，请重试！");
             onError(exception);
@@ -471,7 +472,6 @@ public class WechatCrawler {
             }};
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);

@@ -12,51 +12,41 @@ object JsonConvertToDb {
     fun convertSongData(list: List<SongData>): ConversionResult {
         val songList = list.map { song ->
             SongDataEntity(
-                song.id.toInt(),
-                song.title,
-                song.titleKana,
-                song.basicInfo.artist,
-                song.basicInfo.imageUrl,
-                song.basicInfo.genre,
-                song.basicInfo.catcode,
-                song.basicInfo.bpm,
-                song.basicInfo.from,
-                song.type,
-                song.basicInfo.version,
-                song.basicInfo.isNew,
-                song.basicInfo.kanji,
-                song.basicInfo.comment,
-                song.basicInfo.buddy
+                id = song.id.toInt(),
+                title = song.title,
+                titleKana = song.titleKana,
+                type = song.type,
+                bpm = song.basicInfo.bpm,
+                artist = song.basicInfo.artist,
+                genre = song.basicInfo.genre,
+                catCode = song.basicInfo.catcode,
+                from = song.basicInfo.from,
+                version = song.basicInfo.version,
+                isNew = song.basicInfo.isNew,
+                imageUrl = song.basicInfo.imageUrl,
+                kanji = song.basicInfo.kanji,
+                comment = song.basicInfo.comment,
+                buddy = song.basicInfo.buddy
             )
         }
 
         val chartList = list.flatMap { song ->
             song.charts.mapIndexed { i, chart ->
-                val difficultyType = getDifficultyType(song.basicInfo.genre, i)
-
                 val notes = chart.notes
-                val totalNotes = notes.sum()
-
-                val (note1, note2, note3, note4, note5) = when (song.type) {
-                    Constants.CHART_TYPE_SD -> listOf(notes[0], notes[1], notes[2], 0, notes[3])
-                    else -> listOf(notes[0], notes[1], notes[2], notes[3], notes[4])
-                }
-
                 ChartEntity(
-                    0,
-                    song.id.toInt(),
-                    difficultyType,
-                    song.type,
-                    song.ds[i],
-                    song.oldDs.getOrNull(i),
-                    song.level[i],
-                    chart.charter,
-                    note1,
-                    note2,
-                    note3,
-                    note4,
-                    note5,
-                    totalNotes
+                    songId = song.id.toInt(),
+                    difficultyType = getDifficultyType(song.type, i),
+                    type = song.type,
+                    charter = chart.charter,
+                    level = song.level[i],
+                    ds = song.ds[i],
+                    oldDs = song.oldDs.getOrNull(i),
+                    notesTap = notes[0],
+                    notesHold = notes[1],
+                    notesSlide = notes[2],
+                    notesTouch = if (song.type == Constants.CHART_TYPE_SD) 0 else notes[3],
+                    notesBreak = if (song.type == Constants.CHART_TYPE_SD) notes[3] else notes[4],
+                    notesTotal = notes.sum()
                 )
             }
         }
@@ -90,8 +80,8 @@ object JsonConvertToDb {
         }
     }
 
-    private fun getDifficultyType(genre: String, index: Int): DifficultyType {
-        return if (genre == Constants.GENRE_UTAGE) {
+    private fun getDifficultyType(songType: String, index: Int): DifficultyType {
+        return if (songType == Constants.CHART_TYPE_UTAGE) {
             when (index) {
                 0 -> DifficultyType.UTAGE
                 1 -> DifficultyType.UTAGE_PLAYER2
