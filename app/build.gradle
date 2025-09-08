@@ -14,8 +14,8 @@ android {
         applicationId = "com.paperpig.maimaidata.local"
         minSdk = 24
         targetSdk = 34
-        versionCode = 60
-        versionName = "1.0.0"
+        versionCode = 61
+        versionName = "1.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -91,13 +91,13 @@ dependencies {
     implementation("com.liulishuo.okdownload:okdownload:1.0.7")
 
     implementation("org.nanohttpd:nanohttpd:2.2.0")
-    implementation ("org.jsoup:jsoup:1.15.3")
+    implementation("org.jsoup:jsoup:1.15.3")
 
-    //room
+    // room
     def room_version = "2.7.0"
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
 
-    //liveData
+    // liveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.8.7"
 }
