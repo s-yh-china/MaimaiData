@@ -106,6 +106,8 @@ public class WechatCrawler {
         }
     }
 
+    private static final List<Integer> linkCofDxScore = List.of(834, 1011, 1275, 1839);
+
     private List<RecordEntity> parsePageToRecordList(String pageData) {
         Pattern diffPattern = Pattern.compile("diff_(.*)\\.png");
         List<RecordEntity> records = new ArrayList<>();
@@ -168,6 +170,18 @@ public class WechatCrawler {
                     Log.w(TAG, "无法获取铺面类型");
                 }
 
+                String dxScoreText = findText(siblings, "music_score_block", s -> s.contains("/"));
+                if (dxScoreText == null) {
+                    continue;
+                }
+                int dxMaxScore = Integer.parseInt(dxScoreText.split("/")[1].replace(",", "").replace(" ", ""));
+                if (title.equals("Link")) {
+                    if (dxMaxScore == linkCofDxScore.get(levelIndex)) {
+                        title = "Link(Cof)";
+                        Log.d(TAG, "Link(Cof)");
+                    }
+                }
+
                 int song_id = -1;
                 SongWithChartsEntity song_entity = null;
                 List<SongWithChartsEntity> searchSongs = songWithChartRepository.searchSongsWithTitle(title);
@@ -190,11 +204,10 @@ public class WechatCrawler {
 
                 String level = findText(siblings, "music_lv_block", null);
                 String achievementText = findText(siblings, "music_score_block", null);
-                String dxScoreText = findText(siblings, "music_score_block", s -> s.contains("/"));
                 String fcIcon = findIcon(siblings, "fc");
                 String fsIcon = findIcon(siblings, "fs");
 
-                if (level == null || achievementText == null || dxScoreText == null) {
+                if (level == null || achievementText == null) {
                     continue;
                 }
 

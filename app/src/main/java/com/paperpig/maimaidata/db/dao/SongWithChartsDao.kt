@@ -224,7 +224,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         """
         SELECT * 
         FROM song_data 
-        WHERE title = :songTitle
+        WHERE title LIKE :songTitle ESCAPE '\'
         """
     )
     fun searchSongsByTitle(songTitle: String): List<SongWithChartsEntity>
