@@ -108,6 +108,10 @@ public class WechatCrawler {
 
     private static final List<Integer> linkCofDxScore = List.of(834, 1011, 1275, 1839);
 
+    private static final Pattern icoPattern = Pattern.compile("_icon_(.*)\\.png");
+    private static final List<String> fcIcons = List.of("fc", "fcp", "ap", "app");
+    private static final List<String> fsIcons = List.of("fs", "fsp", "fdx", "fdxp");
+
     private List<RecordEntity> parsePageToRecordList(String pageData) {
         Pattern diffPattern = Pattern.compile("diff_(.*)\\.png");
         List<RecordEntity> records = new ArrayList<>();
@@ -129,6 +133,11 @@ public class WechatCrawler {
                     continue;
                 }
                 Elements siblings = parentRow.children();
+
+                String achievementText = findText(siblings, "music_score_block", s -> s.contains("%"));
+                if (achievementText == null) {
+                    continue;
+                }
 
                 Element diffImg = null;
                 for (Element sibling : siblings) {
@@ -201,14 +210,32 @@ public class WechatCrawler {
                 }
 
                 boolean isBuddy = isUtage && song_entity.getSongData().getBuddy() != null;
+                String level = song_entity.getCharts().get(levelIndex).getLevel();
 
-                String level = findText(siblings, "music_lv_block", null);
-                String achievementText = findText(siblings, "music_score_block", null);
-                String fcIcon = findIcon(siblings, "fc");
-                String fsIcon = findIcon(siblings, "fs");
+                String fc = "";
+                String fs = "";
 
-                if (level == null || achievementText == null) {
-                    continue;
+                for (Element sibling : siblings) {
+                    Element img = sibling.select("img[src*=_icon_]").first();
+                    if (img != null) {
+                        Matcher m = icoPattern.matcher(img.attr("src"));
+                        if (m.find()) {
+                            String iconType = m.group(1);
+                            if (iconType != null) {
+                                if (fcIcons.contains(iconType)) {
+                                    fc = iconType;
+                                } else if (fsIcons.contains(iconType)) {
+                                    if (iconType.equals("fdx")) {
+                                        fs = "fsd";
+                                    } else if (iconType.equals("fdxp")) {
+                                        fs = "fsdp";
+                                    } else {
+                                        fs = iconType;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 double achievements = Double.parseDouble(achievementText.replace("%", ""));
@@ -244,22 +271,6 @@ public class WechatCrawler {
                     rate = "sss";
                 } else {
                     rate = "sssp";
-                }
-
-                String fc = extractFromIcon(fcIcon);
-                String fs = extractFromIcon(fsIcon);
-
-                if ("fdx".equals(fs)) {
-                    fs = "fsd";
-                }
-                if ("fdxp".equals(fs)) {
-                    fs = "fsdp";
-                }
-                if ("back".equals(fc)) {
-                    fc = "";
-                }
-                if ("back".equals(fs)) {
-                    fs = "";
                 }
 
                 // Create record
@@ -314,29 +325,6 @@ public class WechatCrawler {
             }
         }
         return null;
-    }
-
-    private static String findIcon(Elements siblings, String iconName) {
-        for (Element sibling : siblings) {
-            Element img = sibling.select("img[src*=_icon_]").first();
-            if (img != null) {
-                String src = img.attr("src");
-                if (src.contains(iconName)) {
-                    return src;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static final Pattern icoPattern = Pattern.compile("_icon_(.*)\\.png");
-
-    private static String extractFromIcon(String iconSrc) {
-        if (iconSrc == null) {
-            return "";
-        }
-        Matcher m = icoPattern.matcher(iconSrc);
-        return m.find() ? m.group(1) : "";
     }
 
     private List<RecordEntity> handleRetryFetchAndUploadData(Exception e, Integer diff, Integer currentRetryCount) {
