@@ -50,37 +50,37 @@ data class RecordEntity(
     val songId: Int,
 ) : Parcelable {
     fun getFcIcon() = when (fc) {
-        "fc" -> R.drawable.mmd_player_rtsong_fc
-        "fcp" -> R.drawable.mmd_player_rtsong_fcp
-        "ap" -> R.drawable.mmd_player_rtsong_ap
-        "app" -> R.drawable.mmd_player_rtsong_app
-        else -> R.drawable.mmd_player_rtsong_stub
+        "fc" -> R.drawable.music_icon_fc
+        "fcp" -> R.drawable.music_icon_fcp
+        "ap" -> R.drawable.music_icon_ap
+        "app" -> R.drawable.music_icon_app
+        else -> R.drawable.music_icon_back
     }
 
     fun getFsIcon() = when (fs) {
-        "fs" -> R.drawable.mmd_player_rtsong_fs
-        "fsp" -> R.drawable.mmd_player_rtsong_fsp
-        "fsd" -> R.drawable.mmd_player_rtsong_fsd
-        "fsdp" -> R.drawable.mmd_player_rtsong_fsdp
-        else -> R.drawable.mmd_player_rtsong_stub
+        "fs" -> R.drawable.music_icon_fs
+        "fsp" -> R.drawable.music_icon_fsp
+        "fsd" -> R.drawable.music_icon_fdx
+        "fsdp" -> R.drawable.music_icon_fdxp
+        else -> R.drawable.music_icon_back
     }
 
     fun getRankIcon() = when (rate) {
-        "d" -> R.drawable.mmd_player_rtsong_d
-        "c" -> R.drawable.mmd_player_rtsong_c
-        "b" -> R.drawable.mmd_player_rtsong_b
-        "bb" -> R.drawable.mmd_player_rtsong_bb
-        "bbb" -> R.drawable.mmd_player_rtsong_bbb
-        "a" -> R.drawable.mmd_player_rtsong_a
-        "aa" -> R.drawable.mmd_player_rtsong_aa
-        "aaa" -> R.drawable.mmd_player_rtsong_aaa
-        "s" -> R.drawable.mmd_player_rtsong_s
-        "sp" -> R.drawable.mmd_player_rtsong_sp
-        "ss" -> R.drawable.mmd_player_rtsong_ss
-        "ssp" -> R.drawable.mmd_player_rtsong_ssp
-        "sss" -> R.drawable.mmd_player_rtsong_sss
-        "sssp" -> R.drawable.mmd_player_rtsong_sssp
-        else -> R.drawable.mmd_player_rtsong_d
+        "d" -> R.drawable.rank_d
+        "c" -> R.drawable.rank_c
+        "b" -> R.drawable.rank_b
+        "bb" -> R.drawable.rank_bb
+        "bbb" -> R.drawable.rank_bbb
+        "a" -> R.drawable.rank_a
+        "aa" -> R.drawable.rank_aa
+        "aaa" -> R.drawable.rank_aaa
+        "s" -> R.drawable.rank_s
+        "sp" -> R.drawable.rank_sp
+        "ss" -> R.drawable.rank_ss
+        "ssp" -> R.drawable.rank_ssp
+        "sss" -> R.drawable.rank_sss
+        "sssp" -> R.drawable.rank_sssp
+        else -> R.drawable.rank_d
     }
 }
 

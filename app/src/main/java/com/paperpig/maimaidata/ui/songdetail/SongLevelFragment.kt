@@ -54,15 +54,9 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.chartStatusGroup.visibility = View.VISIBLE
             binding.chartNoStatusGroup.visibility = View.GONE
             binding.chartAchievement.text = getString(R.string.maimaidx_achievement_desc, record!!.achievements)
-            binding.chartRank.setImageDrawable(
-                ContextCompat.getDrawable(requireContext(), record!!.getRankIcon())
-            )
-            binding.chartFcap.setImageDrawable(
-                ContextCompat.getDrawable(requireContext(), record!!.getFcIcon())
-            )
-            binding.chartFsfsd.setImageDrawable(
-                ContextCompat.getDrawable(requireContext(), record!!.getFsIcon())
-            )
+            binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getRankIcon()))
+            binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getFcIcon()))
+            binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getFsIcon()))
         } else {
             binding.chartStatusGroup.visibility = View.GONE
             binding.chartNoStatusGroup.visibility = View.VISIBLE
@@ -73,10 +67,10 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         }
         val chart = data.charts[position]
         val songData = data.songData
-        //显示拟合定数
+        // 显示拟合定数
         ChartStatsRepository.getInstance(AppDataBase.getInstance().chartStatsDao())
             .getChartStatsBySongIdAndDifficultyIndex(songData.id, position).observe(requireActivity()) {
-                //没有拟合定数数据显示为"-"
+                // 没有拟合定数数据显示为"-"
                 val fitDiff = it?.fitDiff?.let {
                     BigDecimal(it).setScale(2, RoundingMode.HALF_UP).toString()
                 } ?: "-"
@@ -90,21 +84,11 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
 
         chart.oldDs?.let {
             if (it < chart.ds) {
-                binding.songLevel.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.mmd_color_red
-                    )
-                )
+                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_red))
                 binding.songLevel.text = getString(R.string.inner_level_up, chart.ds)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else if (it > chart.ds) {
-                binding.songLevel.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.mmd_color_green
-                    )
-                )
+                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_green))
                 binding.songLevel.text = getString(R.string.inner_level_down, chart.ds)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else {
@@ -156,17 +140,9 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         val notesAchievementStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_stroke) as GradientDrawable
         val notesAchievementInnerStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_inner_stroke) as GradientDrawable
 
-        notesAchievementStoke.setStroke(
-            4.toDp().toInt(),
-            ContextCompat.getColor(requireContext(), songData.strokeColor)
-        )
+        notesAchievementStoke.setStroke(4.toDp().toInt(), ContextCompat.getColor(requireContext(), songData.strokeColor))
 
-        notesAchievementInnerStoke.setStroke(
-            3.toDp().toInt(), ContextCompat.getColor(
-                requireContext(),
-                songData.bgColor
-            )
-        )
+        notesAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), songData.bgColor))
 
         if (chart.type == Constants.CHART_TYPE_DX) {
             binding.finaleGroup.visibility = View.GONE
@@ -174,7 +150,8 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.finaleGroup.visibility = View.VISIBLE
             binding.finaleAchievement.text =
                 String.format(
-                    getString(R.string.maimai_achievement_format), BigDecimal(
+                    getString(R.string.maimai_achievement_format),
+                    BigDecimal(
                         (chart.notesTap * 500 + chart.notesHold * 1000 + chart.notesSlide * 1500 + chart.notesBreak * 2600) * 1.0 /
                             (chart.notesTap * 500 + chart.notesHold * 1000 + chart.notesSlide * 1500 + chart.notesBreak * 2500) * 100
                     ).setScale(2, RoundingMode.DOWN)

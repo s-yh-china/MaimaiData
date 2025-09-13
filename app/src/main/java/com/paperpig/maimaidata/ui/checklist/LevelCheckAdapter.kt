@@ -150,30 +150,20 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 }
             }
 
-
             holder.songJacket.apply {
-                setBackgroundColor(
-                    ContextCompat.getColor(
-                        holder.itemView.context, getBorderColor(data.levelIndex)
-                    )
-                )
-                GlideApp.with(holder.itemView.context)
-                    .load(MaimaiDataClient.IMAGE_BASE_URL + data.imageUrl).into(holder.songJacket)
+                setBackgroundColor(ContextCompat.getColor(holder.itemView.context, getBorderColor(data.levelIndex)))
+                GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.imageUrl).into(holder.songJacket)
             }
             if (data.type == Constants.CHART_TYPE_DX) {
-                GlideApp.with(holder.itemView.context).load(R.drawable.ic_deluxe)
-                    .into(holder.songType)
+                GlideApp.with(holder.itemView.context).load(R.drawable.ic_deluxe).into(holder.songType)
             } else {
-                GlideApp.with(holder.itemView.context).clear(holder.songType)
+                GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
             }
 
             recordList.find { it.songId == data.songId && it.levelIndex == data.levelIndex }
                 ?.let { record ->
                     holder.songJacket.colorFilter =
-                        PorterDuffColorFilter(
-                            Color.argb(128, 128, 128, 128),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
+                        PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
                     when (displayMode) {
                         0 -> {
                             GlideApp.with(holder.itemView.context).load(record.getRankIcon())
@@ -208,7 +198,6 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 holder.songJacket.colorFilter = null
                 holder.songRecordMark.setImageDrawable(null)
             }
-
         }
     }
 
@@ -228,7 +217,6 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         levelSelect = newLevelSelect
         groupData = getFormatData()
         notifyDataSetChanged()
-
     }
 
     override fun getItemCount(): Int {
@@ -236,14 +224,14 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0) return TYPE_HEADER
+        if (position == 0) {
+            return TYPE_HEADER
+        }
         var count = 0
         for (groupDatum in groupData) {
             val size = groupDatum.value.size + 1
             if (position - 1 < count + size) {
-                return if (position - 1 == count) {
-                    TYPE_LEVEL
-                } else TYPE_NORMAL
+                return if (position - 1 == count) TYPE_LEVEL else TYPE_NORMAL
             }
             count += size
         }
@@ -252,13 +240,10 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
     private fun getSongAt(position: Int): DsSongData {
         var count = 0
-
         for (groupDatum in groupData) {
             val size = groupDatum.value.size + 1
             if (position - 1 < count + size) {
-                return if (position - 1 == count) {
-                    groupDatum.value[0]
-                } else groupDatum.value[position - count - 1 - 1]
+                return if (position - 1 == count) groupDatum.value[0] else groupDatum.value[position - count - 1 - 1]
             }
             count += size
         }

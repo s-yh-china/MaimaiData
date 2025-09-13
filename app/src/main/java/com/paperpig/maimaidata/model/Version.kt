@@ -11,5 +11,5 @@ data class Version(
     /**
      * 用于显示版本图片的drawable资源
      */
-    @DrawableRes val res: Int
+    @field:DrawableRes val res: Int
 )

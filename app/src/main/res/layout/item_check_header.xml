@@ -23,7 +23,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_sss"/>
+                android:src="@drawable/rank_sss"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/music_icon_fc"/>
 
         </LinearLayout>
 
@@ -37,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_fc"/>
+                android:src="@drawable/music_icon_ap"/>
 
         </LinearLayout>
 
@@ -51,21 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_ap"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/mmd_player_rtsong_fsd"/>
+                android:src="@drawable/music_icon_fdx"/>
 
         </LinearLayout>
     </LinearLayout>

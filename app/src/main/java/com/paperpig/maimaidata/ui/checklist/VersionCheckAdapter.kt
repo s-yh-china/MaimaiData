@@ -125,25 +125,16 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
             holder.itemView.setOnClickListener {
                 SongDetailActivity.actionStart(holder.itemView.context, data)
             }
-            holder.songJacket.apply {
-                setBackgroundColor(
-                    ContextCompat.getColor(
-                        holder.itemView.context, R.color.master
-                    )
-                )
-                GlideApp.with(holder.itemView.context)
-                    .load(MaimaiDataClient.IMAGE_BASE_URL + data.songData.imageUrl)
-                    .into(this)
-            }
 
+            holder.songJacket.apply {
+                setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.master))
+                GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.songData.imageUrl).into(this)
+            }
 
             recordList.find { it.songId == data.songData.id }
                 ?.let { record ->
                     holder.songJacket.colorFilter =
-                        PorterDuffColorFilter(
-                            Color.argb(128, 128, 128, 128),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
+                        PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
                     when (displayMode) {
                         0 -> {
                             GlideApp.with(holder.itemView.context).load(record.getRankIcon())
@@ -186,14 +177,14 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0) return TYPE_HEADER
+        if (position == 0) {
+            return TYPE_HEADER
+        }
         var count = 0
         for (groupDatum in groupData) {
             val size = groupDatum.value.size + 1
             if (position - 1 < count + size) {
-                return if (position - 1 == count) {
-                    TYPE_LEVEL
-                } else TYPE_NORMAL
+                return if (position - 1 == count) TYPE_LEVEL else TYPE_NORMAL
             }
             count += size
         }
@@ -215,7 +206,6 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
         versionSelect = version
         groupData = getFormatData()
         notifyDataSetChanged()
-
     }
 
     private fun getSongAt(position: Int): SongWithChartsEntity {
@@ -223,9 +213,7 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
         for (groupDatum in groupData) {
             val size = groupDatum.value.size + 1
             if (position - 1 < count + size) {
-                return if (position - 1 == count) {
-                    groupDatum.value[0]
-                } else groupDatum.value[position - count - 1 - 1]
+                return if (position - 1 == count) groupDatum.value[0] else groupDatum.value[position - count - 1 - 1]
             }
             count += size
         }

@@ -11,8 +11,7 @@ import com.bumptech.glide.Glide
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.model.Version
 
-class VersionArrayAdapter(context: Context?, resource: Int, val list: List<Version>?) :
-    ArrayAdapter<Version>(context!!, resource, list!!) {
+class VersionArrayAdapter(context: Context, resource: Int, val list: List<Version>) : ArrayAdapter<Version>(context, resource, list) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return initView(position, convertView, parent)

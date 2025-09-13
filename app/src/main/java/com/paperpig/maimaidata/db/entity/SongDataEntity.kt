@@ -79,16 +79,15 @@ data class SongDataEntity(
     @IgnoredOnParcel
     @Ignore
     @ColorRes
-    val strokeColor: Int =
-        when (genre) {
-            "流行&动漫" -> R.color.pop_stroke
-            "niconico & VOCALOID" -> R.color.vocal_stroke
-            "东方Project" -> R.color.touhou_stroke
-            "其他游戏" -> R.color.variety_stroke
-            "舞萌" -> R.color.maimai_stroke
-            "宴·会·场" -> R.color.utage_stroke
-            else -> R.color.gekichuni_stroke
-        }
+    val strokeColor: Int = when (genre) {
+        "流行&动漫" -> R.color.pop_stroke
+        "niconico & VOCALOID" -> R.color.vocal_stroke
+        "东方Project" -> R.color.touhou_stroke
+        "其他游戏" -> R.color.variety_stroke
+        "舞萌" -> R.color.maimai_stroke
+        "宴·会·场" -> R.color.utage_stroke
+        else -> R.color.gekichuni_stroke
+    }
 }
 
 

@@ -40,12 +40,12 @@ data class ChartStatsEntity(
     val stdDev: Double?,
 
     // 评级分布
-    @TypeConverters(ListIntConverter::class)
+    @field:TypeConverters(ListIntConverter::class)
     val dist: List<Int>?,
 
     // Full Combo 分布
     @ColumnInfo(name = "fc_dist")
-    @TypeConverters(ListIntConverter::class)
+    @field:TypeConverters(ListIntConverter::class)
     val fcDist: List<Int>?
 )
 

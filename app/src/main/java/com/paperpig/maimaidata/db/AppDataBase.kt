@@ -40,12 +40,8 @@ abstract class AppDataBase : RoomDatabase() {
         }
 
         fun init(context: Context): AppDataBase {
-            instance = Room.databaseBuilder(
-                context.applicationContext,
-                AppDataBase::class.java,
-                DATABASE_NAME
-            )
-                .fallbackToDestructiveMigration(BuildConfig.DEBUG)
+            instance = Room.databaseBuilder(context.applicationContext, AppDataBase::class.java, DATABASE_NAME)
+                .fallbackToDestructiveMigration(true)
                 .addCallback(object : Callback() {
                     override fun onDestructiveMigration(connection: SQLiteConnection) {
                         SpUtil.setDataVersion("0")
