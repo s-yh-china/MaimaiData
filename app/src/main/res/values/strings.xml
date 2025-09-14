@@ -105,6 +105,7 @@
     <string name="file_saved_to_path">文件已保存至%1$s目录</string>
     <string name="version_query">版本进度</string>
     <string name="level_query">等级进度</string>
+    <string name="genre_query">分类进度</string>
     <string name="switch_display">切换显示</string>
     <string name="name_plate_achieved">%d/%d</string>
 

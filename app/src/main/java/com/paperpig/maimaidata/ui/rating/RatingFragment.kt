@@ -21,6 +21,7 @@ import com.paperpig.maimaidata.network.server.HttpServerService
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
 import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.ui.about.SettingsActivity
+import com.paperpig.maimaidata.ui.checklist.GenreCheckActivity
 import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
 import com.paperpig.maimaidata.utils.ConvertUtils
@@ -84,6 +85,10 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
         binding.proberVersionCheckBtn.setOnClickListener {
             startActivity(Intent(context, VersionCheckActivity::class.java))
+        }
+
+        binding.proberGenreCheckBtn.setOnClickListener {
+            startActivity(Intent(context, GenreCheckActivity::class.java))
         }
 
         binding.calculateBtn.setOnClickListener {

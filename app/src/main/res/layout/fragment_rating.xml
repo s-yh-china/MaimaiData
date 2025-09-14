@@ -65,11 +65,20 @@
                 android:id="@+id/prober_level_check_btn"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/level_query"
-                app:layout_constraintBottom_toBottomOf="@+id/prober_version_check_btn"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/prober_genre_check_btn"
                 app:layout_constraintStart_toEndOf="@id/prober_version_check_btn"
+                app:layout_constraintTop_toTopOf="@id/prober_version_check_btn"/>
+
+            <Button
+                android:id="@+id/prober_genre_check_btn"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/genre_query"
+                app:layout_constraintStart_toEndOf="@id/prober_level_check_btn"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/prober_version_check_btn"/>
 
             <Button

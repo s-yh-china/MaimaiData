@@ -34,6 +34,8 @@ object SpUtil {
 
     private const val KEY_LAST_QUERY_LEVEL = "last_query_level"
     private const val KEY_LAST_QUERY_VERSION = "last_query_version"
+    private const val KEY_LAST_QUERY_GENRE = "last_query_genre"
+    private const val KEY_LAST_QUERY_GENRE_DIFFICULTY = "last_query_genre_difficulty"
 
     private const val KEY_VERSION = "db_version"
     private const val KEY_LAST_UPDATE_TIME = "chart_stats_db_last_update_time"
@@ -67,6 +69,18 @@ object SpUtil {
 
     fun getLastQueryVersion(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION, 0)
 
+    fun saveLastQueryGenre(index: Int) {
+        userInfoPrefs.edit { putInt(KEY_LAST_QUERY_GENRE, index) }
+    }
+
+    fun getLastQueryGenre(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE, 0)
+
+    fun saveLastQueryDifficulty(index: Int) {
+        userInfoPrefs.edit { putInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, index) }
+    }
+
+    fun getLastQueryDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, 0)
+
     // ================= SONG INFO =================
 
     fun isFavorite(id: String): Boolean = songInfoPrefs.getBoolean(id, false)
@@ -76,9 +90,7 @@ object SpUtil {
     }
 
     fun getFavIds(): List<String> {
-        return songInfoPrefs.all
-            .filter { it.value == true }
-            .keys.toList()
+        return songInfoPrefs.all.filter { it.value == true }.keys.toList()
     }
 
     // ================= VERSION INFO =================
