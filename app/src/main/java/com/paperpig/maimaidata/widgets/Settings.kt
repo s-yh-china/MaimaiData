@@ -25,7 +25,7 @@ object Settings {
     private const val DEFAULT_SHOW_ALIAS = true
 
     private const val KEY_NICKNAME = "nickname"
-    private const val DEFAULT_NICKNAME = "匿名用户"
+    private const val DEFAULT_NICKNAME = "MAIMAI"
 
     private const val KEY_SELECT_DIFFICULTIES = "select_difficulties"
     private val DEFAULT_SELECT = setOf("2", "3", "4")

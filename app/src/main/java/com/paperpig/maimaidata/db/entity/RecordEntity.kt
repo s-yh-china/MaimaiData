@@ -4,48 +4,37 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import com.paperpig.maimaidata.R
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "record")
 @Parcelize
 data class RecordEntity(
-    // 主键（自增长，默认值 0）
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    // 完成率
     @ColumnInfo(name = "achievements")
     val achievements: Double,
 
-    // DX分数
     @ColumnInfo(name = "dx_score")
     val dxScore: Int,
 
-    // 全连状态
     @ColumnInfo(name = "fc")
     val fc: String,
 
-    // 同步状态
     @ColumnInfo(name = "fs")
     val fs: String,
 
-    // 等级
     @ColumnInfo(name = "level")
     val level: String,
 
-    // 等级索引
-    @SerializedName("level_index")
+    // 难度索引
     @ColumnInfo(name = "level_index")
     val levelIndex: Int,
 
-    // 评级
     @ColumnInfo(name = "rate")
     val rate: String,
 
-    // 歌曲ID
-    @SerializedName("song_id")
     @ColumnInfo(name = "song_id", index = true)
     val songId: Int,
 ) : Parcelable {

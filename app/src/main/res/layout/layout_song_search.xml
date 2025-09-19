@@ -241,7 +241,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="version_maimai_checkbox,version_green_checkbox,version_orange_checkbox,version_pink_checkbox,version_murasaki_checkbox,version_milk_checkbox,version_finale_checkbox,version_dx_checkbox,version_dx2021_checkbox,version_dx2022_checkbox,version_dx2023_checkbox,version_dx2024_checkbox,version_dx2025_checkbox"
+            app:constraint_referenced_ids="version_maimai_checkbox,version_green_checkbox,version_green_plus_checkbox,version_orange_checkbox,version_orange_plus_checkbox,version_pink_checkbox,version_pink_plus_checkbox,version_murasaki_checkbox,version_murasaki_plus_checkbox,version_milk_checkbox,version_milk_plus_checkbox,version_finale_checkbox,version_dx_checkbox,version_dx2021_checkbox,version_dx2022_checkbox,version_dx2023_checkbox,version_dx2024_checkbox,version_dx2025_checkbox"
             app:flow_horizontalBias="0"
             app:flow_horizontalGap="10dp"
             app:flow_horizontalStyle="packed"
@@ -262,9 +262,19 @@
             android:text="@string/green"/>
 
         <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/version_green_plus_checkbox"
+            style="@style/SearchCheckBoxStyle"
+            android:text="@string/green_plus"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/version_orange_checkbox"
             style="@style/SearchCheckBoxStyle"
             android:text="@string/orange"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/version_orange_plus_checkbox"
+            style="@style/SearchCheckBoxStyle"
+            android:text="@string/orange_plus"/>
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/version_pink_checkbox"
@@ -272,14 +282,29 @@
             android:text="@string/pink"/>
 
         <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/version_pink_plus_checkbox"
+            style="@style/SearchCheckBoxStyle"
+            android:text="@string/pink_plus"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/version_murasaki_checkbox"
             style="@style/SearchCheckBoxStyle"
             android:text="@string/murasaki"/>
 
         <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/version_murasaki_plus_checkbox"
+            style="@style/SearchCheckBoxStyle"
+            android:text="@string/murasaki_plus"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/version_milk_checkbox"
             style="@style/SearchCheckBoxStyle"
             android:text="@string/milk"/>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/version_milk_plus_checkbox"
+            style="@style/SearchCheckBoxStyle"
+            android:text="@string/milk_plus"/>
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/version_finale_checkbox"

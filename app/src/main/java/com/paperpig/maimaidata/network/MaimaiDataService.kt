@@ -3,23 +3,15 @@ package com.paperpig.maimaidata.network
 import com.google.gson.JsonElement
 import io.reactivex.Observable
 import retrofit2.http.GET
-import retrofit2.http.Headers
+import retrofit2.http.Path
 
-/**
- * @author BBS
- * @since  2021-05-13
- */
 interface MaimaiDataService {
-    /**
-     * fetch update info from a noob's server
-     */
-    @Headers("urlName:https://maimaidata.violetc.net/")
     @GET("/update.json")
     fun getUpdateInfo(): Observable<JsonElement>
 
-    /**
-     * get chart_status from diving-fish.com
-     */
-    @GET("/api/maimaidxprober/chart_stats")
-    fun getChartStatus(): Observable<JsonElement>
+    @GET("/data_version.json")
+    fun getDataVersion(): Observable<JsonElement>
+
+    @GET("/data/chart_stats/{version}.json")
+    fun getChartStatus(@Path("version") version: String): Observable<JsonElement>
 }

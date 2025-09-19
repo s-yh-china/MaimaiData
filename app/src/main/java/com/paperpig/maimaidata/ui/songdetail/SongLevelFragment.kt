@@ -13,6 +13,7 @@ import com.paperpig.maimaidata.databinding.FragmentSongLevelBinding
 import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.repository.ChartStatsRepository
 import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.utils.Constants
@@ -67,36 +68,30 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         }
         val chart = data.charts[position]
         val songData = data.songData
-        // 显示拟合定数
         ChartStatsRepository.getInstance(AppDataBase.getInstance().chartStatsDao())
             .getChartStatsBySongIdAndDifficultyIndex(songData.id, position).observe(requireActivity()) {
-                // 没有拟合定数数据显示为"-"
-                val fitDiff = it?.fitDiff?.let {
-                    BigDecimal(it).setScale(2, RoundingMode.HALF_UP).toString()
-                } ?: "-"
-
-                binding.songFitDiff.text = fitDiff
+                binding.songFitDiff.text = it?.fitDifficulty?.toString() ?: "-"
             }
 
-        val totalScore = (chart.notesTap + chart.notesTouch) + chart.notesHold * 2 + chart.notesSlide * 3 + chart.notesBreak * 5
+        val totalScore = (chart.noteTap + chart.noteTouch) + chart.noteHold * 2 + chart.noteSlide * 3 + chart.noteBreak * 5
         val format = DecimalFormat("0.#####%")
         format.roundingMode = RoundingMode.DOWN
 
-        chart.oldDs?.let {
-            if (it < chart.ds) {
+        chart.oldInternalLevel?.let {
+            if (it < chart.internalLevel) {
                 binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_red))
-                binding.songLevel.text = getString(R.string.inner_level_up, chart.ds)
+                binding.songLevel.text = getString(R.string.inner_level_up, chart.internalLevel)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
-            } else if (it > chart.ds) {
+            } else if (it > chart.internalLevel) {
                 binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_green))
-                binding.songLevel.text = getString(R.string.inner_level_down, chart.ds)
+                binding.songLevel.text = getString(R.string.inner_level_down, chart.internalLevel)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else {
-                binding.songLevel.text = "${chart.ds}"
+                binding.songLevel.text = "${chart.internalLevel}"
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             }
         } ?: run {
-            binding.songLevel.text = chart.ds.toString()
+            binding.songLevel.text = chart.internalLevel.toString()
         }
 
         binding.chartDesigner.apply {
@@ -106,15 +101,15 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         }
 
         binding.chartView.setMaxValues((MaimaiDataApplication.instance.maxNotesStats?.let {
-            listOf(it.total, it.tap, it.hold, it.slide, it.touch, it.break_)
+            listOf(it.total, it.tap, it.hold, it.slide, it.touch, it.`break`)
         }) ?: emptyList())
         val noteValueList = listOf(
-            chart.notesTotal,
-            chart.notesTap,
-            chart.notesHold,
-            chart.notesSlide,
-            chart.notesTouch,
-            chart.notesBreak
+            chart.noteTotal,
+            chart.noteTap,
+            chart.noteHold,
+            chart.noteSlide,
+            chart.noteTouch,
+            chart.noteBreak
         )
         binding.chartView.setValues(noteValueList)
 
@@ -129,13 +124,13 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         binding.slideGreatScore.text = format.format(3f / totalScore * 0.2)
         binding.slideGoodScore.text = format.format(3f / totalScore * 0.5)
         binding.slideMissScore.text = format.format(3f / totalScore)
-        binding.breakGreat4xScore.text = format.format(5f / totalScore * 0.2 + (0.01 / chart.notesBreak) * 0.6)
-        binding.breakGreat3xScore.text = format.format(5f / totalScore * 0.4 + (0.01 / chart.notesBreak) * 0.6)
-        binding.breakGreat25xScore.text = format.format(5f / totalScore * 0.5 + (0.01 / chart.notesBreak) * 0.6)
-        binding.breakGoodScore.text = format.format(5f / totalScore * 0.6 + (0.01 / chart.notesBreak) * 0.7)
-        binding.breakMissScore.text = format.format(5f / totalScore + 0.01 / chart.notesBreak)
-        binding.break50Score.text = format.format(0.01 / chart.notesBreak * 0.25)
-        binding.break100Score.text = (format.format((0.01 / chart.notesBreak) * 0.5))
+        binding.breakGreat4xScore.text = format.format(5f / totalScore * 0.2 + (0.01 / chart.noteBreak) * 0.6)
+        binding.breakGreat3xScore.text = format.format(5f / totalScore * 0.4 + (0.01 / chart.noteBreak) * 0.6)
+        binding.breakGreat25xScore.text = format.format(5f / totalScore * 0.5 + (0.01 / chart.noteBreak) * 0.6)
+        binding.breakGoodScore.text = format.format(5f / totalScore * 0.6 + (0.01 / chart.noteBreak) * 0.7)
+        binding.breakMissScore.text = format.format(5f / totalScore + 0.01 / chart.noteBreak)
+        binding.break50Score.text = format.format(0.01 / chart.noteBreak * 0.25)
+        binding.break100Score.text = (format.format((0.01 / chart.noteBreak) * 0.5))
 
         val notesAchievementStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_stroke) as GradientDrawable
         val notesAchievementInnerStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_inner_stroke) as GradientDrawable
@@ -144,18 +139,18 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
 
         notesAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), songData.bgColor))
 
-        if (chart.type == Constants.CHART_TYPE_DX) {
-            binding.finaleGroup.visibility = View.GONE
-        } else if (chart.type == Constants.CHART_TYPE_SD) {
+        if (!songData.version.contains("舞萌")) {
             binding.finaleGroup.visibility = View.VISIBLE
             binding.finaleAchievement.text =
                 String.format(
                     getString(R.string.maimai_achievement_format),
                     BigDecimal(
-                        (chart.notesTap * 500 + chart.notesHold * 1000 + chart.notesSlide * 1500 + chart.notesBreak * 2600) * 1.0 /
-                            (chart.notesTap * 500 + chart.notesHold * 1000 + chart.notesSlide * 1500 + chart.notesBreak * 2500) * 100
+                        (chart.noteTap * 500 + chart.noteHold * 1000 + chart.noteSlide * 1500 + chart.noteBreak * 2600) * 1.0 /
+                            (chart.noteTap * 500 + chart.noteHold * 1000 + chart.noteSlide * 1500 + chart.noteBreak * 2500) * 100
                     ).setScale(2, RoundingMode.DOWN)
                 )
+        } else {
+            binding.finaleGroup.visibility = View.GONE
         }
     }
 

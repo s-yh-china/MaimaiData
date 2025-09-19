@@ -7,61 +7,51 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.paperpig.maimaidata.R
+import com.paperpig.maimaidata.model.SongType
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "song_data")
 data class SongDataEntity(
-    // 主键（歌曲id）
     @PrimaryKey
     val id: Int,
 
-    // 标题
+    @ColumnInfo(name = "sort_id")
+    val sortId: Int,
+
     val title: String,
 
-    // 标题假名（有汉字时）
     @ColumnInfo(name = "title_kana")
     val titleKana: String,
 
-    // 作曲家
+    val type: SongType,
+
+    @ColumnInfo(name = "release_time")
+    val releaseTime: Int,
+
     val artist: String,
 
-    // 图片地址
-    @ColumnInfo(name = "image_url")
-    val imageUrl: String,
-
-    // 歌曲流派
     val genre: String,
 
-    // 歌曲流派（日）
-    @ColumnInfo(name = "cat_code")
-    val catCode: String,
-
-    // bpm
     val bpm: Int,
 
-    // 添加版本
-    val from: String,
-
-    // 标准 or DX
-    val type: String,
-
-    // 添加版本（日）
     val version: String,
 
-    // 是否为新版本歌曲
+    @ColumnInfo(name = "jp_version")
+    val jpVersion: String,
+
     @ColumnInfo(name = "is_new")
     val isNew: Boolean,
 
-    // 宴会场分类汉字
+    @ColumnInfo(name = "image_url")
+    val imageUrl: String,
+
     val kanji: String?,
 
-    // 宴会场说明
     val comment: String?,
 
-    // 双人协谱标记
-    val buddy: String?,
+    val buddy: Boolean?,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore
@@ -73,7 +63,8 @@ data class SongDataEntity(
         "其他游戏" -> R.color.variety
         "舞萌" -> R.color.maimai
         "宴·会·场" -> R.color.utage
-        else -> R.color.gekichuni
+        "音击&中二节奏" -> R.color.gekichuni
+        else -> R.color.white
     }
 
     @IgnoredOnParcel
@@ -86,7 +77,8 @@ data class SongDataEntity(
         "其他游戏" -> R.color.variety_stroke
         "舞萌" -> R.color.maimai_stroke
         "宴·会·场" -> R.color.utage_stroke
-        else -> R.color.gekichuni_stroke
+        "音击&中二节奏" -> R.color.gekichuni_stroke
+        else -> R.color.white
     }
 }
 

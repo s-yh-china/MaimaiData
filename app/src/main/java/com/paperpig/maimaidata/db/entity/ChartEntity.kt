@@ -19,51 +19,41 @@ import kotlinx.parcelize.Parcelize
     )]
 )
 data class ChartEntity(
-    // 主键（自增长，默认值 0）
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    // 外键关联 SongDataEntity.id
-    @ColumnInfo(name = "song_id", index = true) // 添加索引提升查询性能
+    @ColumnInfo(name = "song_id", index = true)
     val songId: Int,
 
-    // 难度类型（如BASIC/ADVANCED/EXPERT/MASTER/REMASTER）
+    val charter: String,
+
+    val level: String,
+
+    @ColumnInfo(name = "internal_level")
+    val internalLevel: Double,
+
+    @ColumnInfo(name = "old_internal_level")
+    val oldInternalLevel: Double?,
+
     @ColumnInfo(name = "difficulty_type")
     val difficultyType: DifficultyType,
 
-    // 标准 or DX
-    val type: String,
+    @ColumnInfo(name = "note_tap")
+    val noteTap: Int,
 
-    // 当前定数
-    val ds: Double,
+    @ColumnInfo(name = "note_hold")
+    val noteHold: Int,
 
-    // 旧版本定数
-    @ColumnInfo(name = "old_ds")
-    val oldDs: Double?,
+    @ColumnInfo(name = "note_slide")
+    val noteSlide: Int,
 
-    // 难度等级（如 "12"）
-    val level: String,
+    @ColumnInfo(name = "note_touch")
+    val noteTouch: Int,
 
-    // 谱面作者
-    val charter: String,
+    @ColumnInfo(name = "note_break")
+    val noteBreak: Int,
 
-    // 音符统计（显式指定列名）
-    @ColumnInfo(name = "notes_tap")
-    val notesTap: Int,
-
-    @ColumnInfo(name = "notes_hold")
-    val notesHold: Int,
-
-    @ColumnInfo(name = "notes_slide")
-    val notesSlide: Int,
-
-    @ColumnInfo(name = "notes_touch")
-    val notesTouch: Int,
-
-    @ColumnInfo(name = "notes_break")
-    val notesBreak: Int,
-
-    @ColumnInfo(name = "notes_total")
-    val notesTotal: Int
+    @ColumnInfo(name = "note_total")
+    val noteTotal: Int
 ) : Parcelable
 

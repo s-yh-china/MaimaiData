@@ -17,7 +17,7 @@ data class DsSongData(
     /**
      * 谱面类型
      */
-    val type: String,
+    val type: SongType,
 
     /**
      * 曲封url
@@ -32,5 +32,5 @@ data class DsSongData(
     /**
      * 定数
      */
-    val ds: Double
+    val internalLevel: Double
 )

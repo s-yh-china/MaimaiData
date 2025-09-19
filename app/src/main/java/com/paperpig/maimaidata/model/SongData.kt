@@ -7,40 +7,58 @@ import java.io.Serializable
 
 @Parcelize
 data class SongData(
-    @SerializedName("basic_info")
-    val basicInfo: BasicInfo,
-    val charts: List<Chart>,
-    val ds: List<Double>,
-    @SerializedName("old_ds")
-    var oldDs: List<Double>,
-    val id: String,
-    var level: List<String>,
+    val id: Int,
+    @SerializedName("sort_id")
+    val sortId: Int?,
     var title: String,
     @SerializedName("title_kana")
     var titleKana: String,
-    val type: String,
-    var alias: List<String>?,
+    val type: SongType,
+    @SerializedName("release_time")
+    val releaseTime: Int,
+    var alias: List<String>,
+    @SerializedName("basic_info")
+    val basicInfo: BasicInfo,
+    val charts: List<Chart>,
 ) : Parcelable {
-    class BasicInfo(
-        val artist: String,
+    data class BasicInfo(
         val bpm: Int,
-        var from: String,
-        var genre: String,
-        var catcode: String,
+        val artist: String,
+        val genre: String,
+        val version: String,
+        @SerializedName("jp_version")
+        val jpVersion: String,
         @SerializedName("is_new")
         val isNew: Boolean,
-        val title: String,
         @SerializedName("image_url")
-        var imageUrl: String,
-        var version: String,
-        var kanji: String?,
-        var comment: String?,
-        var buddy: String?
-    ) : Serializable
+        val imageUrl: String,
+        @SerializedName("utage_info")
+        val utageInfo: UtageInfo?
+    ) : Serializable {
+        data class UtageInfo(
+            val kanji: String,
+            val comment: String,
+            val buddy: Boolean
+        ) : Serializable
+    }
 
-    class Chart(
+    data class Chart(
         val charter: String,
-        val notes: List<Int>
-    ) : Serializable
+        val level: String,
+        @SerializedName("internal_level")
+        val internalLevel: Double,
+        @SerializedName("old_internal_level")
+        val oldInternalLevel: Double?,
+        val notes: NoteInfo
+    ) : Serializable {
+        data class NoteInfo(
+            val tap: Int,
+            val hold: Int,
+            val slide: Int,
+            val torch: Int?,
+            @SerializedName("break")
+            val `break`: Int
+        ) : Serializable
+    }
 }
 

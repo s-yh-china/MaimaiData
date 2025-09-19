@@ -15,14 +15,11 @@ import androidx.room.PrimaryKey
     )]
 )
 data class AliasEntity(
-    // 主键（自增长，默认值 0）
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    // 外键关联 SongDataEntity.id
-    @ColumnInfo(name = "song_id", index = true) // 添加索引提升查询性能
+    @ColumnInfo(name = "song_id", index = true)
     val songId: Int,
 
-    // 别名信息
     val alias: String
 )

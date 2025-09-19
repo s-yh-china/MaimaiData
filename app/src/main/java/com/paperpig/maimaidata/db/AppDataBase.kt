@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import androidx.sqlite.SQLiteConnection
-import com.paperpig.maimaidata.BuildConfig
 import com.paperpig.maimaidata.db.AppDataBase.Companion.DATABASE_VERSION
 import com.paperpig.maimaidata.db.dao.*
 import com.paperpig.maimaidata.db.entity.*
@@ -16,7 +14,6 @@ import com.paperpig.maimaidata.utils.SpUtil
     entities = [SongDataEntity::class, ChartEntity::class, AliasEntity::class, RecordEntity::class, ChartStatsEntity::class],
     version = DATABASE_VERSION
 )
-@TypeConverters(ListIntConverter::class)
 abstract class AppDataBase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun chartDao(): ChartDao
@@ -26,7 +23,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun chartStatsDao(): ChartStatsDao
 
     companion object {
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "maimaidata_db"
 
         @Volatile

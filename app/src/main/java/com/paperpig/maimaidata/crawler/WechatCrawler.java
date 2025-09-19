@@ -1,12 +1,14 @@
 package com.paperpig.maimaidata.crawler;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import androidx.core.util.Predicate;
 import com.paperpig.maimaidata.db.entity.RecordEntity;
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity;
+import com.paperpig.maimaidata.model.SongType;
 import com.paperpig.maimaidata.repository.RecordRepository;
 import com.paperpig.maimaidata.repository.SongWithChartRepository;
-import com.paperpig.maimaidata.utils.Constants;
+
 import okhttp3.Call;
 import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
@@ -167,14 +169,14 @@ public class WechatCrawler {
 
                 Element superParentRow = nameElement.parent().parent().parent();
                 Element typeImg = superParentRow.select("img.music_kind_icon").first();
-                String type = Constants.CHART_TYPE_DX;
+                SongType type = SongType.DX;
                 if (typeImg != null) {
                     String src = typeImg.attr("src");
                     if (src.contains("standard")) {
-                        type = Constants.CHART_TYPE_SD;
+                        type = SongType.SD;
                     }
                 } else if (isUtage) {
-                    type = Constants.CHART_TYPE_UTAGE;
+                    type = SongType.UTAGE;
                 } else {
                     Log.w(TAG, "无法获取铺面类型");
                 }
@@ -209,7 +211,7 @@ public class WechatCrawler {
                     continue;
                 }
 
-                boolean isBuddy = isUtage && song_entity.getSongData().getBuddy() != null;
+                boolean isBuddy = isUtage && Boolean.TRUE.equals(song_entity.getSongData().getBuddy());
                 String level = song_entity.getCharts().get(levelIndex).getLevel();
 
                 String fc = "";
@@ -455,13 +457,16 @@ public class WechatCrawler {
         client = builder.build();
     }
 
+    @SuppressLint("CustomX509TrustManager")
     private static void ignoreCertBuilder(OkHttpClient.Builder builder) {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                @SuppressLint("TrustAllX509TrustManager")
                 @Override
                 public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                 }
 
+                @SuppressLint("TrustAllX509TrustManager")
                 @Override
                 public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                 }

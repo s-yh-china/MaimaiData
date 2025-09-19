@@ -56,7 +56,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
     @Query(
         """
         SELECT * FROM song_data
-        WHERE (:includeUtage = 1 OR genre != '${Constants.GENRE_UTAGE}')
+        WHERE (:includeUtage = 1 OR type != '${Constants.GENRE_UTAGE}')
         ORDER BY 
             CASE WHEN :ascending = 1 THEN id END ASC,
             CASE WHEN :ascending = 0 THEN id END DESC
@@ -91,7 +91,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
      * @param selectLevel 筛选的谱面等级（如 "8+", "9" 等），为 null 表示不筛选。
      *        - 如果为 "ALL"，则匹配任意等级。
      *        - 否则仅匹配指定等级，并可进一步通过 sequencing 限定难度类型。
-     * @param ds 筛选的定数（难度值），为 null 表示不筛选。
+     * @param internalLevel 筛选的定数（难度值），为 null 表示不筛选。
      * @param isSearchFavor 是否只搜索收藏的歌曲。
      *        - 若为 true，则只包含在 favIdList 中的歌曲。
      *        - 若为 false，则不限制。
@@ -154,7 +154,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
             -- 版本匹配
             AND (
                 :isVersionListEmpty = 1 
-                OR `from` IN (:versionList)
+                OR `version` IN (:versionList)
             )
 
             -- 等级匹配
@@ -180,13 +180,13 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
 
             -- 定数匹配
             AND (
-                :ds IS NULL 
+                :internalLevel IS NULL 
                 OR EXISTS (
                     SELECT 1
                     FROM chart 
                     WHERE 
                         chart.song_id = song_data.id 
-                        AND chart.ds = :ds
+                        AND chart.internal_level = :internalLevel
                     )
             )
 
@@ -205,7 +205,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
         versionList: List<String>,
         sequencing: DifficultyType?,
         selectLevel: String?,
-        ds: Double?,
+        internalLevel: Double?,
         isSearchFavor: Boolean,
         favIdList: List<String>,
         isMatchAlias: Boolean,

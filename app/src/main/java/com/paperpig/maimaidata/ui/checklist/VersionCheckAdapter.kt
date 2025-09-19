@@ -36,7 +36,7 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
     private var groupData: Map<String, List<SongWithChartsEntity>> = mapOf()
 
     private fun getFormatData(): Map<String, List<SongWithChartsEntity>> {
-        return dataList.filter { it.songData.from == versionSelect }.sortedByDescending { it.charts[3].ds }.groupBy { it.charts[3].level }
+        return dataList.filter { it.songData.version == versionSelect }.sortedByDescending { it.charts[3].internalLevel }.groupBy { it.charts[3].level }
     }
 
     companion object {

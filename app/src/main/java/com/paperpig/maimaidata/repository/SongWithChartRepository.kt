@@ -66,7 +66,7 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
      * @param versionList 版本列表，用于筛选特定版本的歌曲。如果为空，则不按版本筛选。
      * @param selectLevel 可选的难度等级，用于筛选特定难度等级的谱面。可以为 null，表示不按难度等级筛选。
      * @param sequencing 可选的排序信息，用于排序指定难度的歌曲。会提取 "EXPERT" 或 "MASTER" 前缀进行筛选。可以为 null，表示默认排序。
-     * @param ds 可选的定数值，用于筛选特定定数值的谱面。可以为 null，表示不按ds值筛选。
+     * @param internalLevel 可选的定数值，用于筛选特定定数值的谱面。可以为 null，表示不按ds值筛选。
      * @param isFavor 是否搜索收藏的歌曲，设置为true时，使用sp文件中收藏歌曲的id进行查询
      * @param isMatchAlias 是否匹配别名搜索，用于匹配歌曲别名
      * @return 包含符合搜索条件的 SongWithChartsEntity 列表的 LiveData。
@@ -77,7 +77,7 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         versionList: List<String>,
         selectLevel: String?,
         sequencing: String?,
-        ds: Double?,
+        internalLevel: Double?,
         isFavor: Boolean,
         isMatchAlias: Boolean,
         isMatchCharter: Boolean,
@@ -91,7 +91,7 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
             versionList = expandFromList(versionList),
             selectLevel = selectLevel,
             sequencing = getDifficultyPrefix(sequencing),
-            ds = ds,
+            internalLevel = internalLevel,
             isSearchFavor = isFavor,
             favIdList = SpUtil.getFavIds(),
             isMatchAlias = isMatchAlias,
@@ -104,10 +104,10 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
                 list.sortedByDescending { it.songData.id }
             } else {
                 when (sequencing) {
-                    "EXPERT-升序" -> list.sortedBy { it.charts.getOrNull(2)?.ds }
-                    "EXPERT-降序" -> list.sortedByDescending { it.charts.getOrNull(2)?.ds }
-                    "MASTER-升序" -> list.sortedBy { it.charts.getOrNull(3)?.ds }
-                    "MASTER-降序" -> list.sortedByDescending { it.charts.getOrNull(3)?.ds }
+                    "EXPERT-升序" -> list.sortedBy { it.charts.getOrNull(2)?.internalLevel }
+                    "EXPERT-降序" -> list.sortedByDescending { it.charts.getOrNull(2)?.internalLevel }
+                    "MASTER-升序" -> list.sortedBy { it.charts.getOrNull(3)?.internalLevel }
+                    "MASTER-降序" -> list.sortedByDescending { it.charts.getOrNull(3)?.internalLevel }
                     "RE:MASTER-升序" -> list.sortedWith(remasterAscComparator)
                     "RE:MASTER-降序" -> list.sortedWith(remasterDescComparator)
                     else -> list.sortedByDescending { it.songData.id }
@@ -127,21 +127,13 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
     }
 
     private fun expandFromList(versionList: List<String>): List<String> {
-        val result = mutableListOf<String>()
-        for (item in versionList) {
+        return versionList.flatMap { item ->
             if (item == "maimai") {
-                result.add(item)
-                result.add("$item PLUS")
-            } else if (item == "FiNALE") {
-                result.add("maimai $item")
-            } else if (!item.startsWith("舞萌") && !item.contains("FiNALE")) {
-                result.add("maimai $item PLUS")
-                result.add("maimai $item")
+                listOf(item, "$item PLUS")
             } else {
-                result.add(item)
+                listOf(item)
             }
         }
-        return result
     }
 
     private val remasterComparator = Comparator<SongWithChartsEntity> { a, b ->
@@ -153,7 +145,7 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         }
     }
 
-    private val remasterAscComparator = remasterComparator.thenBy { it.charts.getOrNull(4)?.ds }
-    private val remasterDescComparator = remasterComparator.thenByDescending { it.charts.getOrNull(4)?.ds }
+    private val remasterAscComparator = remasterComparator.thenBy { it.charts.getOrNull(4)?.internalLevel }
+    private val remasterDescComparator = remasterComparator.thenByDescending { it.charts.getOrNull(4)?.internalLevel }
 }
 

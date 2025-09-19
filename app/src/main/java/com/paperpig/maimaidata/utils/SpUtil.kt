@@ -79,7 +79,7 @@ object SpUtil {
         userInfoPrefs.edit { putInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, index) }
     }
 
-    fun getLastQueryDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, 0)
+    fun getLastQueryDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, 3)
 
     // ================= SONG INFO =================
 

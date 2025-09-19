@@ -34,10 +34,15 @@
     <!--version-->
     <string name="maimai">maimai</string>
     <string name="green">GreeN</string>
+    <string name="green_plus">GreeN PLUS</string>
     <string name="orange">ORANGE</string>
+    <string name="orange_plus">ORANGE PLUS</string>
     <string name="pink">PiNK</string>
+    <string name="pink_plus">PiNK PLUS</string>
     <string name="murasaki">MURASAKi</string>
+    <string name="murasaki_plus">MURASAKi PLUS</string>
     <string name="milk">MiLK</string>
+    <string name="milk_plus">MiLK PLUS</string>
     <string name="finale">FiNALE</string>
     <string name="dx">舞萌DX</string>
     <string name="dx2021">舞萌DX 2021</string>

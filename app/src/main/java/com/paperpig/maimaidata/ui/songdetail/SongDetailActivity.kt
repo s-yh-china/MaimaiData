@@ -25,6 +25,7 @@ import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.repository.AliasRepository
 import com.paperpig.maimaidata.repository.RecordRepository
@@ -116,21 +117,21 @@ class SongDetailActivity : AppCompatActivity() {
             songGenre.text = songData.genre
             GlideApp.with(this@SongDetailActivity).apply {
                 when (songData.type) {
-                    Constants.CHART_TYPE_DX -> {
+                    SongType.DX -> {
                         load(R.drawable.ic_deluxe).into(binding.songType)
                     }
 
-                    Constants.CHART_TYPE_SD -> {
+                    SongType.SD -> {
                         load(R.drawable.ic_standard).into(binding.songType)
                     }
 
-                    Constants.CHART_TYPE_UTAGE -> {
+                    SongType.UTAGE -> {
                         // load(R.drawable.ic_utage).into(binding.songType) TODO find a utage icon
                     }
                 }
             }
-            setVersionImage(songAddVersion, songData.version)
-            setCnVersionImage(songAddCnVersion, songData.from)
+            setVersionImage(songAddVersion, songData.jpVersion)
+            setCnVersionImage(songAddCnVersion, songData.version)
 
             val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
                 if (isFavor) {
@@ -256,9 +257,7 @@ class SongDetailActivity : AppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence {
             return when (count) {
-                // 1个难度显示标签为宴·会·场
                 1 -> arrayOf("宴·会·场")[position]
-                // 2个难度显示便签为宴·会·场1p和2p
                 2 -> arrayOf("1p", "2p")[position]
                 4 -> arrayOf("MAS", "EXP", "ADV", "BAS")[position]
                 else -> arrayOf("Re:MAS", "MAS", "EXP", "ADV", "BAS")[position]
@@ -268,39 +267,38 @@ class SongDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home ->
-                finish()
+            android.R.id.home -> finish()
         }
         return true
     }
 
     private fun setVersionImage(view: ImageView, addVersion: String) {
-        @DrawableRes var versionDrawable = 0
-        with(addVersion) {
+        @DrawableRes val versionDrawable = with(addVersion) {
             when {
-                startsWith("100") -> versionDrawable = R.drawable.maimai
-                startsWith("110") -> versionDrawable = R.drawable.maimai_plus
-                startsWith("120") -> versionDrawable = R.drawable.maimai_green
-                startsWith("130") -> versionDrawable = R.drawable.maimai_green_plus
-                startsWith("140") -> versionDrawable = R.drawable.maimai_orange
-                startsWith("150") -> versionDrawable = R.drawable.maimai_orange_plus
-                startsWith("160") -> versionDrawable = R.drawable.maimai_pink
-                startsWith("170") -> versionDrawable = R.drawable.maimai_pink_plus
-                startsWith("180") -> versionDrawable = R.drawable.maimai_murasaki
-                startsWith("185") -> versionDrawable = R.drawable.maimai_murasaki_plus
-                startsWith("190") -> versionDrawable = R.drawable.maimai_milk
-                startsWith("195") -> versionDrawable = R.drawable.maimai_milk_plus
-                startsWith("199") -> versionDrawable = R.drawable.maimai_finale
-                startsWith("200") -> versionDrawable = R.drawable.maimaidx
-                startsWith("205") -> versionDrawable = R.drawable.maimaidx_plus
-                startsWith("210") -> versionDrawable = R.drawable.maimaidx_splash
-                startsWith("215") -> versionDrawable = R.drawable.maimaidx_splash_plus
-                startsWith("220") -> versionDrawable = R.drawable.maimaidx_universe
-                startsWith("225") -> versionDrawable = R.drawable.maimaidx_universe_plus
-                startsWith("230") -> versionDrawable = R.drawable.maimaidx_festival
-                startsWith("235") -> versionDrawable = R.drawable.maimaidx_festival_plus
-                startsWith("240") -> versionDrawable = R.drawable.maimaidx_buddies
-                startsWith("245") -> versionDrawable = R.drawable.maimaidx_buddies_plus
+                equals("maimai") -> R.drawable.maimai
+                equals("maimai PLUS") -> R.drawable.maimai_plus
+                equals("GreeN") -> R.drawable.maimai_green
+                equals("GreeN PLUS") -> R.drawable.maimai_green_plus
+                equals("ORANGE") -> R.drawable.maimai_orange
+                equals("ORANGE PLUS") -> R.drawable.maimai_orange_plus
+                equals("PiNK") -> R.drawable.maimai_pink
+                equals("PiNK PLUS") -> R.drawable.maimai_pink_plus
+                equals("MURASAKi") -> R.drawable.maimai_murasaki
+                equals("MURASAKi PLUS") -> R.drawable.maimai_murasaki_plus
+                equals("MiLK") -> R.drawable.maimai_milk
+                equals("MiLK PLUS") -> R.drawable.maimai_milk_plus
+                equals("FiNALE") -> R.drawable.maimai_finale
+                equals("maimaiでらっくす") -> R.drawable.maimaidx
+                equals("maimaiでらっくす PLUS") -> R.drawable.maimaidx_plus
+                equals("Splash") -> R.drawable.maimaidx_splash
+                equals("Splash PLUS") -> R.drawable.maimaidx_splash_plus
+                equals("UNiVERSE") -> R.drawable.maimaidx_universe
+                equals("UNiVERSE PLUS") -> R.drawable.maimaidx_universe_plus
+                equals("FESTiVAL") -> R.drawable.maimaidx_festival
+                equals("FESTiVAL PLUS") -> R.drawable.maimaidx_festival_plus
+                equals("BUDDiES") -> R.drawable.maimaidx_buddies
+                equals("BUDDiES PLUS") -> R.drawable.maimaidx_buddies_plus
+                else -> 0
             }
         }
         Glide.with(view.context)

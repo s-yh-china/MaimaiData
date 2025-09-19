@@ -17,9 +17,9 @@ import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DsSongData
+import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
-import com.paperpig.maimaidata.utils.Constants
 import com.paperpig.maimaidata.utils.toDp
 
 class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -52,10 +52,10 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                         datum.songData.type,
                         datum.songData.imageUrl,
                         i,
-                        datum.charts[i].ds
+                        datum.charts[i].internalLevel
                     )
                 }
-        }.sortedByDescending { it.ds }.groupBy { it.ds }
+        }.sortedByDescending { it.internalLevel }.groupBy { it.internalLevel }
     }
 
     companion object {
@@ -139,7 +139,7 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         }
         if (holder is LevelViewHolder) {
             val data = getSongAt(position)
-            holder.levelTitle.text = data.ds.toString()
+            holder.levelTitle.text = data.internalLevel.toString()
 
         }
         if (holder is ItemViewHolder) {
@@ -154,9 +154,9 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 setBackgroundColor(ContextCompat.getColor(holder.itemView.context, getBorderColor(data.levelIndex)))
                 GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.imageUrl).into(holder.songJacket)
             }
-            if (data.type == Constants.CHART_TYPE_DX) {
+            if (data.type == SongType.DX) {
                 GlideApp.with(holder.itemView.context).load(R.drawable.ic_deluxe).into(holder.songType)
-            } else {
+            } else if (data.type == SongType.SD) {
                 GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
             }
 

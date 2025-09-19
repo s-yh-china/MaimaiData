@@ -17,12 +17,12 @@ interface ChartDao {
     @Query(
         """
         SELECT 
-            MAX(notes_tap) AS tap,
-            MAX(notes_hold) AS hold,
-            MAX(notes_slide) AS slide,
-            MAX(notes_touch) AS touch,
-            MAX(notes_break) AS break_,
-            MAX(notes_total) AS total
+            MAX(note_tap) AS tap,
+            MAX(note_hold) AS hold,
+            MAX(note_slide) AS slide,
+            MAX(note_touch) AS touch,
+            MAX(note_break) AS `break`,
+            MAX(note_total) AS total
         FROM chart
         WHERE difficulty_type NOT IN ('UTAGE', 'UTAGE_PLAYER2')
     """
