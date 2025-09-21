@@ -3,15 +3,28 @@ package com.paperpig.maimaidata.db.entity
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.paperpig.maimaidata.R
+import com.paperpig.maimaidata.model.DifficultyType
 import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "record")
+@Entity(
+    tableName = "record",
+    foreignKeys = [ForeignKey(
+        entity = SongDataEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["song_id"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 @Parcelize
 data class RecordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+
+    @ColumnInfo(name = "song_id", index = true)
+    val songId: Int,
 
     @ColumnInfo(name = "achievements")
     val achievements: Double,
@@ -28,15 +41,11 @@ data class RecordEntity(
     @ColumnInfo(name = "level")
     val level: String,
 
-    // 难度索引
-    @ColumnInfo(name = "level_index")
-    val levelIndex: Int,
+    @ColumnInfo(name = "difficulty_type")
+    val difficultyType: DifficultyType,
 
     @ColumnInfo(name = "rate")
     val rate: String,
-
-    @ColumnInfo(name = "song_id", index = true)
-    val songId: Int,
 ) : Parcelable {
     fun getFcIcon() = when (fc) {
         "fc" -> R.drawable.music_icon_fc

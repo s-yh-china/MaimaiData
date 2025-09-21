@@ -1,10 +1,10 @@
 package com.paperpig.maimaidata.network
 
 import com.google.gson.Gson
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.model.AppUpdateModel
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DataVersionModel
+import com.paperpig.maimaidata.utils.JsonConvertToDb
 import io.reactivex.Observable
 
 /**
@@ -30,7 +30,7 @@ object MaimaiDataRequests {
             .getDataVersion()
             .compose(MaimaiDataTransformer.handleResult())
             .flatMap {
-                val model = Gson().fromJson(it.asJsonObject.get(AppDataBase.DATABASE_VERSION.toString()), DataVersionModel::class.java)
+                val model = Gson().fromJson(it.asJsonObject.get(JsonConvertToDb.DATA_STRUCTURE_VERSION.toString()), DataVersionModel::class.java)
                 Observable.just(model)
             }
 

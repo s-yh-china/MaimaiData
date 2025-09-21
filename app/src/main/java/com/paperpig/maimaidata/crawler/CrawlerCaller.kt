@@ -1,6 +1,5 @@
 package com.paperpig.maimaidata.crawler
 
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
 import com.paperpig.maimaidata.repository.RecordRepository
 import com.paperpig.maimaidata.repository.SongWithChartRepository
@@ -61,11 +60,8 @@ object CrawlerCaller {
                 onError(e)
             }
             try {
-                val crawler = WechatCrawler(RecordRepository.getInstance(AppDataBase.getInstance().recordDao()), SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()))
-                crawler.startFetch(
-                    getDifficulties(),
-                    authUrl
-                )
+                val crawler = WechatCrawler(RecordRepository.getInstance(), SongWithChartRepository.getInstance())
+                crawler.startFetch(Settings.getUpdateDifficulty(), authUrl)
             } catch (e: IOException) {
                 onError(e)
             }
@@ -78,9 +74,5 @@ object CrawlerCaller {
 
     fun removeOnWechatCrawlerListener() {
         this.listener = null
-    }
-
-    private fun getDifficulties(): Set<Int> {
-        return Settings.getUpdateDifficulty()
     }
 }

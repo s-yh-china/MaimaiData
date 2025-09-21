@@ -1,19 +1,19 @@
 package com.paperpig.maimaidata.repository
 
 import androidx.lifecycle.LiveData
+import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.dao.RecordDao
 import com.paperpig.maimaidata.db.entity.RecordEntity
+import com.paperpig.maimaidata.model.DifficultyType
 
 class RecordRepository private constructor(private val recordDao: RecordDao) {
     companion object {
         @Volatile
         private var instance: RecordRepository? = null
-
-        fun getInstance(recordDao: RecordDao): RecordRepository {
-            if (instance == null) {
-                instance = RecordRepository(recordDao)
+        fun getInstance(): RecordRepository {
+            return instance ?: synchronized(this) {
+                instance ?: RecordRepository(AppDataBase.getInstance().recordDao()).also { instance = it }
             }
-            return instance!!
         }
     }
 
@@ -31,13 +31,8 @@ class RecordRepository private constructor(private val recordDao: RecordDao) {
         return recordDao.getAllRecords()
     }
 
-    /**
-     * 根据难度索引获取成绩
-     * @param index 0 = basic , 1 = advance , 2 = expert , 3 = master , 4 = remaster
-     * @return 成绩列表
-     */
-    fun getRecordsByDifficultyIndex(index: Int): LiveData<List<RecordEntity>> {
-        return recordDao.getRecordsByDifficultyIndex(index)
+    fun getRecordsByDifficulty(difficultyType: DifficultyType): LiveData<List<RecordEntity>> {
+        return recordDao.getRecordsByDifficulty(difficultyType)
     }
 
     /**

@@ -16,6 +16,7 @@ import com.paperpig.maimaidata.databinding.ItemSongCheckBinding
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
@@ -29,12 +30,13 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     private var recordList: List<RecordEntity> = listOf()
 
     private var genreSelect: String? = null
-    private var difficultyIndexSelect: Int = 3
+    private var difficultySelect: DifficultyType = DifficultyType.MASTER
     private var groupData: Map<String, List<SongWithChartsEntity>> = mapOf()
 
-    private fun getFormatData(): Map<String, List<SongWithChartsEntity>> {
-        return dataList.filter { it.songData.genre == genreSelect }.sortedByDescending { it.charts[getActualDifficultyIndex(it)].internalLevel }.groupBy { it.charts[getActualDifficultyIndex(it)].level }
-    }
+    private fun getFormatData(): Map<String, List<SongWithChartsEntity>> = dataList
+        .filter { it.songData.genre == genreSelect }
+        .sortedByDescending { it.chartsMap[getActualDifficulty(it)]?.internalLevel }
+        .groupBy { it.chartsMap[getActualDifficulty(it)]!!.level }
 
     companion object {
         const val TYPE_HEADER = 0
@@ -90,46 +92,46 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 holder.tripleSCount.text = String.format(
                     format, recordList.count {
                         val songInGroup = groupFlatten.find { data -> data.songData.id == it.songId }
-                        songInGroup != null && getActualDifficultyIndex(songInGroup) == it.levelIndex && it.achievements >= 100
+                        songInGroup != null && getActualDifficulty(songInGroup) == it.difficultyType && it.achievements >= 100
                     }, groupSize
                 )
 
                 holder.fcCount.text = String.format(
                     format, recordList.count {
                         val songInGroup = groupFlatten.find { data -> data.songData.id == it.songId }
-                        songInGroup != null && getActualDifficultyIndex(songInGroup) == it.levelIndex && it.fc.isNotEmpty()
+                        songInGroup != null && getActualDifficulty(songInGroup) == it.difficultyType && it.fc.isNotEmpty()
                     }, groupSize
                 )
 
                 holder.apCount.text = String.format(
                     format, recordList.count {
                         val songInGroup = groupFlatten.find { data -> data.songData.id == it.songId }
-                        songInGroup != null && getActualDifficultyIndex(songInGroup) == it.levelIndex && (it.fc == "ap" || it.fc == "app")
+                        songInGroup != null && getActualDifficulty(songInGroup) == it.difficultyType && (it.fc == "ap" || it.fc == "app")
                     }, groupSize
                 )
 
                 holder.fsdCount.text = String.format(
                     format, recordList.count {
                         val songInGroup = groupFlatten.find { data -> data.songData.id == it.songId }
-                        songInGroup != null && getActualDifficultyIndex(songInGroup) == it.levelIndex && (it.fs == "fsd" || it.fs == "fsdp")
+                        songInGroup != null && getActualDifficulty(songInGroup) == it.difficultyType && (it.fs == "fsd" || it.fs == "fsdp")
                     }, groupSize
                 )
             }
 
             is LevelHolder -> {
                 val data = getSongAt(position)
-                holder.levelTitle.text = "Level " + data.charts[getActualDifficultyIndex(data)].level
+                holder.levelTitle.text = "Level " + data.chartsMap[getActualDifficulty(data)]?.level
             }
 
             is ViewHolder -> {
                 val song = getSongAt(position)
-                val actualDifficultyIndex = getActualDifficultyIndex(song)
+                val actualDifficulty = getActualDifficulty(song)
                 holder.itemView.setOnClickListener {
                     SongDetailActivity.actionStart(holder.itemView.context, song)
                 }
 
                 holder.songJacket.apply {
-                    setBackgroundColor(ContextCompat.getColor(holder.itemView.context, getBorderColor(actualDifficultyIndex)))
+                    setBackgroundColor(ContextCompat.getColor(holder.itemView.context, actualDifficulty.color))
                     GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + song.songData.imageUrl).into(this)
                 }
                 if (song.songData.type == SongType.DX) {
@@ -138,7 +140,7 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
                 }
 
-                recordList.find { it.songId == song.songData.id && it.levelIndex == actualDifficultyIndex }
+                recordList.find { it.songId == song.songData.id && it.difficultyType == actualDifficulty }
                     ?.let { record ->
                         holder.songJacket.colorFilter =
                             PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
@@ -180,22 +182,11 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private fun getActualDifficultyIndex(song: SongWithChartsEntity): Int {
-        return if (song.charts.size <= difficultyIndexSelect) {
-            song.charts.size - 1
+    private fun getActualDifficulty(song: SongWithChartsEntity): DifficultyType {
+        return if (song.charts.size <= difficultySelect.difficultyIndex) {
+            DifficultyType.from(song.songData.type, difficultySelect.difficultyIndex - 1)
         } else {
-            difficultyIndexSelect
-        }
-    }
-
-    private fun getBorderColor(levelIndex: Int): Int {
-        return when (levelIndex) {
-            0 -> R.color.basic
-            1 -> R.color.advanced
-            2 -> R.color.expert
-            3 -> R.color.master
-            4 -> R.color.remaster_border
-            else -> 0
+            difficultySelect
         }
     }
 
@@ -231,12 +222,12 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     fun setData(newSongData: List<SongWithChartsEntity>, newRecordList: List<RecordEntity>) {
         dataList = newSongData
         recordList = newRecordList
-        updateData(genreSelect, difficultyIndexSelect)
+        updateData(genreSelect, difficultySelect)
     }
 
-    fun updateData(genre: String?, difficultyIndex: Int) {
+    fun updateData(genre: String?, difficulty: DifficultyType) {
         genreSelect = genre
-        difficultyIndexSelect = difficultyIndex
+        difficultySelect = difficulty
         groupData = getFormatData()
         notifyDataSetChanged()
     }

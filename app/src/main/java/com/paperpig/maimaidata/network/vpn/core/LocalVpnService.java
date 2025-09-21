@@ -1,5 +1,7 @@
 package com.paperpig.maimaidata.network.vpn.core;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
 import com.paperpig.maimaidata.R;
 import com.paperpig.maimaidata.network.vpn.dns.DnsPacket;
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
@@ -27,8 +30,6 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static android.content.ContentValues.TAG;
 
 public class LocalVpnService extends VpnService implements Runnable {
 

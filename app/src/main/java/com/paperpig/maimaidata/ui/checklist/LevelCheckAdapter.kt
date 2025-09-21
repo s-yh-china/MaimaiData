@@ -51,7 +51,7 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                         datum.songData.title,
                         datum.songData.type,
                         datum.songData.imageUrl,
-                        i,
+                        datum.charts[i].difficultyType,
                         datum.charts[i].internalLevel
                     )
                 }
@@ -151,7 +151,7 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             }
 
             holder.songJacket.apply {
-                setBackgroundColor(ContextCompat.getColor(holder.itemView.context, getBorderColor(data.levelIndex)))
+                setBackgroundColor(ContextCompat.getColor(holder.itemView.context, data.difficultyType.color))
                 GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.imageUrl).into(holder.songJacket)
             }
             if (data.type == SongType.DX) {
@@ -160,7 +160,7 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
             }
 
-            recordList.find { it.songId == data.songId && it.levelIndex == data.levelIndex }
+            recordList.find { it.songId == data.songId && it.difficultyType == data.difficultyType }
                 ?.let { record ->
                     holder.songJacket.colorFilter =
                         PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
@@ -194,10 +194,11 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
                         else -> {}
                     }
-                } ?: run {
-                holder.songJacket.colorFilter = null
-                holder.songRecordMark.setImageDrawable(null)
-            }
+                }
+                ?: run {
+                    holder.songJacket.colorFilter = null
+                    holder.songRecordMark.setImageDrawable(null)
+                }
         }
     }
 
@@ -248,16 +249,5 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             count += size
         }
         throw IllegalArgumentException()
-    }
-
-    private fun getBorderColor(levelIndex: Int): Int {
-        return when (levelIndex) {
-            0 -> R.color.basic
-            1 -> R.color.advanced
-            2 -> R.color.expert
-            3 -> R.color.master
-            4 -> R.color.remaster_border
-            else -> 0
-        }
     }
 }

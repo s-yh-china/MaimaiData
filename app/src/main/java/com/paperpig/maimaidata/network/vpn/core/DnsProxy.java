@@ -2,6 +2,7 @@ package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.Log;
 import android.util.SparseArray;
+
 import com.paperpig.maimaidata.network.vpn.dns.DnsPacket;
 import com.paperpig.maimaidata.network.vpn.dns.Question;
 import com.paperpig.maimaidata.network.vpn.dns.ResourcePointer;

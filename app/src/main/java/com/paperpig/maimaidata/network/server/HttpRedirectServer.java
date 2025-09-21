@@ -1,9 +1,10 @@
 package com.paperpig.maimaidata.network.server;
 
 import android.util.Log;
-import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
+
+import fi.iki.elonen.NanoHTTPD;
 
 public class HttpRedirectServer extends NanoHTTPD {
     public static int Port = 9457;

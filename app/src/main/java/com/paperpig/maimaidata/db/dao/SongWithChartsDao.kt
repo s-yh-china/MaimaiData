@@ -56,14 +56,14 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
     @Query(
         """
         SELECT * FROM song_data
-        WHERE (:includeUtage = 1 OR type != '${Constants.GENRE_UTAGE}')
+        WHERE (:includeUtage = 1 OR type != '${Constants.UTAGE_TYPE}')
         ORDER BY 
             CASE WHEN :ascending = 1 THEN id END ASC,
             CASE WHEN :ascending = 0 THEN id END DESC
         """
     )
     fun getAllSongsWithCharts(
-        includeUtage: Boolean = true,
+        includeUtage: Boolean = false,
         ascending: Boolean = false
     ): LiveData<List<SongWithChartsEntity>>
 
@@ -147,7 +147,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
 
             -- 流派匹配
             AND (
-                (:isGenreListEmpty = 1 AND genre != '${Constants.GENRE_UTAGE}')
+                (:isGenreListEmpty = 1 AND (type != '${Constants.UTAGE_TYPE}' OR :isSearchFavor = 1))
                 OR (:isGenreListEmpty = 0 AND genre IN (:genreList))
             )
 
@@ -162,7 +162,7 @@ interface SongWithChartsDao : ChartDao, SongDao, AliasDao {
                 :selectLevel IS NULL 
                 OR EXISTS (
                     SELECT 1
-                    FROM chart 
+                    FROM chart
                     WHERE 
                         chart.song_id = song_data.id
                         AND (

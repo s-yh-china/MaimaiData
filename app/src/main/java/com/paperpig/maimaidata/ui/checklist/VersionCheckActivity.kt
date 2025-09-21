@@ -12,9 +12,9 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivityVersionCheckBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.Version
 import com.paperpig.maimaidata.repository.RecordRepository
 import com.paperpig.maimaidata.repository.SongWithChartRepository
@@ -44,11 +44,8 @@ class VersionCheckActivity : AppCompatActivity() {
     private fun getData() {
         var songs: List<SongWithChartsEntity>? = null
         var records: List<RecordEntity>? = null
-        //获取所有的歌曲
-        val allSongs = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).getAllSongWithCharts()
-        //获取MASTER难度记录
-        val allRecords = RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getRecordsByDifficultyIndex(3)
-        //使用MediatorLiveData来监听两个LiveData的变化
+        val allSongs = SongWithChartRepository.getInstance().getAllSongWithCharts()
+        val allRecords = RecordRepository.getInstance().getRecordsByDifficulty(DifficultyType.REMASTER)
         MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
             addSource(allSongs) { newSongs ->
                 songs = newSongs
@@ -104,7 +101,7 @@ class VersionCheckActivity : AppCompatActivity() {
                 }
         }
 
-        //设置recyclerView适配器
+        // 设置recyclerView适配器
         binding.versionCheckRecycler.apply {
             adapter = VersionCheckAdapter(context)
 
@@ -122,18 +119,17 @@ class VersionCheckActivity : AppCompatActivity() {
     private fun getVersionList(): MutableList<Version> {
         return mutableListOf(
             Version("maimai", R.drawable.maimai),
-            Version("maimai PLUS", R.drawable.maimai_plus),
-            Version("maimai GreeN", R.drawable.maimai_green),
-            Version("maimai GreeN PLUS", R.drawable.maimai_green_plus),
-            Version("maimai ORANGE", R.drawable.maimai_orange),
-            Version("maimai ORANGE PLUS", R.drawable.maimai_orange),
-            Version("maimai PiNK", R.drawable.maimai_pink),
-            Version("maimai PiNK PLUS", R.drawable.maimai_pink_plus),
-            Version("maimai MURASAKi", R.drawable.maimai_murasaki),
-            Version("maimai MURASAKi PLUS", R.drawable.maimai_murasaki_plus),
-            Version("maimai MiLK", R.drawable.maimai_milk),
-            Version("maimai MiLK PLUS", R.drawable.maimai_milk_plus),
-            Version("maimai FiNALE", R.drawable.maimai_finale),
+            Version("GreeN", R.drawable.maimai_green),
+            Version("GreeN PLUS", R.drawable.maimai_green_plus),
+            Version("ORANGE", R.drawable.maimai_orange),
+            Version("ORANGE PLUS", R.drawable.maimai_orange),
+            Version("PiNK", R.drawable.maimai_pink),
+            Version("PiNK PLUS", R.drawable.maimai_pink_plus),
+            Version("MURASAKi", R.drawable.maimai_murasaki),
+            Version("MURASAKi PLUS", R.drawable.maimai_murasaki_plus),
+            Version("MiLK", R.drawable.maimai_milk),
+            Version("MiLK PLUS", R.drawable.maimai_milk_plus),
+            Version("FiNALE", R.drawable.maimai_finale),
             Version("舞萌DX", R.drawable.maimaidx_cn),
             Version("舞萌DX 2021", R.drawable.maimaidx_2021),
             Version("舞萌DX 2022", R.drawable.maimaidx_2022),

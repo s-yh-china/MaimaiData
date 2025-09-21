@@ -2,11 +2,20 @@ package com.paperpig.maimaidata.ui.rating
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.MenuProvider
@@ -28,7 +37,7 @@ import com.paperpig.maimaidata.utils.ConvertUtils
 import com.paperpig.maimaidata.utils.getInt
 import com.paperpig.maimaidata.widgets.Settings
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import kotlin.math.floor
 import kotlin.random.Random
 

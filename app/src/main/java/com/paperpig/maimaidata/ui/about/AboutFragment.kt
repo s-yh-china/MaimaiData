@@ -9,7 +9,7 @@ import com.paperpig.maimaidata.BuildConfig
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.utils.SpUtil
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class AboutFragment : PreferenceFragmentCompat() {
     companion object {

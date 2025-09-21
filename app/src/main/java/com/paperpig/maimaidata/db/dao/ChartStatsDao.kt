@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.ChartStatsEntity
+import com.paperpig.maimaidata.model.DifficultyType
 
 @Dao
 interface ChartStatsDao {
@@ -24,8 +25,8 @@ interface ChartStatsDao {
         }
     }
 
-    @Query("SELECT * FROM chart_stats WHERE song_id = :songId AND level_index = :index")
-    fun getChartStatsBySongIdAndDifficultyIndex(songId: Int, index: Int): LiveData<ChartStatsEntity>
+    @Query("SELECT * FROM chart_stats WHERE song_id = :songId AND difficulty_type = :difficultyType")
+    fun getChartStatsBySongIdAndDifficulty(songId: Int, difficultyType: DifficultyType): LiveData<ChartStatsEntity>
 
     @Insert
     fun insertAllChartStats(list: List<ChartStatsEntity>)

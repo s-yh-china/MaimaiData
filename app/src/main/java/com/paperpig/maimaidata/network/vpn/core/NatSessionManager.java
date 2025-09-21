@@ -1,6 +1,7 @@
 package com.paperpig.maimaidata.network.vpn.core;
 
 import android.util.SparseArray;
+
 import com.paperpig.maimaidata.network.vpn.tcpip.CommonMethods;
 
 public class NatSessionManager {

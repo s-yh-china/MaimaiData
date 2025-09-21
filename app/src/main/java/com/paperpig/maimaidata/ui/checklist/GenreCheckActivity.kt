@@ -12,15 +12,15 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivityGenreCheckBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.repository.RecordRepository
 import com.paperpig.maimaidata.repository.SongWithChartRepository
 import com.paperpig.maimaidata.utils.SpUtil
 
 class GenreCheckActivity : AppCompatActivity() {
-    private val difficultyList = mutableListOf("Basic", "Advanced", "Expert", "Master", "Re:Master")
+    private val difficultyList = mutableListOf(DifficultyType.BASIC, DifficultyType.ADVANCED, DifficultyType.EXPERT, DifficultyType.MASTER, DifficultyType.REMASTER)
     private val genreList = mutableListOf(
         "流行&动漫",
         "niconico & VOCALOID",
@@ -30,9 +30,10 @@ class GenreCheckActivity : AppCompatActivity() {
         "音击&中二节奏",
     )
 
+    private var currentGenre = ""
+    private var currentDifficulty = DifficultyType.MASTER
+
     private lateinit var binding: ActivityGenreCheckBinding
-    private var searchGenreString = ""
-    private var currentDifficultyIndex = 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +55,8 @@ class GenreCheckActivity : AppCompatActivity() {
     private fun getData() {
         var songs: List<SongWithChartsEntity>? = null
         var records: List<RecordEntity>? = null
-        val allSongs = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).getAllSongWithCharts()
-        val allRecords = RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getAllRecord()
+        val allSongs = SongWithChartRepository.getInstance().getAllSongWithCharts()
+        val allRecords = RecordRepository.getInstance().getAllRecord()
         MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
             addSource(allSongs) { newSongs ->
                 songs = newSongs
@@ -72,55 +73,52 @@ class GenreCheckActivity : AppCompatActivity() {
             observe(this@GenreCheckActivity) { (songs, records) ->
                 (binding.genreCheckRecycler.adapter as GenreCheckAdapter).apply {
                     setData(songs, records)
-                    updateData(searchGenreString, currentDifficultyIndex)
+                    updateData(currentGenre, currentDifficulty)
                 }
             }
         }
     }
 
     private fun initView() {
-        val lastSelectedPosition = SpUtil.getLastQueryGenre()
-        searchGenreString = genreList[lastSelectedPosition]
+        val lastSelectedGenrePosition = SpUtil.getLastQueryGenre()
+        currentGenre = genreList[lastSelectedGenrePosition]
 
         binding.genreSpn.apply {
             adapter = ArrayAdapter(this@GenreCheckActivity, android.R.layout.simple_spinner_item, genreList).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
-            setSelection(lastSelectedPosition, true)
-            onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        SpUtil.saveLastQueryGenre(position)
-                        searchGenreString = parent?.getItemAtPosition(position) as String
-                        (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(searchGenreString, currentDifficultyIndex)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
+            setSelection(lastSelectedGenrePosition, true)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    SpUtil.saveLastQueryGenre(position)
+                    currentGenre = genreList[position]
+                    (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(currentGenre, currentDifficulty)
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
         }
 
         val lastSelectedDifficultyIndex = SpUtil.getLastQueryDifficulty()
-        currentDifficultyIndex = lastSelectedDifficultyIndex
+        currentDifficulty = difficultyList[lastSelectedDifficultyIndex]
 
         binding.difficultySpn.apply {
-            adapter = ArrayAdapter(this@GenreCheckActivity, android.R.layout.simple_spinner_item, difficultyList).apply {
+            adapter = ArrayAdapter(this@GenreCheckActivity, android.R.layout.simple_spinner_item, difficultyList.map { it.displayName }).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
-            setSelection(currentDifficultyIndex, true)
-            onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        currentDifficultyIndex = position
-                        SpUtil.saveLastQueryDifficulty(position)
-                        (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(searchGenreString, currentDifficultyIndex)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
+            setSelection(lastSelectedDifficultyIndex, true)
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    SpUtil.saveLastQueryDifficulty(position)
+                    currentDifficulty = difficultyList[position]
+                    (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(currentGenre, currentDifficulty)
                 }
-        }
 
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        }
 
         binding.genreCheckRecycler.apply {
             adapter = GenreCheckAdapter(context)

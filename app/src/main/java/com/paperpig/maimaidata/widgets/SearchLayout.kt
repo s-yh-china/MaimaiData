@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -17,19 +18,17 @@ import com.google.android.material.slider.Slider
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ItemSearchHistoryBinding
 import com.paperpig.maimaidata.databinding.LayoutSongSearchBinding
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.utils.SpUtil
+import com.paperpig.maimaidata.utils.setShrinkOnTouch
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), Slider.OnSliderTouchListener {
 
     private var listener: OnSearchListener? = null
-    private val binding: LayoutSongSearchBinding =
-        LayoutSongSearchBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: LayoutSongSearchBinding = LayoutSongSearchBinding.inflate(LayoutInflater.from(context), this, true)
 
     private val levels = resources.getStringArray(R.array.dxp_song_level)
-    private var dataList: List<SongWithChartsEntity> = listOf()
 
     private var searchLevelDs = 1.0f
     private var searchLevelString = ""
@@ -121,8 +120,7 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
             versionCheckBoxList.forEach { it.isChecked = false }
             binding.favorCheckbox.isChecked = false
             searchLevelString = levels[0]
-            binding.levelText.text =
-                context.getString(R.string.search_level_string, searchLevelString)
+            binding.levelText.text = context.getString(R.string.search_level_string, searchLevelString)
         }
 
         binding.searchEditText.setOnEditorActionListener { _, i, _ ->
@@ -159,10 +157,15 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
                 }
             }
         }
+
+        genreCheckBoxList.forEach { it.setShrinkOnTouch() }
+        versionCheckBoxList.forEach { it.setShrinkOnTouch() }
+
+        setupLongClickInversion(genreCheckBoxList)
+        setupLongClickInversion(versionCheckBoxList)
     }
 
-    fun setOnSearchResultListener(list: List<SongWithChartsEntity>, onSearchResultListener: OnSearchListener) {
-        dataList = list
+    fun setOnSearchResultListener(onSearchResultListener: OnSearchListener) {
         listener = onSearchResultListener
     }
 
@@ -255,6 +258,15 @@ class SearchLayout(context: Context, attrs: AttributeSet) : LinearLayout(context
                     binding.levelDsIntSlider.value + binding.levelDsDecimalSlider.value / 10
                 binding.levelText.text =
                     context.getString(R.string.search_level_ds, searchLevelDs)
+            }
+        }
+    }
+
+    private fun setupLongClickInversion(checkBoxList: List<CheckBox>) {
+        checkBoxList.forEach { checkBox ->
+            checkBox.setOnLongClickListener {
+                checkBoxList.forEach { otherCheckbox -> otherCheckbox.isChecked = otherCheckbox != checkBox }
+                true
             }
         }
     }

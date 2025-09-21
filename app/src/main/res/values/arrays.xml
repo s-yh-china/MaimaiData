@@ -35,6 +35,8 @@
         <item>MASTER-降序</item>
         <item>RE:MASTER-升序</item>
         <item>RE:MASTER-降序</item>
+        <item>最高难度-升序</item>
+        <item>最高难度-降序</item>
     </string-array>
 
     <string-array name="bypass_private_route">
@@ -177,20 +179,20 @@
     </string-array>
 
     <string-array name="difficulty_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>10</item>
+        <item>BASIC</item>
+        <item>ADVANCED</item>
+        <item>EXPERT</item>
+        <item>MASTER</item>
+        <item>REMASTER</item>
+        <item>UTAGE</item>
     </string-array>
 
     <string-array name="difficulty_default">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>10</item>
+        <item>BASIC</item>
+        <item>ADVANCED</item>
+        <item>EXPERT</item>
+        <item>MASTER</item>
+        <item>REMASTER</item>
+        <item>UTAGE</item>
     </string-array>
 </resources>

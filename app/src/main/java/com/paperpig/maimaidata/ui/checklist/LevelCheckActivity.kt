@@ -10,7 +10,6 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivityLevelCheckBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.repository.RecordRepository
@@ -42,9 +41,9 @@ class LevelCheckActivity : AppCompatActivity() {
         var songs: List<SongWithChartsEntity>? = null
         var records: List<RecordEntity>? = null
         //获取所有的歌曲
-        val allSongs = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).getAllSongWithCharts()
+        val allSongs = SongWithChartRepository.getInstance().getAllSongWithCharts()
         //获取所有的记录
-        val allRecords = RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getAllRecord()
+        val allRecords = RecordRepository.getInstance().getAllRecord()
         //使用MediatorLiveData来监听两个LiveData的变化
         MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
             addSource(allSongs) { newSongs ->

@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
+import com.paperpig.maimaidata.model.DifficultyType
 
 @Dao
 interface RecordDao {
@@ -37,8 +38,8 @@ interface RecordDao {
      * @param index 难度索引
      * @return 记录列表
      */
-    @Query("SELECT * FROM record WHERE level_index = :index")
-    fun getRecordsByDifficultyIndex(index: Int): LiveData<List<RecordEntity>>
+    @Query("SELECT * FROM record WHERE difficulty_type = :difficultyType")
+    fun getRecordsByDifficulty(difficultyType: DifficultyType): LiveData<List<RecordEntity>>
 
     /**
      * 根据歌曲ID获取记录表

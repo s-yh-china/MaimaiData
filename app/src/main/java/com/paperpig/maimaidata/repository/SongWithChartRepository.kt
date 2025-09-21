@@ -2,7 +2,9 @@ package com.paperpig.maimaidata.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.dao.SongWithChartsDao
+import com.paperpig.maimaidata.db.entity.SongDataEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongData
@@ -15,11 +17,10 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
     companion object {
         @Volatile
         private var instance: SongWithChartRepository? = null
-        fun getInstance(songChartDao: SongWithChartsDao): SongWithChartRepository {
-            if (instance == null) {
-                instance = SongWithChartRepository(songChartDao)
+        fun getInstance(): SongWithChartRepository {
+            return instance ?: synchronized(this) {
+                instance ?: SongWithChartRepository(AppDataBase.getInstance().songWithChartDao()).also { instance = it }
             }
-            return instance!!
         }
     }
 
@@ -104,25 +105,30 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
                 list.sortedByDescending { it.songData.id }
             } else {
                 when (sequencing) {
-                    "EXPERT-升序" -> list.sortedBy { it.charts.getOrNull(2)?.internalLevel }
-                    "EXPERT-降序" -> list.sortedByDescending { it.charts.getOrNull(2)?.internalLevel }
-                    "MASTER-升序" -> list.sortedBy { it.charts.getOrNull(3)?.internalLevel }
-                    "MASTER-降序" -> list.sortedByDescending { it.charts.getOrNull(3)?.internalLevel }
+                    "EXPERT-升序" -> list.sortedBy { it.chartsMap[DifficultyType.EXPERT]?.internalLevel }
+                    "EXPERT-降序" -> list.sortedByDescending { it.chartsMap[DifficultyType.EXPERT]?.internalLevel }
+                    "MASTER-升序" -> list.sortedBy { it.chartsMap[DifficultyType.MASTER]?.internalLevel }
+                    "MASTER-降序" -> list.sortedByDescending { it.chartsMap[DifficultyType.MASTER]?.internalLevel }
                     "RE:MASTER-升序" -> list.sortedWith(remasterAscComparator)
                     "RE:MASTER-降序" -> list.sortedWith(remasterDescComparator)
+                    "最高难度-升序" -> list.sortedBy { song -> song.charts.maxByOrNull { it.difficultyType.difficultyIndex }?.internalLevel }
+                    "最高难度-降序" -> list.sortedByDescending { song -> song.charts.maxByOrNull { it.difficultyType.difficultyIndex }?.internalLevel }
                     else -> list.sortedByDescending { it.songData.id }
                 }
             }
         }
     }
 
+    fun getAllSong(): List<SongDataEntity> = songChartDao.getAllSong()
+
     private fun getDifficultyPrefix(sequencing: String?): DifficultyType? {
-        if (sequencing == null) return null
-        return when {
-            sequencing.startsWith("EXPERT") -> DifficultyType.EXPERT
-            sequencing.startsWith("MASTER") -> DifficultyType.MASTER
-            sequencing.startsWith("RE:MASTER") -> DifficultyType.REMASTER
-            else -> null
+        return sequencing?.let {
+            when {
+                it.startsWith("EXPERT") -> DifficultyType.EXPERT
+                it.startsWith("MASTER") -> DifficultyType.MASTER
+                it.startsWith("RE:MASTER") -> DifficultyType.REMASTER
+                else -> null
+            }
         }
     }
 
@@ -145,7 +151,7 @@ class SongWithChartRepository private constructor(private val songChartDao: Song
         }
     }
 
-    private val remasterAscComparator = remasterComparator.thenBy { it.charts.getOrNull(4)?.internalLevel }
-    private val remasterDescComparator = remasterComparator.thenByDescending { it.charts.getOrNull(4)?.internalLevel }
+    private val remasterAscComparator = remasterComparator.thenBy { it.chartsMap[DifficultyType.REMASTER]?.internalLevel }
+    private val remasterDescComparator = remasterComparator.thenByDescending { it.chartsMap[DifficultyType.REMASTER]?.internalLevel }
 }
 

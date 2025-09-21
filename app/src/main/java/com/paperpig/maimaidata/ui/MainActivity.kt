@@ -23,7 +23,6 @@ import com.paperpig.maimaidata.BuildConfig
 import com.paperpig.maimaidata.MaimaiDataApplication
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivityMainBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.model.SongData
 import com.paperpig.maimaidata.network.MaimaiDataRequests
 import com.paperpig.maimaidata.repository.ChartRepository
@@ -160,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                                     startDownload(it.songListUrl, "song_list_data.json") { task ->
                                         lifecycleScope.launch {
                                             val data = getSongListData(this@MainActivity)
-                                            if (SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao()).updateDatabase(data)) {
+                                            if (SongWithChartRepository.getInstance().updateDatabase(data)) {
                                                 SpUtil.setDataVersion(it.version)
                                                 checkChartStatus(force = true)
                                             }
@@ -186,7 +185,7 @@ class MainActivity : AppCompatActivity() {
      * 查询最大notes数量
      */
     private fun queryMaxNotes() {
-        ChartRepository.getInstance(AppDataBase.getInstance().chartDao()).getMaxNotes().observe(this) {
+        ChartRepository.getInstance().getMaxNotes().observe(this) {
             MaimaiDataApplication.instance.maxNotesStats = it
         }
     }
@@ -197,8 +196,9 @@ class MainActivity : AppCompatActivity() {
             if ((currentTime - SpUtil.getLastUpdateChartStats()) >= 5 * 24 * 60 * 60 * 1000L || force) {
                 checkChartStatusDisposable = MaimaiDataRequests.getChartStats(SpUtil.getDataVersion()).subscribe({
                     lifecycleScope.launch {
-                        val convertChatStats = JsonConvertToDb.convertChatStats(it)
-                        if (ChartStatsRepository.getInstance(AppDataBase.getInstance().chartStatsDao()).replaceAllChartStats(convertChatStats)) {
+                        val allSongs = withContext(Dispatchers.IO) { SongWithChartRepository.getInstance().getAllSong() }
+                        val convertChatStats = JsonConvertToDb.convertChatStats(it, allSongs)
+                        if (ChartStatsRepository.getInstance().replaceAllChartStats(convertChatStats)) {
                             SpUtil.saveLastUpdateChartStats(it.time * 1000L)
                         }
                     }

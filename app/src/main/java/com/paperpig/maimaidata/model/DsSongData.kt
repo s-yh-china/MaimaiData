@@ -25,9 +25,9 @@ data class DsSongData(
     val imageUrl: String?,
 
     /**
-     * 难度索引
+     * 难度
      */
-    val levelIndex: Int,
+    val difficultyType: DifficultyType,
 
     /**
      * 定数

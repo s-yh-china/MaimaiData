@@ -2,7 +2,11 @@ package com.paperpig.maimaidata.ui.songlist
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -11,10 +15,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.FragmentSongListBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.repository.SongWithChartRepository
 import com.paperpig.maimaidata.ui.BaseFragment
-import com.paperpig.maimaidata.utils.Constants
 import com.paperpig.maimaidata.widgets.AnimationHelper
 import com.paperpig.maimaidata.widgets.SearchLayout
 import com.paperpig.maimaidata.widgets.Settings
@@ -106,45 +108,38 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                 }
             }
         })
-        loadData()
-    }
 
-    fun loadData() {
-        SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao())
-            .getAllSongWithCharts().observe(requireActivity()) {
-                songAdapter.setData(it.filterNot { it.songData.genre == Constants.GENRE_UTAGE })
-
-                binding.searchLayout.setOnSearchResultListener(it, object :
-                    SearchLayout.OnSearchListener {
-                    override fun onSearch(
-                        searchText: String,
-                        genreList: List<String>,
-                        versionList: List<String>,
-                        selectLevel: String?,
-                        sequencing: String?,
-                        ds: Double?,
-                        isFavor: Boolean
-                    ) {
-                        val repository = SongWithChartRepository.getInstance(AppDataBase.getInstance().songWithChartDao())
-                        repository.searchSongsWithCharts(
-                            searchText,
-                            genreList,
-                            versionList,
-                            selectLevel,
-                            sequencing,
-                            ds,
-                            isFavor,
-                            Settings.getEnableAliasSearch(),
-                            Settings.getEnableCharterSearch(),
-                            true
-                        ).observe(requireActivity()) {
-                            songAdapter.setData(it)
-                            showOrHideSearchBar()
-                            hideKeyboard(view)
-                        }
-                    }
-                })
+        binding.searchLayout.setOnSearchResultListener(object : SearchLayout.OnSearchListener {
+            override fun onSearch(
+                searchText: String,
+                genreList: List<String>,
+                versionList: List<String>,
+                selectLevel: String?,
+                sequencing: String?,
+                ds: Double?,
+                isFavor: Boolean
+            ) {
+                val repository = SongWithChartRepository.getInstance()
+                repository.searchSongsWithCharts(
+                    searchText,
+                    genreList,
+                    versionList,
+                    selectLevel,
+                    sequencing,
+                    ds,
+                    isFavor,
+                    Settings.getEnableAliasSearch(),
+                    Settings.getEnableCharterSearch(),
+                    true
+                ).observe(requireActivity()) {
+                    songAdapter.setData(it)
+                    showOrHideSearchBar()
+                    hideKeyboard(view)
+                }
             }
+        })
+
+        SongWithChartRepository.getInstance().getAllSongWithCharts().observe(requireActivity()) { songAdapter.setData(it) }
     }
 
     private fun showOrHideSearchBar() {

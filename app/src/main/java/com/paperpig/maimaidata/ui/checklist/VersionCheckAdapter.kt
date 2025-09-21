@@ -16,6 +16,7 @@ import com.paperpig.maimaidata.databinding.ItemSongCheckBinding
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
@@ -35,9 +36,10 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
 
     private var groupData: Map<String, List<SongWithChartsEntity>> = mapOf()
 
-    private fun getFormatData(): Map<String, List<SongWithChartsEntity>> {
-        return dataList.filter { it.songData.version == versionSelect }.sortedByDescending { it.charts[3].internalLevel }.groupBy { it.charts[3].level }
-    }
+    private fun getFormatData(): Map<String, List<SongWithChartsEntity>> = dataList
+        .filter { it.songData.version == versionSelect || (versionSelect == "maimai" && it.songData.version == "maimai PLUS") }
+        .sortedByDescending { it.chartsMap[DifficultyType.MASTER]?.internalLevel }
+        .groupBy { it.chartsMap[DifficultyType.MASTER]!!.level }
 
     companion object {
         const val TYPE_HEADER = 0
@@ -117,7 +119,7 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
         }
         if (holder is LevelHolder) {
             val data = getSongAt(position)
-            holder.levelTitle.text = "Level " + data.charts[3].level
+            holder.levelTitle.text = "Level " + data.chartsMap[DifficultyType.MASTER]?.level
 
         }
         if (holder is ViewHolder) {

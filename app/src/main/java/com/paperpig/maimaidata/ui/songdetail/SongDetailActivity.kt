@@ -21,15 +21,18 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivitySongDetailBinding
-import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.repository.AliasRepository
 import com.paperpig.maimaidata.repository.RecordRepository
-import com.paperpig.maimaidata.utils.*
+import com.paperpig.maimaidata.utils.SpUtil
+import com.paperpig.maimaidata.utils.setCopyOnLongClick
+import com.paperpig.maimaidata.utils.setShrinkOnTouch
+import com.paperpig.maimaidata.utils.toDp
 import com.paperpig.maimaidata.widgets.Settings
 
 class SongDetailActivity : AppCompatActivity() {
@@ -66,48 +69,23 @@ class SongDetailActivity : AppCompatActivity() {
             val songData = data.songData
 
             // 设置背景颜色
-            appbarLayout.setBackgroundColor(
-                ContextCompat.getColor(
-                    this@SongDetailActivity,
-                    songData.bgColor
-                )
-            )
+            appbarLayout.setBackgroundColor(ContextCompat.getColor(this@SongDetailActivity, songData.bgColor))
             tabLayout.apply {
-                setSelectedTabIndicatorColor(
-                    ContextCompat.getColor(
-                        this@SongDetailActivity,
-                        songData.bgColor
-                    )
-                )
-                setTabTextColors(
-                    Color.BLACK, ContextCompat.getColor(
-                        this@SongDetailActivity,
-                        songData.bgColor
-                    )
-                )
+                setSelectedTabIndicatorColor(ContextCompat.getColor(this@SongDetailActivity, songData.bgColor))
+                setTabTextColors(Color.BLACK, ContextCompat.getColor(this@SongDetailActivity, songData.bgColor))
             }
             toolbarLayout.setContentScrimResource(songData.bgColor)
-            GlideApp.with(this@SongDetailActivity)
-                .load(MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl)
-                .into(songJacket)
-            songJacket.setBackgroundColor(
-                ContextCompat.getColor(
-                    this@SongDetailActivity,
-                    songData.strokeColor
-                )
-            )
+            GlideApp.with(this@SongDetailActivity).load(MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl).into(songJacket)
+            songJacket.setBackgroundColor(ContextCompat.getColor(this@SongDetailActivity, songData.strokeColor))
 
-            // 显示歌曲信息
             songTitle.apply {
                 text = songData.title
-
                 setShrinkOnTouch()
                 setCopyOnLongClick(songData.title)
             }
 
             songIdText.apply {
                 text = songData.id.toString()
-
                 setShrinkOnTouch()
                 setCopyOnLongClick(songData.id.toString())
             }
@@ -149,47 +127,38 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            // 显示别名
             if (Settings.getEnableShowAlias()) {
-                AliasRepository.getInstance(AppDataBase.getInstance().aliasDao())
-                    .getAliasListBySongId(songData.id).observe(this@SongDetailActivity) {
-                        // 对添加的别名进行flow约束
-                        if (it.isNotEmpty()) {
-                            val aliasViewIds = songAliasFlow.referencedIds.toMutableList()
-                            it.forEachIndexed { _, item ->
-                                val textView = TextView(this@SongDetailActivity).apply {
-                                    text = item.alias
-                                    id = View.generateViewId()
-                                    aliasViewIds.add(id)
-                                    val padding = 5.toDp().toInt()
-                                    setPadding(padding, padding, padding, padding)
-                                    setBackgroundResource(R.drawable.mmd_song_alias_info_bg)
-                                    setTextColor(
-                                        ContextCompat.getColor(
-                                            this@SongDetailActivity,
-                                            songData.bgColor
-                                        )
-                                    )
-                                    layoutParams = ConstraintLayout.LayoutParams(
-                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                                    )
+                AliasRepository.getInstance().getAliasListBySongId(songData.id).observe(this@SongDetailActivity) {
+                    if (it.isNotEmpty()) {
+                        val aliasViewIds = songAliasFlow.referencedIds.toMutableList()
+                        it.forEach { item ->
+                            val textView = TextView(this@SongDetailActivity).apply {
+                                text = item.alias
+                                id = View.generateViewId()
+                                aliasViewIds.add(id)
+                                val padding = 5.toDp().toInt()
+                                setPadding(padding, padding, padding, padding)
+                                setBackgroundResource(R.drawable.mmd_song_alias_info_bg)
+                                setTextColor(ContextCompat.getColor(this@SongDetailActivity, songData.bgColor))
+                                layoutParams = ConstraintLayout.LayoutParams(
+                                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+                                )
 
-                                    setShrinkOnTouch()
-                                    setCopyOnLongClick(item.alias)
-                                }
-                                constraintLayout.addView(textView)
+                                setShrinkOnTouch()
+                                setCopyOnLongClick(item.alias)
                             }
-                            songAliasFlow.referencedIds = aliasViewIds.toIntArray()
-                        } else {
-                            aliasLabel.visibility = View.GONE
+                            constraintLayout.addView(textView)
                         }
+                        songAliasFlow.referencedIds = aliasViewIds.toIntArray()
+                    } else {
+                        aliasLabel.visibility = View.GONE
                     }
+                }
             } else {
                 aliasLabel.visibility = View.GONE
             }
 
-            // 打开歌曲大图
             songJacket.setOnClickListener {
                 val options: ActivityOptions = ActivityOptions
                     .makeSceneTransitionAnimation(
@@ -205,7 +174,6 @@ class SongDetailActivity : AppCompatActivity() {
                 )
             }
 
-            // 设置收藏
             favButton.apply {
                 val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
                     if (isFavor) {
@@ -222,19 +190,24 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            // 获取成绩数据
-            RecordRepository.getInstance(AppDataBase.getInstance().recordDao()).getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
+            RecordRepository.getInstance().getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
         }
     }
 
     private fun setupFragments(recordList: List<RecordEntity>) {
-        val list = ArrayList<Fragment>()
-
-        (1..data.charts.size).forEach { i ->
-            val position = data.charts.size - i
-            list.add(SongLevelFragment.newInstance(data, position, recordList.find {
-                it.songId == data.songData.id && it.levelIndex == position
-            }))
+        val sortedCharts = if (data.songData.type == SongType.UTAGE) {
+            data.charts.sortedBy { it.difficultyType.difficultyIndex }
+        } else {
+            data.charts.sortedByDescending { it.difficultyType.difficultyIndex }
+        }
+        val list = sortedCharts.map { chart ->
+            SongLevelFragment.newInstance(
+                GameSongObject(
+                    song = data.songData,
+                    chart = chart,
+                    record = recordList.find { chart.difficultyType == it.difficultyType }
+                )
+            )
         }
 
         binding.viewPager.adapter = LevelDataFragmentAdapter(supportFragmentManager, -1, list)

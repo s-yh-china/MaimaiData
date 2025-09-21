@@ -1,13 +1,35 @@
 package com.paperpig.maimaidata.crawler;
 
-import android.annotation.SuppressLint;
+import static com.paperpig.maimaidata.crawler.CrawlerCaller.finishUpdate;
+import static com.paperpig.maimaidata.crawler.CrawlerCaller.onError;
+import static com.paperpig.maimaidata.crawler.CrawlerCaller.startAuth;
+import static com.paperpig.maimaidata.crawler.CrawlerCaller.writeLog;
+
 import android.util.Log;
+
 import androidx.core.util.Predicate;
+
 import com.paperpig.maimaidata.db.entity.RecordEntity;
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity;
+import com.paperpig.maimaidata.model.DifficultyType;
 import com.paperpig.maimaidata.model.SongType;
 import com.paperpig.maimaidata.repository.RecordRepository;
 import com.paperpig.maimaidata.repository.SongWithChartRepository;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.ConnectionSpec;
@@ -16,50 +38,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.paperpig.maimaidata.crawler.CrawlerCaller.finishUpdate;
-import static com.paperpig.maimaidata.crawler.CrawlerCaller.onError;
-import static com.paperpig.maimaidata.crawler.CrawlerCaller.startAuth;
-import static com.paperpig.maimaidata.crawler.CrawlerCaller.writeLog;
 
 public class WechatCrawler {
-    // Make this true for Fiddler to capture https request
-    private static final boolean IGNORE_CERT = false;
-
     private static final int MAX_RETRY_COUNT = 4;
 
     private static final String TAG = "Crawler";
 
     private static final SimpleCookieJar jar = new SimpleCookieJar();
-
-    private static final Map<Integer, String> diffMap = Map.of(
-        0, "Basic",
-        1, "Advance",
-        2, "Expert",
-        3, "Master",
-        4, "Re:Master",
-        10, "宴·会·场"
-    );
 
     private static OkHttpClient client = null;
 
@@ -72,11 +57,11 @@ public class WechatCrawler {
         this.songWithChartRepository = songWithChartRepository;
     }
 
-    private int batchFetchAndUploadData(Set<Integer> difficulties) {
+    private int batchFetchAndUploadData(Set<DifficultyType> difficulties) {
         List<CompletableFuture<List<RecordEntity>>> tasks = new ArrayList<>();
         List<RecordEntity> allRecords = new ArrayList<>();
-        for (Integer diff : difficulties) {
-            tasks.add(CompletableFuture.supplyAsync(() -> fetchAndUploadData(diff, 1)));
+        for (DifficultyType difficulty : difficulties) {
+            tasks.add(CompletableFuture.supplyAsync(() -> fetchAndUploadData(difficulty, 1)));
         }
         for (CompletableFuture<List<RecordEntity>> task : tasks) {
             allRecords.addAll(task.join());
@@ -86,9 +71,10 @@ public class WechatCrawler {
         return allRecords.size();
     }
 
-    private List<RecordEntity> fetchAndUploadData(Integer diff, Integer retryCount) {
-        writeLog("开始获取 " + diffMap.get(diff) + " 难度的数据");
-        Request request = new Request.Builder().url("https://maimai.wahlap.com/maimai-mobile/record/musicGenre/search/?genre=99&diff=" + diff).build();
+    private List<RecordEntity> fetchAndUploadData(DifficultyType difficulty, Integer retryCount) {
+        writeLog("开始获取 " + difficulty.getDisplayName() + " 难度的数据");
+        Log.d(TAG, "开始获取 " + difficulty.getDisplayName() + " 难度的数据");
+        Request request = new Request.Builder().url("https://maimai.wahlap.com/maimai-mobile/record/musicGenre/search/?genre=99&diff=" + difficulty.getWebDifficultyIndex()).build();
 
         Call call = client.newCall(request);
         try {
@@ -100,11 +86,11 @@ public class WechatCrawler {
             }
             data = Pattern.compile("\\s+").matcher(data).replaceAll(" ");
 
-            // Upload data to maimai-prober
-            writeLog(diffMap.get(diff) + " 难度的数据已获取，正在处理");
-            return parsePageToRecordList(data);
+            writeLog(difficulty.getDisplayName() + " 难度的数据已获取，正在处理");
+            Log.d(TAG, difficulty.getDisplayName() + " 难度的数据已获取，正在处理");
+            return parsePageToRecordList(data, difficulty);
         } catch (Exception e) {
-            return handleRetryFetchAndUploadData(e, diff, retryCount);
+            return handleRetryFetchAndUploadData(e, difficulty, retryCount);
         }
     }
 
@@ -114,19 +100,15 @@ public class WechatCrawler {
     private static final List<String> fcIcons = List.of("fc", "fcp", "ap", "app");
     private static final List<String> fsIcons = List.of("fs", "fsp", "fdx", "fdxp");
 
-    private List<RecordEntity> parsePageToRecordList(String pageData) {
-        Pattern diffPattern = Pattern.compile("diff_(.*)\\.png");
+    private List<RecordEntity> parsePageToRecordList(String pageData, DifficultyType difficulty) {
         List<RecordEntity> records = new ArrayList<>();
-        Document doc = Jsoup.parse(pageData);
 
-        Elements nameBlocks = doc.select("div.music_name_block.t_l.f_13.break");
-
-        for (Element nameElement : nameBlocks) {
+        for (Element nameElement : Jsoup.parse(pageData).select("div.music_name_block.t_l.f_13.break")) {
             try {
                 String title = nameElement.text();
+                boolean isUtage = difficulty == DifficultyType.UTAGE;
 
                 if (title.isEmpty()) {
-                    Log.d(TAG, "发现如月车站");
                     title = "　";
                 }
 
@@ -141,78 +123,50 @@ public class WechatCrawler {
                     continue;
                 }
 
-                Element diffImg = null;
-                for (Element sibling : siblings) {
-                    Element img = sibling.select("img[src*=diff_]").first();
-                    if (img != null) {
-                        diffImg = img;
-                        break;
-                    }
-                }
-
-                if (diffImg == null) {
-                    continue;
-                }
-
-                String diffSrc = diffImg.attr("src");
-                Matcher diffMatcher = diffPattern.matcher(diffSrc);
-                if (!diffMatcher.find()) {
-                    continue;
-                }
-
-                String diffName = diffMatcher.group(1);
-                int levelIndex = getLevelIndex(diffName);
-                boolean isUtage = diffName.contains("utage");
-                if (levelIndex == -1) {
-                    continue;
-                }
-
                 Element superParentRow = nameElement.parent().parent().parent();
                 Element typeImg = superParentRow.select("img.music_kind_icon").first();
                 SongType type = SongType.DX;
                 if (typeImg != null) {
-                    String src = typeImg.attr("src");
-                    if (src.contains("standard")) {
+                    if (typeImg.attr("src").contains("standard")) {
                         type = SongType.SD;
                     }
                 } else if (isUtage) {
                     type = SongType.UTAGE;
                 } else {
-                    Log.w(TAG, "无法获取铺面类型");
+                    Log.w(TAG, "无法获取铺面类型，推测为DX铺面");
                 }
 
                 String dxScoreText = findText(siblings, "music_score_block", s -> s.contains("/"));
                 if (dxScoreText == null) {
                     continue;
                 }
-                int dxMaxScore = Integer.parseInt(dxScoreText.split("/")[1].replace(",", "").replace(" ", ""));
+                String[] dxScorePart = dxScoreText.replace(",", "").replace(" ", "").split("/");
+                int dxScore = Integer.parseInt(dxScorePart[0]);
+                int dxMaxScore = Integer.parseInt(dxScorePart[1]);
                 if (title.equals("Link")) {
-                    if (dxMaxScore == linkCofDxScore.get(levelIndex)) {
+                    if (dxMaxScore == linkCofDxScore.get(difficulty.getDifficultyIndex())) {
                         title = "Link(Cof)";
-                        Log.d(TAG, "Link(Cof)");
                     }
                 }
 
                 int song_id = -1;
                 SongWithChartsEntity song_entity = null;
                 List<SongWithChartsEntity> searchSongs = songWithChartRepository.searchSongsWithTitle(title);
-                if (!searchSongs.isEmpty()) {
-                    for (SongWithChartsEntity song : searchSongs) {
-                        if (song.getSongData().getType().equals(type)) {
-                            song_id = song.getSongData().getId();
-                            song_entity = song;
-                            break;
-                        }
+                for (SongWithChartsEntity song : searchSongs) {
+                    if (song.getSongData().getType().equals(type)) {
+                        song_id = song.getSongData().getId();
+                        song_entity = song;
+                        break;
                     }
                 }
                 if (song_id == -1) {
-                    Log.w(TAG, "无法获取 " + title + "(" + type + ") " + diffName + " 的歌曲数据");
-                    writeLog("无法获取 " + title + "(" + type + ") " + diffName + " 的歌曲数据");
+                    Log.w(TAG, "无法获取 " + title + "(" + type + ") " + difficulty.getDisplayName() + " 的歌曲数据");
+                    writeLog("无法获取 " + title + "(" + type + ") " + difficulty.getDisplayName() + " 的歌曲数据");
                     continue;
                 }
 
                 boolean isBuddy = isUtage && Boolean.TRUE.equals(song_entity.getSongData().getBuddy());
-                String level = song_entity.getCharts().get(levelIndex).getLevel();
+                String level = song_entity.getChartsMap().get(difficulty).getLevel();
 
                 String fc = "";
                 String fs = "";
@@ -241,7 +195,6 @@ public class WechatCrawler {
                 }
 
                 double achievements = Double.parseDouble(achievementText.replace("%", ""));
-                int dxScore = Integer.parseInt(dxScoreText.split("/")[0].replace(",", "").replace(" ", ""));
 
                 String rate;
                 double rateAchievements = isBuddy ? achievements / 2 : achievements;
@@ -275,29 +228,28 @@ public class WechatCrawler {
                     rate = "sssp";
                 }
 
-                // Create record
                 records.add(new RecordEntity(
                     0,
+                    song_id,
                     achievements,
                     dxScore,
                     fc,
                     fs,
                     level,
-                    levelIndex,
-                    rate,
-                    song_id
+                    difficulty,
+                    rate
                 ));
                 if (isBuddy) {
                     records.add(new RecordEntity(
                         0,
+                        song_id,
                         achievements,
                         dxScore,
                         fc,
                         fs,
                         level,
-                        1,
-                        rate,
-                        song_id
+                        DifficultyType.UTAGE_PLAYER2,
+                        rate
                     ));
                 }
             } catch (Exception e) {
@@ -309,17 +261,6 @@ public class WechatCrawler {
         return records;
     }
 
-    private static int getLevelIndex(String diffName) {
-        return switch (diffName) {
-            case "basic", "utage" -> 0;
-            case "advanced" -> 1;
-            case "expert" -> 2;
-            case "master" -> 3;
-            case "remaster" -> 4;
-            default -> -1;
-        };
-    }
-
     private static String findText(Elements siblings, String clazz, Predicate<String> predicate) {
         for (Element sibling : siblings) {
             if (sibling.hasClass(clazz) && (predicate == null || predicate.test(sibling.text()))) {
@@ -329,13 +270,13 @@ public class WechatCrawler {
         return null;
     }
 
-    private List<RecordEntity> handleRetryFetchAndUploadData(Exception e, Integer diff, Integer currentRetryCount) {
-        writeLog("获取 " + diffMap.get(diff) + " 难度数据时出现错误: " + e);
+    private List<RecordEntity> handleRetryFetchAndUploadData(Exception e, DifficultyType difficulty, Integer currentRetryCount) {
+        writeLog("获取 " + difficulty.getDisplayName() + " 难度数据时出现错误: " + e);
         if (currentRetryCount < MAX_RETRY_COUNT) {
             writeLog("进行第" + currentRetryCount + "次重试");
-            return fetchAndUploadData(diff, currentRetryCount + 1);
+            return fetchAndUploadData(difficulty, currentRetryCount + 1);
         } else {
-            writeLog(diffMap.get(diff) + "难度数据更新失败！");
+            writeLog(difficulty.getDisplayName() + "难度数据更新失败！");
         }
         return new ArrayList<>();
     }
@@ -353,7 +294,7 @@ public class WechatCrawler {
         return url;
     }
 
-    public void startFetch(Set<Integer> difficulties, String wechatAuthUrl) {
+    public void startFetch(Set<DifficultyType> difficulties, String wechatAuthUrl) {
         if (wechatAuthUrl.startsWith("http")) {
             wechatAuthUrl = wechatAuthUrl.replaceFirst("http", "https");
         }
@@ -383,7 +324,7 @@ public class WechatCrawler {
         }
     }
 
-    private int fetchMaimaiData(Set<Integer> difficulties) {
+    private int fetchMaimaiData(Set<DifficultyType> difficulties) {
         buildHttpClient(false);
         return batchFetchAndUploadData(difficulties);
     }
@@ -411,7 +352,6 @@ public class WechatCrawler {
             throw new Exception(exception);
         }
 
-        // Handle redirect manually
         String location = response.headers().get("Location");
         if (response.code() >= 300 && location != null) {
             request = new Request.Builder().url(location).get().build();
@@ -423,10 +363,6 @@ public class WechatCrawler {
     private static void buildHttpClient(boolean followRedirect) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        if (IGNORE_CERT) {
-            ignoreCertBuilder(builder);
-        }
-
         builder.connectTimeout(120, TimeUnit.SECONDS);
         builder.readTimeout(120, TimeUnit.SECONDS);
         builder.writeTimeout(120, TimeUnit.SECONDS);
@@ -436,7 +372,6 @@ public class WechatCrawler {
 
         builder.cookieJar(jar);
 
-        // No cache for http request
         builder.cache(null);
         Interceptor noCacheInterceptor = chain -> {
             Request request = chain.request();
@@ -446,42 +381,12 @@ public class WechatCrawler {
         };
         builder.addInterceptor(noCacheInterceptor);
 
-        // Fix SSL handle shake error
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS).tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0).allEnabledCipherSuites().build();
-        // 兼容http接口
         ConnectionSpec spec1 = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT).build();
         builder.connectionSpecs(Arrays.asList(spec, spec1));
 
         builder.pingInterval(3, TimeUnit.SECONDS);
 
         client = builder.build();
-    }
-
-    @SuppressLint("CustomX509TrustManager")
-    private static void ignoreCertBuilder(OkHttpClient.Builder builder) {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                @SuppressLint("TrustAllX509TrustManager")
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                }
-
-                @SuppressLint("TrustAllX509TrustManager")
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                }
-
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[]{};
-                }
-            }};
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier((hostname, session) -> true);
-        } catch (Exception ignored) {
-        }
     }
 }

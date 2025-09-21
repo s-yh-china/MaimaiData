@@ -10,13 +10,9 @@ import androidx.core.content.ContextCompat
 import com.paperpig.maimaidata.MaimaiDataApplication
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.FragmentSongLevelBinding
-import com.paperpig.maimaidata.db.AppDataBase
-import com.paperpig.maimaidata.db.entity.RecordEntity
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
-import com.paperpig.maimaidata.model.SongType
+import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.repository.ChartStatsRepository
 import com.paperpig.maimaidata.ui.BaseFragment
-import com.paperpig.maimaidata.utils.Constants
 import com.paperpig.maimaidata.utils.setCopyOnLongClick
 import com.paperpig.maimaidata.utils.setShrinkOnTouch
 import com.paperpig.maimaidata.utils.toDp
@@ -25,21 +21,15 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 private const val ARG_SONG_DATA = "song_data"
-private const val ARG_POSITION = "position"
-private const val ARG_RECORD = "record"
 
 class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
     private lateinit var binding: FragmentSongLevelBinding
-    private lateinit var data: SongWithChartsEntity
-    private var record: RecordEntity? = null
-    private var position: Int = 0
+    private lateinit var data: GameSongObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             data = it.getParcelable(ARG_SONG_DATA)!!
-            position = it.getInt(ARG_POSITION)
-            record = it.getParcelable(ARG_RECORD)
         }
     }
 
@@ -51,27 +41,24 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (record != null) {
+        data.record?.let {
             binding.chartStatusGroup.visibility = View.VISIBLE
             binding.chartNoStatusGroup.visibility = View.GONE
-            binding.chartAchievement.text = getString(R.string.maimaidx_achievement_desc, record!!.achievements)
-            binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getRankIcon()))
-            binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getFcIcon()))
-            binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), record!!.getFsIcon()))
-        } else {
+            binding.chartAchievement.text = getString(R.string.maimaidx_achievement_desc, it.achievements)
+            binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getRankIcon()))
+            binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getFcIcon()))
+            binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getFsIcon()))
+        } ?: run {
             binding.chartStatusGroup.visibility = View.GONE
             binding.chartNoStatusGroup.visibility = View.VISIBLE
-
-            binding.recordTips.setOnClickListener {
-                Toast.makeText(context, R.string.no_record_tips, Toast.LENGTH_LONG).show()
-            }
+            binding.recordTips.setOnClickListener { Toast.makeText(context, R.string.no_record_tips, Toast.LENGTH_LONG).show() }
         }
-        val chart = data.charts[position]
-        val songData = data.songData
-        ChartStatsRepository.getInstance(AppDataBase.getInstance().chartStatsDao())
-            .getChartStatsBySongIdAndDifficultyIndex(songData.id, position).observe(requireActivity()) {
-                binding.songFitDiff.text = it?.fitDifficulty?.toString() ?: "-"
-            }
+
+        val song = data.song
+        val chart = data.chart
+        ChartStatsRepository.getInstance().getChartStatsBySongIdAndDifficulty(song.id, chart.difficultyType).observe(requireActivity()) {
+            binding.songFitDiff.text = it?.fitDifficulty?.toString() ?: "-"
+        }
 
         val totalScore = (chart.noteTap + chart.noteTouch) + chart.noteHold * 2 + chart.noteSlide * 3 + chart.noteBreak * 5
         val format = DecimalFormat("0.#####%")
@@ -95,25 +82,15 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         }
 
         binding.chartDesigner.apply {
-            text = data.charts[position].charter
+            text = chart.charter
             setShrinkOnTouch()
-            setCopyOnLongClick(data.charts[position].charter)
+            setCopyOnLongClick(chart.charter)
         }
 
-        binding.chartView.setMaxValues((MaimaiDataApplication.instance.maxNotesStats?.let {
-            listOf(it.total, it.tap, it.hold, it.slide, it.touch, it.`break`)
-        }) ?: emptyList())
-        val noteValueList = listOf(
-            chart.noteTotal,
-            chart.noteTap,
-            chart.noteHold,
-            chart.noteSlide,
-            chart.noteTouch,
-            chart.noteBreak
-        )
+        binding.chartView.setMaxValues(MaimaiDataApplication.instance.maxNotesStats?.let { listOf(it.total, it.tap, it.hold, it.slide, it.touch, it.`break`) } ?: emptyList())
+        val noteValueList = listOf(chart.noteTotal, chart.noteTap, chart.noteHold, chart.noteSlide, chart.noteTouch, chart.noteBreak)
         binding.chartView.setValues(noteValueList)
-
-        binding.chartView.setBarColor(songData.bgColor)
+        binding.chartView.setBarColor(song.bgColor)
 
         binding.tapGreatScore.text = format.format(1f / totalScore * 0.2)
         binding.tapGoodScore.text = format.format(1f / totalScore * 0.5)
@@ -135,11 +112,10 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         val notesAchievementStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_stroke) as GradientDrawable
         val notesAchievementInnerStoke = (binding.noteAchievementLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_inner_stroke) as GradientDrawable
 
-        notesAchievementStoke.setStroke(4.toDp().toInt(), ContextCompat.getColor(requireContext(), songData.strokeColor))
+        notesAchievementStoke.setStroke(4.toDp().toInt(), ContextCompat.getColor(requireContext(), song.strokeColor))
+        notesAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), song.bgColor))
 
-        notesAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), songData.bgColor))
-
-        if (!songData.version.contains("舞萌")) {
+        if (!song.version.contains("舞萌")) {
             binding.finaleGroup.visibility = View.VISIBLE
             binding.finaleAchievement.text =
                 String.format(
@@ -155,12 +131,10 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
     }
 
     companion object {
-        fun newInstance(chart: SongWithChartsEntity, position: Int, record: RecordEntity?) =
+        fun newInstance(data: GameSongObject) =
             SongLevelFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_SONG_DATA, chart)
-                    putInt(ARG_POSITION, position)
-                    putParcelable(ARG_RECORD, record)
+                    putParcelable(ARG_SONG_DATA, data)
                 }
             }
     }

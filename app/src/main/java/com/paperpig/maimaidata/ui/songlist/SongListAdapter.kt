@@ -16,6 +16,7 @@ import com.paperpig.maimaidata.databinding.ItemNormalSongBinding
 import com.paperpig.maimaidata.databinding.ItemUtageSongBinding
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
@@ -78,7 +79,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val songData = list[position].songData
-        val charts = list[position].charts
+        val charts = list[position].chartsMap
         holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, list[position]) }
         holder.itemView.setCopyOnLongClick(songData.title, copiedMessage = holder.itemView.context.getText(R.string.copy_song_name_success).toString())
 
@@ -107,15 +108,11 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             holder.songJacket.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songData.strokeColor))
             holder.songTitle.text = songData.title
             holder.songArtist.text = songData.artist
-            holder.difficultyBasic.text = charts[0].internalLevel.toString()
-            holder.difficultyAdvanced.text = charts[1].internalLevel.toString()
-            holder.difficultyExpert.text = charts[2].internalLevel.toString()
-            holder.difficultyMaster.text = charts[3].internalLevel.toString()
-            if (charts.size == 5) {
-                holder.difficultyRemaster.text = charts[4].internalLevel.toString()
-            } else {
-                holder.difficultyRemaster.text = ""
-            }
+            holder.difficultyBasic.text = charts[DifficultyType.BASIC]?.internalLevel.toString()
+            holder.difficultyAdvanced.text = charts[DifficultyType.ADVANCED]?.internalLevel.toString()
+            holder.difficultyExpert.text = charts[DifficultyType.EXPERT]?.internalLevel.toString()
+            holder.difficultyMaster.text = charts[DifficultyType.MASTER]?.internalLevel.toString()
+            holder.difficultyRemaster.text = charts[DifficultyType.REMASTER]?.internalLevel?.toString() ?: ""
 
             if (songData.type == SongType.DX) {
                 holder.songType.setImageResource(R.drawable.ic_deluxe)
@@ -137,7 +134,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
 
             holder.songTitle.text = songData.title
             holder.songArtist.text = songData.artist
-            holder.songLevelUtage.text = charts[0].level
+            holder.songLevelUtage.text = charts[DifficultyType.UTAGE]?.level
             holder.songUtageKanji.text = songData.kanji
             holder.songComment.text = songData.comment
             holder.songUtagePartyMark.visibility = if (songData.buddy!!) View.VISIBLE else View.GONE
