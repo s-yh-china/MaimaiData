@@ -161,7 +161,6 @@ public class WechatCrawler {
                 }
                 if (song_id == -1) {
                     Log.w(TAG, "无法获取 " + title + "(" + type + ") " + difficulty.getDisplayName() + " 的歌曲数据");
-                    writeLog("无法获取 " + title + "(" + type + ") " + difficulty.getDisplayName() + " 的歌曲数据");
                     continue;
                 }
 

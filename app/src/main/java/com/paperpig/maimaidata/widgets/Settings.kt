@@ -28,7 +28,7 @@ object Settings {
     private const val KEY_NICKNAME = "nickname"
     private const val DEFAULT_NICKNAME = "maimai"
 
-    private const val KEY_SELECT_DIFFICULTIES = "select_difficulties"
+    private const val KEY_SELECT_DIFFICULTIES = "select_difficulties_v2"
     private val DEFAULT_SELECT = setOf("BASIC", "ADVANCED", "EXPERT", "MASTER", "REMASTER", "UTAGE")
 
     fun getEnableAliasSearch() = settingsPre.getBoolean(KEY_ALIAS_SEARCH, DEFAULT_ALIAS_SEARCH)
@@ -37,7 +37,7 @@ object Settings {
 
     fun getEnableShowAlias() = settingsPre.getBoolean(KEY_SHOW_ALIAS, DEFAULT_SHOW_ALIAS)
 
-    fun getNickname(): String = settingsPre.getString(KEY_NICKNAME, DEFAULT_NICKNAME) ?: DEFAULT_NICKNAME
+    fun getNickname(): String = settingsPre.getString(KEY_NICKNAME, DEFAULT_NICKNAME).takeIf { !it.isNullOrBlank() } ?: DEFAULT_NICKNAME
 
     fun getUpdateDifficulty(): Set<DifficultyType> {
         val selectedSet = settingsPre.getStringSet(KEY_SELECT_DIFFICULTIES, DEFAULT_SELECT) ?: DEFAULT_SELECT

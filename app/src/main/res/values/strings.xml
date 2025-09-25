@@ -88,9 +88,9 @@
 
     <string name="rating_sheet">RANK 系数表</string>
     <string name="maimaidx_prober">舞萌DX查分器</string>
-    <string name="current_user">当前用户</string>
+    <string name="current_user">你好</string>
     <string name="prober_update_help">数据录入帮助</string>
-    <string name="prober_update_content_step1">①.打开“开启代理”，App会自动打开代理（第一次使用请同意VPN创建请求）、复制链接、跳转微信</string>
+    <string name="prober_update_content_step1">①.打开“开始录入”，App会自动打开代理（第一次使用请同意VPN创建请求）、复制链接、跳转微信</string>
     <string name="prober_update_content_step2">②.在微信中将复制的链接发送至聊天窗口（如文件传输助手）</string>
     <string name="prober_update_content_step3">③.点击发送的链接，等待网页提示“登录信息以获取”后，即可关闭页面返回App</string>
     <string name="prober_update_content_step4">④.App开始获取分数信息，并根据设置中的难度选择将对应难度的成绩载入数据库</string>
@@ -125,7 +125,7 @@
     <string name="select_account_hint">请选择账号</string>
     <string name="type_in_account_pwd_hint">请输入用户名或密码</string>
 
-    <string name="start_proxy">开启代理</string>
+    <string name="start_proxy">开始录入</string>
     <string name="stop_proxy">关闭代理</string>
 
     <string name="about">关于</string>
