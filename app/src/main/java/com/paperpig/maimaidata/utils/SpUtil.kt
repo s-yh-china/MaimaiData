@@ -36,6 +36,8 @@ object SpUtil {
     private const val KEY_LAST_QUERY_VERSION = "last_query_version"
     private const val KEY_LAST_QUERY_GENRE = "last_query_genre"
     private const val KEY_LAST_QUERY_GENRE_DIFFICULTY = "last_query_genre_difficulty"
+    private const val KEY_LAST_QUERY_VERSION_CLEAR = "last_query_version_clear"
+    private const val KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY = "last_query_version_clear_difficulty"
 
     private const val KEY_VERSION = "db_version"
     private const val KEY_LAST_UPDATE_TIME = "chart_stats_db_last_update_time"
@@ -75,11 +77,23 @@ object SpUtil {
 
     fun getLastQueryGenre(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE, 0)
 
-    fun saveLastQueryDifficulty(index: Int) {
+    fun saveLastQueryGenreDifficulty(index: Int) {
         userInfoPrefs.edit { putInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, index) }
     }
 
-    fun getLastQueryDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, 3)
+    fun getLastQueryGenreDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_GENRE_DIFFICULTY, 3)
+
+    fun saveLastQueryVersionClear(index: Int) {
+        userInfoPrefs.edit { putInt(KEY_LAST_QUERY_VERSION_CLEAR, index) }
+    }
+
+    fun getLastQueryVersionClear(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION_CLEAR, 0)
+
+    fun saveLastQueryVersionClearDifficulty(index: Int) {
+        userInfoPrefs.edit { putInt(KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY, index) }
+    }
+
+    fun getLastQueryVersionClearDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY, 0)
 
     // ================= SONG INFO =================
 

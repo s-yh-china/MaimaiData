@@ -1,9 +1,6 @@
 package com.paperpig.maimaidata.crawler
 
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
-import com.paperpig.maimaidata.repository.RecordRepository
-import com.paperpig.maimaidata.repository.SongWithChartRepository
-import com.paperpig.maimaidata.widgets.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,28 +19,24 @@ object CrawlerCaller {
         }
     }
 
-    @JvmStatic
     fun writeLog(text: String) {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onMessageReceived(text)
         }
     }
 
-    @JvmStatic
     fun startAuth() {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onStartAuth()
         }
     }
 
-    @JvmStatic
     fun finishUpdate() {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onFinishUpdate()
         }
     }
 
-    @JvmStatic
     fun onError(e: Exception) {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onError(e)
@@ -59,12 +52,7 @@ object CrawlerCaller {
             } catch (e: InterruptedException) {
                 onError(e)
             }
-            try {
-                val crawler = WechatCrawler(RecordRepository.getInstance(), SongWithChartRepository.getInstance())
-                crawler.startFetch(Settings.getUpdateDifficulty(), authUrl)
-            } catch (e: IOException) {
-                onError(e)
-            }
+            WechatCrawler.startFetch(authUrl)
         }
     }
 

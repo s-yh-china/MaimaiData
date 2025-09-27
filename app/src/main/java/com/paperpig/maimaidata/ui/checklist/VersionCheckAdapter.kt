@@ -13,33 +13,30 @@ import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ItemCheckHeaderBinding
 import com.paperpig.maimaidata.databinding.ItemLevelHeaderBinding
 import com.paperpig.maimaidata.databinding.ItemSongCheckBinding
-import com.paperpig.maimaidata.db.entity.RecordEntity
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DifficultyType
+import com.paperpig.maimaidata.model.SongFC
+import com.paperpig.maimaidata.model.SongFS
+import com.paperpig.maimaidata.model.SongRank
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
 
 class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    //0为显示完成率标识，1为显示FC/AP标识，2为显示FDX标识
+
     private var displayMode = 0
 
-    //歌曲信息列表
-    private var dataList: List<SongWithChartsEntity> = listOf()
+    private var dataList: List<SongWithRecordEntity> = listOf()
 
-    //个人记录列表
-    private var recordList: List<RecordEntity> = listOf()
-
-    //指定版本
     private var versionSelect: String? = null
 
-    private var groupData: Map<String, List<SongWithChartsEntity>> = mapOf()
+    private var groupData: Map<String, List<SongWithRecordEntity>> = mapOf()
 
-    private fun getFormatData(): Map<String, List<SongWithChartsEntity>> = dataList
+    private fun getFormatData(): Map<String, List<SongWithRecordEntity>> = dataList
         .filter { it.songData.version == versionSelect || (versionSelect == "maimai" && it.songData.version == "maimai PLUS") }
         .sortedByDescending { it.chartsMap[DifficultyType.MASTER]?.internalLevel }
-        .groupBy { it.chartsMap[DifficultyType.MASTER]!!.level }
+        .groupBy { it.chartsMap[DifficultyType.MASTER]?.level ?: "?" }
 
     companion object {
         const val TYPE_HEADER = 0
@@ -87,89 +84,69 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is HeaderViewHolder) {
-            val format = context.getString(R.string.name_plate_achieved)
+        when (holder) {
+            is HeaderViewHolder -> {
+                val format = context.getString(R.string.name_plate_achieved)
 
-            val groupFlatten = groupData.values.flatten()
-            val groupSize = groupData.values.sumOf { it.size }
+                val groupFlatten = groupData.values.flatten()
+                val groupSize = groupFlatten.size
 
-            holder.tripleSCount.text = String.format(
-                format, recordList.count {
-                    it.achievements >= 100 && groupFlatten.any { data -> data.songData.id == it.songId }
-                }, groupSize
-            )
+                holder.tripleSCount.text = String.format(
+                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.rate ?: SongRank.D) >= SongRank.SSS }, groupSize
+                )
 
-            holder.fcCount.text = String.format(
-                format, recordList.count {
-                    it.fc.isNotEmpty() && groupFlatten.any { data -> data.songData.id == it.songId }
-                }, groupSize
-            )
+                holder.fcCount.text = String.format(
+                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fc ?: SongFC.NONE) >= SongFC.FC }, groupSize
+                )
 
-            holder.apCount.text = String.format(
-                format, recordList.count {
-                    (it.fc == "ap" || it.fc == "app") && groupFlatten.any { data -> data.songData.id == it.songId }
-                }, groupSize
-            )
+                @Suppress("KotlinConstantConditions") // Android Studio bug
+                holder.apCount.text = String.format(
+                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fc ?: SongFC.NONE) >= SongFC.AP }, groupSize
+                )
 
-            holder.fsdCount.text = String.format(
-                format, recordList.count {
-                    (it.fs == "fsd" || it.fs == "fsdp") && groupFlatten.any { data -> data.songData.id == it.songId }
-                }, groupSize
-            )
-        }
-        if (holder is LevelHolder) {
-            val data = getSongAt(position)
-            holder.levelTitle.text = "Level " + data.chartsMap[DifficultyType.MASTER]?.level
-
-        }
-        if (holder is ViewHolder) {
-            val data = getSongAt(position)
-            holder.itemView.setOnClickListener {
-                SongDetailActivity.actionStart(holder.itemView.context, data)
+                holder.fsdCount.text = String.format(
+                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fs ?: SongFS.NONE) >= SongFS.FDX }, groupSize
+                )
             }
 
-            holder.songJacket.apply {
-                setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.master))
-                GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.songData.imageUrl).into(this)
+            is LevelHolder -> {
+                holder.levelTitle.text = "Level " + getSongAt(position).chartsMap[DifficultyType.MASTER]?.level
             }
 
-            recordList.find { it.songId == data.songData.id }
-                ?.let { record ->
-                    holder.songJacket.colorFilter =
-                        PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
+            is ViewHolder -> {
+                val data = getSongAt(position)
+                holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data) }
+
+                holder.songJacket.apply {
+                    setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.master))
+                    GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.songData.imageUrl).into(this)
+                }
+
+                data.recordsMap[DifficultyType.MASTER]?.let {
+                    holder.songJacket.colorFilter = PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
                     when (displayMode) {
                         0 -> {
-                            GlideApp.with(holder.itemView.context).load(record.getRankIcon())
-                                .override(
-                                    50.toDp().toInt(),
-                                    22.toDp().toInt()
-                                )
+                            GlideApp.with(holder.itemView.context).load(it.rate.icon)
+                                .override(50.toDp().toInt(), 22.toDp().toInt())
                                 .into(holder.songRecordMark)
                         }
 
                         1 -> {
-                            GlideApp.with(holder.itemView.context).load(record.getFcIcon())
-                                .override(
-                                    30.toDp().toInt(),
-                                    30.toDp().toInt()
-                                )
+                            GlideApp.with(holder.itemView.context).load(it.fc.icon)
+                                .override(30.toDp().toInt(), 30.toDp().toInt())
                                 .into(holder.songRecordMark)
                         }
 
                         2 -> {
-                            GlideApp.with(holder.itemView.context).load(record.getFsIcon())
-                                .override(
-                                    30.toDp().toInt(),
-                                    30.toDp().toInt()
-                                )
+                            GlideApp.with(holder.itemView.context).load(it.fs.icon)
+                                .override(30.toDp().toInt(), 30.toDp().toInt())
                                 .into(holder.songRecordMark)
                         }
-
-                        else -> {}
                     }
                 } ?: run {
-                holder.songJacket.colorFilter = null
-                holder.songRecordMark.setImageDrawable(null)
+                    holder.songJacket.colorFilter = null
+                    holder.songRecordMark.setImageDrawable(null)
+                }
             }
         }
     }
@@ -193,24 +170,27 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
         throw IllegalArgumentException()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateDisplay() {
         displayMode = (displayMode + 1) % 3
         notifyDataSetChanged()
     }
 
-    fun setData(newSongData: List<SongWithChartsEntity>, newRecordList: List<RecordEntity>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(newSongData: List<SongWithRecordEntity>) {
         dataList = newSongData
-        recordList = newRecordList
         groupData = getFormatData()
+        notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(version: String) {
         versionSelect = version
         groupData = getFormatData()
         notifyDataSetChanged()
     }
 
-    private fun getSongAt(position: Int): SongWithChartsEntity {
+    private fun getSongAt(position: Int): SongWithRecordEntity {
         var count = 0
         for (groupDatum in groupData) {
             val size = groupDatum.value.size + 1

@@ -12,6 +12,7 @@ import com.paperpig.maimaidata.db.dao.ChartStatsDao
 import com.paperpig.maimaidata.db.dao.RecordDao
 import com.paperpig.maimaidata.db.dao.SongDao
 import com.paperpig.maimaidata.db.dao.SongWithChartsDao
+import com.paperpig.maimaidata.db.dao.SongWithRecordDao
 import com.paperpig.maimaidata.db.entity.AliasEntity
 import com.paperpig.maimaidata.db.entity.ChartEntity
 import com.paperpig.maimaidata.db.entity.ChartStatsEntity
@@ -27,12 +28,13 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun chartDao(): ChartDao
     abstract fun songWithChartDao(): SongWithChartsDao
+    abstract fun songWithRecordDao(): SongWithRecordDao
     abstract fun aliasDao(): AliasDao
     abstract fun recordDao(): RecordDao
     abstract fun chartStatsDao(): ChartStatsDao
 
     companion object {
-        const val DATABASE_VERSION = 3
+        const val DATABASE_VERSION = 4
         const val DATABASE_NAME = "maimaidata_db"
 
         @Volatile

@@ -14,6 +14,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -22,7 +23,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivitySongDetailBinding
 import com.paperpig.maimaidata.db.entity.RecordEntity
+import com.paperpig.maimaidata.db.entity.SongDetailData
 import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongType
@@ -35,21 +38,11 @@ import com.paperpig.maimaidata.utils.setShrinkOnTouch
 import com.paperpig.maimaidata.utils.toDp
 import com.paperpig.maimaidata.widgets.Settings
 
+private const val EXTRA_DATA_KEY = "data"
+
 class SongDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySongDetailBinding
-
-    private lateinit var data: SongWithChartsEntity
-
-    companion object {
-        const val EXTRA_DATA_KEY = "data"
-
-        fun actionStart(context: Context, songWithChartsEntity: SongWithChartsEntity) {
-            val intent = Intent(context, SongDetailActivity::class.java).apply {
-                putExtra(EXTRA_DATA_KEY, songWithChartsEntity)
-            }
-            context.startActivity(intent)
-        }
-    }
+    private lateinit var data: SongDetailData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,29 +88,15 @@ class SongDetailActivity : AppCompatActivity() {
             songGenre.text = songData.genre
             GlideApp.with(this@SongDetailActivity).apply {
                 when (songData.type) {
-                    SongType.DX -> {
-                        load(R.drawable.ic_deluxe).into(binding.songType)
-                    }
-
-                    SongType.SD -> {
-                        load(R.drawable.ic_standard).into(binding.songType)
-                    }
-
-                    SongType.UTAGE -> {
-                        // load(R.drawable.ic_utage).into(binding.songType) TODO find a utage icon
-                    }
+                    SongType.DX -> load(R.drawable.ic_deluxe).into(binding.songType)
+                    SongType.SD -> load(R.drawable.ic_standard).into(binding.songType)
+                    SongType.UTAGE -> {}
                 }
             }
             setVersionImage(songAddVersion, songData.jpVersion)
             setCnVersionImage(songAddCnVersion, songData.version)
 
-            val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
-                if (isFavor) {
-                    0
-                } else {
-                    Color.WHITE
-                }
-            }
+            val colorFilter: (Boolean) -> Int = { if (it) 0 else Color.WHITE }
             favButton.apply {
                 setColorFilter(colorFilter.invoke(SpUtil.isFavorite(songData.id.toString())))
                 setOnClickListener {
@@ -175,13 +154,6 @@ class SongDetailActivity : AppCompatActivity() {
             }
 
             favButton.apply {
-                val colorFilter: (Boolean) -> Int = { isFavor: Boolean ->
-                    if (isFavor) {
-                        0
-                    } else {
-                        Color.WHITE
-                    }
-                }
                 setColorFilter(colorFilter.invoke(SpUtil.isFavorite(songData.id.toString())))
                 setOnClickListener {
                     val isFavor = SpUtil.isFavorite(songData.id.toString())
@@ -190,17 +162,20 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            RecordRepository.getInstance().getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
+            if (data is SongWithRecordEntity) {
+                setupFragments((data as SongWithRecordEntity).records)
+            } else {
+                RecordRepository.getInstance().getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
+            }
         }
     }
 
     private fun setupFragments(recordList: List<RecordEntity>) {
-        val sortedCharts = if (data.songData.type == SongType.UTAGE) {
+        val list = (if (data.songData.type == SongType.UTAGE) {
             data.charts.sortedBy { it.difficultyType.difficultyIndex }
         } else {
             data.charts.sortedByDescending { it.difficultyType.difficultyIndex }
-        }
-        val list = sortedCharts.map { chart ->
+        }).map { chart ->
             SongLevelFragment.newInstance(
                 GameSongObject(
                     song = data.songData,
@@ -292,9 +267,22 @@ class SongDetailActivity : AppCompatActivity() {
                 else -> 0
             }
         }
-        Glide.with(view.context)
-            .load(versionDrawable)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(view)
+        if (versionDrawable != 0) {
+            Glide.with(view.context)
+                .load(versionDrawable)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(view)
+        } else {
+            view.isVisible = false
+        }
+    }
+
+    companion object {
+        fun actionStart(context: Context, detailData: SongDetailData) {
+            val intent = Intent(context, SongDetailActivity::class.java).apply {
+                putExtra(EXTRA_DATA_KEY, detailData)
+            }
+            context.startActivity(intent)
+        }
     }
 }

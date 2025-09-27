@@ -45,9 +45,9 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.chartStatusGroup.visibility = View.VISIBLE
             binding.chartNoStatusGroup.visibility = View.GONE
             binding.chartAchievement.text = getString(R.string.maimaidx_achievement_desc, it.achievements)
-            binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getRankIcon()))
-            binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getFcIcon()))
-            binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.getFsIcon()))
+            binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.rate.icon))
+            binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fc.icon))
+            binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fs.icon))
         } ?: run {
             binding.chartStatusGroup.visibility = View.GONE
             binding.chartNoStatusGroup.visibility = View.VISIBLE
@@ -131,11 +131,10 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
     }
 
     companion object {
-        fun newInstance(data: GameSongObject) =
-            SongLevelFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_SONG_DATA, data)
-                }
+        fun newInstance(data: GameSongObject) = SongLevelFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(ARG_SONG_DATA, data)
             }
+        }
     }
 }

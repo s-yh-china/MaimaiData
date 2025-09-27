@@ -6,20 +6,17 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MediatorLiveData
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivityGenreCheckBinding
-import com.paperpig.maimaidata.db.entity.RecordEntity
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.model.DifficultyType
-import com.paperpig.maimaidata.repository.RecordRepository
-import com.paperpig.maimaidata.repository.SongWithChartRepository
+import com.paperpig.maimaidata.repository.SongWithRecordRepository
 import com.paperpig.maimaidata.utils.SpUtil
 
 class GenreCheckActivity : AppCompatActivity() {
+
     private val difficultyList = mutableListOf(DifficultyType.BASIC, DifficultyType.ADVANCED, DifficultyType.EXPERT, DifficultyType.MASTER, DifficultyType.REMASTER)
     private val genreList = mutableListOf(
         "流行&动漫",
@@ -52,33 +49,6 @@ class GenreCheckActivity : AppCompatActivity() {
         getData()
     }
 
-    private fun getData() {
-        var songs: List<SongWithChartsEntity>? = null
-        var records: List<RecordEntity>? = null
-        val allSongs = SongWithChartRepository.getInstance().getAllSongWithCharts()
-        val allRecords = RecordRepository.getInstance().getAllRecord()
-        MediatorLiveData<Pair<List<SongWithChartsEntity>, List<RecordEntity>>>().apply {
-            addSource(allSongs) { newSongs ->
-                songs = newSongs
-                if (songs != null && records != null) {
-                    value = Pair(songs!!, records!!)
-                }
-            }
-            addSource(allRecords) { newRecords ->
-                records = newRecords
-                if (songs != null && records != null) {
-                    value = Pair(songs, records!!)
-                }
-            }
-            observe(this@GenreCheckActivity) { (songs, records) ->
-                (binding.genreCheckRecycler.adapter as GenreCheckAdapter).apply {
-                    setData(songs, records)
-                    updateData(currentGenre, currentDifficulty)
-                }
-            }
-        }
-    }
-
     private fun initView() {
         val lastSelectedGenrePosition = SpUtil.getLastQueryGenre()
         currentGenre = genreList[lastSelectedGenrePosition]
@@ -100,7 +70,7 @@ class GenreCheckActivity : AppCompatActivity() {
             }
         }
 
-        val lastSelectedDifficultyIndex = SpUtil.getLastQueryDifficulty()
+        val lastSelectedDifficultyIndex = SpUtil.getLastQueryGenreDifficulty()
         currentDifficulty = difficultyList[lastSelectedDifficultyIndex]
 
         binding.difficultySpn.apply {
@@ -110,7 +80,7 @@ class GenreCheckActivity : AppCompatActivity() {
             setSelection(lastSelectedDifficultyIndex, true)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    SpUtil.saveLastQueryDifficulty(position)
+                    SpUtil.saveLastQueryGenreDifficulty(position)
                     currentDifficulty = difficultyList[position]
                     (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(currentGenre, currentDifficulty)
                 }
@@ -131,6 +101,15 @@ class GenreCheckActivity : AppCompatActivity() {
 
         binding.switchBtn.setOnClickListener {
             (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateDisplay()
+        }
+    }
+
+    private fun getData() {
+        SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(this@GenreCheckActivity) {
+            (binding.genreCheckRecycler.adapter as GenreCheckAdapter).apply {
+                setData(it)
+                updateData(currentGenre, currentDifficulty)
+            }
         }
     }
 

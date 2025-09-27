@@ -31,6 +31,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.songdetail.SongDetailActivity" />
         <activity android:name=".ui.checklist.VersionCheckActivity" />
+        <activity android:name=".ui.checklist.VersionClearCheckActivity" />
         <activity android:name=".ui.checklist.LevelCheckActivity" />
         <activity android:name=".ui.checklist.GenreCheckActivity" />
         <activity

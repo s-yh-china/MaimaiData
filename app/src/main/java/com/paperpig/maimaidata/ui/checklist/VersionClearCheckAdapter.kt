@@ -10,38 +10,51 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.paperpig.maimaidata.R
-import com.paperpig.maimaidata.databinding.ItemCheckHeaderBinding
+import com.paperpig.maimaidata.databinding.ItemClearCheckHeaderBinding
 import com.paperpig.maimaidata.databinding.ItemLevelHeaderBinding
 import com.paperpig.maimaidata.databinding.ItemSongCheckBinding
 import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.GameSongObject
-import com.paperpig.maimaidata.model.SongFC
-import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
-import com.paperpig.maimaidata.model.SongType.DX
-import com.paperpig.maimaidata.model.SongType.SD
-import com.paperpig.maimaidata.model.SongType.UTAGE
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
 
-class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var displayMode = 0
 
     private var dataList: List<SongWithRecordEntity> = listOf()
 
-    private var genreSelect: String? = null
-    private var difficultySelect: DifficultyType = DifficultyType.MASTER
+    private var versionSelect: String? = null
+    private var difficultySelect: DifficultyType = DifficultyType.BASIC
+
     private var groupData: Map<String, List<Pair<GameSongObject, SongWithRecordEntity>>> = mapOf()
 
-    private fun getFormatData(): Map<String, List<Pair<GameSongObject, SongWithRecordEntity>>> = dataList
-        .filter { it.songData.genre == genreSelect }
-        .map { GameSongObject.formSongWithRecord(it, getActualDifficulty(it))!! to it }
-        .sortedByDescending { it.first.chart.internalLevel }
-        .groupBy { it.first.chart.level }
+    private fun getFormatData(): Map<String, List<Pair<GameSongObject, SongWithRecordEntity>>> = when (displayMode) {
+        0 -> {
+            dataList
+                .filter { it.songData.version == versionSelect }
+                .mapNotNull { song -> GameSongObject.formSongWithRecord(song, difficultySelect)?.let { it to song } }
+                .sortedByDescending { it.first.chart.internalLevel }
+                .groupBy { it.first.chart.level }
+        }
+
+        1 -> {
+            dataList
+                .flatMap { song ->
+                    song.charts
+                        .filter { (song.recordsMap[it.difficultyType]?.rate ?: SongRank.D) < SongRank.A }
+                        .map { GameSongObject.formSongWithRecord(song, it.difficultyType)!! to song }
+                }
+                .sortedByDescending { it.first.chart.internalLevel }
+                .groupBy { it.first.chart.level }
+        }
+
+        else -> mapOf()
+    }
 
     companion object {
         const val TYPE_HEADER = 0
@@ -49,11 +62,8 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         const val TYPE_NORMAL = 2
     }
 
-    class HeaderViewHolder(binding: ItemCheckHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
-        val tripleSCount = binding.tripleSCount
-        val fcCount = binding.fcCount
-        val apCount = binding.apCount
-        val fsdCount = binding.fsdCount
+    class HeaderViewHolder(binding: ItemClearCheckHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
+        val clearCount = binding.clearCount
     }
 
     class LevelHolder(binding: ItemLevelHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -63,14 +73,13 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     class ViewHolder(binding: ItemSongCheckBinding) : RecyclerView.ViewHolder(binding.root) {
         val songJacket = binding.songJacket
         val songRecordMark = binding.songRecordMark
-        val songType = binding.songType
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> HeaderViewHolder(
-                ItemCheckHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
+                ItemClearCheckHeaderBinding.inflate(
+                    LayoutInflater.from(context), parent, false
                 )
             )
 
@@ -94,25 +103,20 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             is HeaderViewHolder -> {
                 val format = context.getString(R.string.name_plate_achieved)
 
-                val groupFlatten = groupData.values.flatten()
-                val groupSize = groupFlatten.size
+                when (displayMode) {
+                    0 -> {
+                        val groupFlatten = groupData.values.flatten()
+                        val groupSize = groupFlatten.size
 
-                holder.tripleSCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.rate ?: SongRank.D) >= SongRank.SSS }, groupSize
-                )
+                        holder.clearCount.text = String.format(format, groupFlatten.count { (it.first.record?.rate ?: SongRank.D) >= SongRank.A }, groupSize)
+                    }
 
-                holder.fcCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fc ?: SongFC.NONE) >= SongFC.FC }, groupSize
-                )
-
-                @Suppress("KotlinConstantConditions") // Android Studio bug
-                holder.apCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fc ?: SongFC.NONE) >= SongFC.AP }, groupSize
-                )
-
-                holder.fsdCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fs ?: SongFS.NONE) >= SongFS.FDX }, groupSize
-                )
+                    1 -> {
+                        val allSongsSize = dataList.sumOf { it.charts.size }
+                        val groupSize = groupData.values.flatten().size
+                        holder.clearCount.text = String.format(format, allSongsSize - groupSize, allSongsSize)
+                    }
+                }
             }
 
             is LevelHolder -> {
@@ -128,30 +132,18 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.first.song.imageUrl).into(this)
                 }
 
-                when (data.first.song.type) {
-                    DX -> GlideApp.with(holder.itemView.context).load(R.drawable.ic_deluxe).into(holder.songType)
-                    SD -> GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
-                    UTAGE -> holder.songType.setImageDrawable(null)
-                }
-
                 data.first.record?.let {
                     holder.songJacket.colorFilter = PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
                     when (displayMode) {
                         0 -> {
-                            GlideApp.with(holder.itemView.context).load(it.rate.icon)
+                            GlideApp.with(holder.itemView.context).load(if (it.rate >= SongRank.A) R.drawable.music_icon_clear else it.rate.icon)
                                 .override(50.toDp().toInt(), 22.toDp().toInt())
                                 .into(holder.songRecordMark)
                         }
 
                         1 -> {
-                            GlideApp.with(holder.itemView.context).load(it.fc.icon)
-                                .override(30.toDp().toInt(), 30.toDp().toInt())
-                                .into(holder.songRecordMark)
-                        }
-
-                        2 -> {
-                            GlideApp.with(holder.itemView.context).load(it.fs.icon)
-                                .override(30.toDp().toInt(), 30.toDp().toInt())
+                            GlideApp.with(holder.itemView.context).load(it.rate.icon)
+                                .override(50.toDp().toInt(), 22.toDp().toInt())
                                 .into(holder.songRecordMark)
                         }
                     }
@@ -163,14 +155,6 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private fun getActualDifficulty(song: SongWithRecordEntity): DifficultyType {
-        return if (song.charts.size <= difficultySelect.difficultyIndex) {
-            DifficultyType.from(song.songData.type, difficultySelect.difficultyIndex - 1)
-        } else {
-            difficultySelect
-        }
-    }
-
     override fun getItemCount(): Int {
         return groupData.size + groupData.values.sumOf { it.size } + 1
     }
@@ -179,39 +163,29 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         if (position == 0) {
             return TYPE_HEADER
         }
-
-        var currentPosition = 1
-        for ((_, songs) in groupData) {
-            if (position == currentPosition) {
-                return TYPE_LEVEL
+        var count = 0
+        for (groupDatum in groupData) {
+            val size = groupDatum.value.size + 1
+            if (position - 1 < count + size) {
+                return if (position - 1 == count) TYPE_LEVEL else TYPE_NORMAL
             }
-            currentPosition++
-            if (position < currentPosition + songs.size) {
-                return TYPE_NORMAL
-            }
-            currentPosition += songs.size
+            count += size
         }
-
-        return TYPE_NORMAL
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateDisplay() {
-        displayMode = (displayMode + 1) % 3
-        notifyDataSetChanged()
+        throw IllegalArgumentException()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(newSongData: List<SongWithRecordEntity>) {
         dataList = newSongData
-        updateData(genreSelect, difficultySelect)
+        groupData = getFormatData()
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(genre: String?, difficulty: DifficultyType) {
-        genreSelect = genre
+    fun updateData(version: String, difficulty: DifficultyType) {
+        versionSelect = version
         difficultySelect = difficulty
+        displayMode = if (version == "霸者") 1 else 0
         groupData = getFormatData()
         notifyDataSetChanged()
     }

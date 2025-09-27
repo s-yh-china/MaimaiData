@@ -33,6 +33,7 @@ import com.paperpig.maimaidata.ui.about.SettingsActivity
 import com.paperpig.maimaidata.ui.checklist.GenreCheckActivity
 import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
+import com.paperpig.maimaidata.ui.checklist.VersionClearCheckActivity
 import com.paperpig.maimaidata.utils.ConvertUtils
 import com.paperpig.maimaidata.utils.getInt
 import com.paperpig.maimaidata.widgets.Settings
@@ -94,6 +95,10 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
         binding.proberVersionCheckBtn.setOnClickListener {
             startActivity(Intent(context, VersionCheckActivity::class.java))
+        }
+        binding.proberVersionCheckBtn.setOnLongClickListener {
+            startActivity(Intent(context, VersionClearCheckActivity::class.java))
+            true
         }
 
         binding.proberGenreCheckBtn.setOnClickListener {
