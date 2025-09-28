@@ -24,6 +24,8 @@ import com.paperpig.maimaidata.utils.toDp
 
 class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val songIdNotReMaster = listOf(47, 85, 111, 115, 131, 133, 134, 144, 155, 219, 239, 240, 248, 252, 260, 261, 328, 364, 367, 378, 389, 463, 464, 472, 629, 704)
+
     private var displayMode = 0
 
     private var dataList: List<SongWithRecordEntity> = listOf()
@@ -37,7 +39,13 @@ class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<Recy
         0 -> {
             dataList
                 .filter { it.songData.version == versionSelect }
-                .mapNotNull { song -> GameSongObject.formSongWithRecord(song, difficultySelect)?.let { it to song } }
+                .mapNotNull { song ->
+                    if (difficultySelect == DifficultyType.REMASTER && song.songData.id in songIdNotReMaster) {
+                        null
+                    } else {
+                        GameSongObject.formSongWithRecord(song, difficultySelect)?.let { it to song }
+                    }
+                }
                 .sortedByDescending { it.first.chart.internalLevel }
                 .groupBy { it.first.chart.level }
         }
@@ -46,7 +54,8 @@ class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<Recy
             dataList
                 .flatMap { song ->
                     song.charts
-                        .filter { (song.recordsMap[it.difficultyType]?.rate ?: SongRank.D) < SongRank.A }
+                        .filter { song.getRecordOrDef(it.difficultyType).rate < SongRank.A }
+                        .filter { song.songData.id !in songIdNotReMaster || it.difficultyType != DifficultyType.REMASTER }
                         .map { GameSongObject.formSongWithRecord(song, it.difficultyType)!! to song }
                 }
                 .sortedByDescending { it.first.chart.internalLevel }
@@ -108,11 +117,11 @@ class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<Recy
                         val groupFlatten = groupData.values.flatten()
                         val groupSize = groupFlatten.size
 
-                        holder.clearCount.text = String.format(format, groupFlatten.count { (it.first.record?.rate ?: SongRank.D) >= SongRank.A }, groupSize)
+                        holder.clearCount.text = String.format(format, groupFlatten.count { it.first.recordOrDef.rate >= SongRank.A }, groupSize)
                     }
 
                     1 -> {
-                        val allSongsSize = dataList.sumOf { it.charts.size }
+                        val allSongsSize = dataList.sumOf { it.charts.size } - songIdNotReMaster.size
                         val groupSize = groupData.values.flatten().size
                         holder.clearCount.text = String.format(format, allSongsSize - groupSize, allSongsSize)
                     }

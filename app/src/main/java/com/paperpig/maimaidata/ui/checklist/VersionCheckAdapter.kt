@@ -92,20 +92,20 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
                 val groupSize = groupFlatten.size
 
                 holder.tripleSCount.text = String.format(
-                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.rate ?: SongRank.D) >= SongRank.SSS }, groupSize
+                    format, groupFlatten.count { it.getRecordOrDef(DifficultyType.MASTER).rate >= SongRank.SSS }, groupSize
                 )
 
                 holder.fcCount.text = String.format(
-                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fc ?: SongFC.NONE) >= SongFC.FC }, groupSize
+                    format, groupFlatten.count { it.getRecordOrDef(DifficultyType.MASTER).fc >= SongFC.FC }, groupSize
                 )
 
                 @Suppress("KotlinConstantConditions") // Android Studio bug
                 holder.apCount.text = String.format(
-                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fc ?: SongFC.NONE) >= SongFC.AP }, groupSize
+                    format, groupFlatten.count { it.getRecordOrDef(DifficultyType.MASTER).fc >= SongFC.AP }, groupSize
                 )
 
                 holder.fsdCount.text = String.format(
-                    format, groupFlatten.count { (it.recordsMap[DifficultyType.MASTER]?.fs ?: SongFS.NONE) >= SongFS.FDX }, groupSize
+                    format, groupFlatten.count { it.getRecordOrDef(DifficultyType.MASTER).fs >= SongFS.FDX }, groupSize
                 )
             }
 

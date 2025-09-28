@@ -38,6 +38,8 @@ class VersionClearCheckActivity : AppCompatActivity() {
         Version("霸者", R.drawable.namep_clear),
     )
 
+    private val songIdNotIn = listOf(44, 146, 185, 189, 190, 341, 419, 451, 455, 460, 524, 687, 688, 712, 731, 792, 853)
+
     private var currentVersion = ""
     private var currentDifficulty = DifficultyType.BASIC
 
@@ -120,7 +122,7 @@ class VersionClearCheckActivity : AppCompatActivity() {
     private fun getData() {
         SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(this@VersionClearCheckActivity) {
             (binding.versionClearCheckRecycler.adapter as VersionClearCheckAdapter).apply {
-                setData(it.filter { song -> "舞萌" !in song.songData.version })
+                setData(it.filter { song -> "舞萌" !in song.songData.version && song.songData.id !in songIdNotIn })
                 updateData(currentVersion, currentDifficulty)
             }
         }

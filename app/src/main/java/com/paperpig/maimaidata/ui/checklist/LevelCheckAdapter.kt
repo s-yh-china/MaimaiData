@@ -98,20 +98,20 @@ class LevelCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 val groupSize = groupFlatten.size
 
                 holder.tripleSCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.rate ?: SongRank.D) >= SongRank.SSS }, groupSize
+                    format, groupFlatten.count { it.first.recordOrDef.rate >= SongRank.SSS }, groupSize
                 )
 
                 holder.fcCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fc ?: SongFC.NONE) >= SongFC.FC }, groupSize
+                    format, groupFlatten.count { it.first.recordOrDef.fc >= SongFC.FC }, groupSize
                 )
 
                 @Suppress("KotlinConstantConditions") // Android Studio bug
                 holder.apCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fc ?: SongFC.NONE) >= SongFC.AP }, groupSize
+                    format, groupFlatten.count { it.first.recordOrDef.fc >= SongFC.AP }, groupSize
                 )
 
                 holder.fsdCount.text = String.format(
-                    format, groupFlatten.count { (it.first.record?.fs ?: SongFS.NONE) >= SongFS.FDX }, groupSize
+                    format, groupFlatten.count { it.first.recordOrDef.fs >= SongFS.FDX }, groupSize
                 )
             }
 
