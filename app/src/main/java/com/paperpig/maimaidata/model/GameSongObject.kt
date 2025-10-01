@@ -38,5 +38,13 @@ data class GameSongObject(
                 )
             }
         }
+
+        fun formSongWithRecordClosest(song: SongWithRecordEntity, difficultyType: DifficultyType): GameSongObject {
+            return GameSongObject(
+                song = song.songData,
+                chart = song.getClosestChart(difficultyType),
+                record = song.recordsMap[difficultyType]
+            )
+        }
     }
 }

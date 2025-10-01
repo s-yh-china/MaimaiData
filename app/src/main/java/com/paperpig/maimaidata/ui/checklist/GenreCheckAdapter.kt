@@ -39,7 +39,7 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
     private fun getFormatData(): Map<String, List<Pair<GameSongObject, SongWithRecordEntity>>> = dataList
         .filter { it.songData.genre == genreSelect }
-        .map { GameSongObject.formSongWithRecord(it, getActualDifficulty(it))!! to it }
+        .map { GameSongObject.formSongWithRecordClosest(it, difficultySelect) to it }
         .sortedByDescending { it.first.chart.internalLevel }
         .groupBy { it.first.chart.level }
 
@@ -160,14 +160,6 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     holder.songRecordMark.setImageDrawable(null)
                 }
             }
-        }
-    }
-
-    private fun getActualDifficulty(song: SongWithRecordEntity): DifficultyType {
-        return if (song.charts.size <= difficultySelect.difficultyIndex) {
-            DifficultyType.from(song.songData.type, difficultySelect.difficultyIndex - 1)
-        } else {
-            difficultySelect
         }
     }
 

@@ -33,6 +33,7 @@
 
     <!--version-->
     <string name="maimai">maimai</string>
+    <string name="maimai_plus">maimai PLUS</string>
     <string name="green">GreeN</string>
     <string name="green_plus">GreeN PLUS</string>
     <string name="orange">ORANGE</string>
@@ -63,6 +64,11 @@
     <string name="status">达成状态</string>
     <string name="no_record">暂无成绩</string>
     <string name="no_record_tips">尚未游玩过当前难度的谱面，或者你需要更新本地数据库</string>
+    <string name="song_find_wait_dialog">少女祈祷中…</string>
+    <string name="song_find_dialog_title">如何找到这首歌</string>
+    <string name="song_find_dialog_content">选择按%s分类-按%s排序，在%s中选择%s难度后，找到%s第%d首歌</string>
+    <string name="song_find_fronted">正序</string>
+    <string name="song_find_reversed">逆序</string>
     <string name="inner_level_up">%.1f↑</string>
     <string name="inner_level_down">%.1f↓</string>
     <string name="inner_level_old">(%.1f)</string>

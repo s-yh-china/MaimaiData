@@ -18,31 +18,35 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivitySongDetailBinding
-import com.paperpig.maimaidata.db.entity.RecordEntity
-import com.paperpig.maimaidata.db.entity.SongDetailData
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
 import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.repository.AliasRepository
-import com.paperpig.maimaidata.repository.RecordRepository
+import com.paperpig.maimaidata.repository.SongWithRecordRepository
+import com.paperpig.maimaidata.utils.SongSortHelper
 import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.setCopyOnLongClick
 import com.paperpig.maimaidata.utils.setShrinkOnTouch
 import com.paperpig.maimaidata.utils.toDp
 import com.paperpig.maimaidata.widgets.Settings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val EXTRA_DATA_KEY = "data"
 
 class SongDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySongDetailBinding
-    private lateinit var data: SongDetailData
+    private lateinit var data: SongWithRecordEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +62,7 @@ class SongDetailActivity : AppCompatActivity() {
                 setDisplayShowHomeEnabled(true)
             }
 
-            data = intent.getParcelableExtra<SongWithChartsEntity>(EXTRA_DATA_KEY)!!
+            data = intent.getParcelableExtra<SongWithRecordEntity>(EXTRA_DATA_KEY)!!
             val songData = data.songData
 
             // 设置背景颜色
@@ -162,15 +166,53 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            if (data is SongWithRecordEntity) {
-                setupFragments((data as SongWithRecordEntity).records)
-            } else {
-                RecordRepository.getInstance().getRecordsBySongId(songData.id).observe(this@SongDetailActivity) { setupFragments(it) }
+            searchButton.apply {
+                setOnClickListener {
+                    this.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100)
+                        .withEndAction { this.animate().scaleX(1f).scaleY(1f).setDuration(100).start() }
+                        .start()
+
+                    val progressDialog = MaterialDialog.Builder(this@SongDetailActivity)
+                        .progress(true, 0)
+                        .content(getString(R.string.song_find_wait_dialog))
+                        .cancelable(false)
+                        .build()
+                    progressDialog.show()
+
+                    val liveData = SongWithRecordRepository.getInstance().getAllSongWithRecord()
+                    liveData.observe(this@SongDetailActivity, object : Observer<List<SongWithRecordEntity>> {
+                        override fun onChanged(value: List<SongWithRecordEntity>) {
+                            liveData.removeObserver(this)
+                            lifecycleScope.launch(Dispatchers.Default) {
+                                val result = SongSortHelper.getSongClosestLocation(data, value)
+                                withContext(Dispatchers.Main) {
+                                    progressDialog.dismiss()
+
+                                    MaterialDialog.Builder(this@SongDetailActivity)
+                                        .title(getString(R.string.song_find_dialog_title))
+                                        .content(
+                                            getString(
+                                                R.string.song_find_dialog_content,
+                                                result.group.displayName,
+                                                result.sort.displayName,
+                                                result.groupName,
+                                                result.difficulty.displayName,
+                                                if (result.isReversed) getString(R.string.song_find_reversed) else getString(R.string.song_find_fronted),
+                                                result.index + 1
+                                            )
+                                        ).build().show()
+                                }
+                            }
+                        }
+                    })
+                }
             }
+
+            setupFragments()
         }
     }
 
-    private fun setupFragments(recordList: List<RecordEntity>) {
+    private fun setupFragments() {
         val list = (if (data.songData.type == SongType.UTAGE) {
             data.charts.sortedBy { it.difficultyType.difficultyIndex }
         } else {
@@ -180,7 +222,7 @@ class SongDetailActivity : AppCompatActivity() {
                 GameSongObject(
                     song = data.songData,
                     chart = chart,
-                    record = recordList.find { chart.difficultyType == it.difficultyType }
+                    record = data.recordsMap[chart.difficultyType]
                 )
             )
         }
@@ -278,7 +320,7 @@ class SongDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun actionStart(context: Context, detailData: SongDetailData) {
+        fun actionStart(context: Context, detailData: SongWithRecordEntity) {
             val intent = Intent(context, SongDetailActivity::class.java).apply {
                 putExtra(EXTRA_DATA_KEY, detailData)
             }

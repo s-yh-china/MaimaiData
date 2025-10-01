@@ -3,7 +3,7 @@ package com.paperpig.maimaidata.model
 import com.paperpig.maimaidata.R
 
 enum class DifficultyType(val difficultyIndex: Int, val webDifficultyIndex: Int = difficultyIndex, val displayName: String, val color: Int) {
-    BASIC(difficultyIndex = 0, displayName = "Basic", color = R.color.basic),
+    BASIC(0, displayName = "Basic", color = R.color.basic),
     ADVANCED(1, displayName = "Advance", color = R.color.advanced),
     EXPERT(2, displayName = "Expert", color = R.color.expert),
     MASTER(3, displayName = "Master", color = R.color.master),

@@ -15,7 +15,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.FragmentSongListBinding
-import com.paperpig.maimaidata.repository.SongWithChartRepository
+import com.paperpig.maimaidata.repository.SongWithRecordRepository
 import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.widgets.AnimationHelper
 import com.paperpig.maimaidata.widgets.SearchLayout
@@ -119,7 +119,7 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                 ds: Double?,
                 isFavor: Boolean
             ) {
-                val repository = SongWithChartRepository.getInstance()
+                val repository = SongWithRecordRepository.getInstance()
                 repository.searchSongsWithCharts(
                     searchText,
                     genreList,
@@ -139,7 +139,7 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
             }
         })
 
-        SongWithChartRepository.getInstance().getAllSongWithCharts().observe(requireActivity()) { songAdapter.setData(it) }
+        SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(requireActivity()) { songAdapter.setData(it) }
     }
 
     private fun showOrHideSearchBar() {

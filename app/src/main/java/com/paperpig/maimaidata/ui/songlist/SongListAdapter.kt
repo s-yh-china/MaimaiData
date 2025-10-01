@@ -1,5 +1,6 @@
 package com.paperpig.maimaidata.ui.songlist
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
@@ -14,7 +15,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ItemNormalSongBinding
 import com.paperpig.maimaidata.databinding.ItemUtageSongBinding
-import com.paperpig.maimaidata.db.entity.SongWithChartsEntity
+import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongType
@@ -29,7 +30,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
         const val TYPE_UTAGE = 1
     }
 
-    private var list = listOf<SongWithChartsEntity>()
+    private var list = listOf<SongWithRecordEntity>()
 
     class NormalViewHolder(binding: ItemNormalSongBinding) : ViewHolder(binding.root) {
         val songJacket: ImageView = binding.songJacket
@@ -141,7 +142,8 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
         }
     }
 
-    fun setData(list: List<SongWithChartsEntity>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(list: List<SongWithRecordEntity>) {
         this.list = list
         notifyDataSetChanged()
     }

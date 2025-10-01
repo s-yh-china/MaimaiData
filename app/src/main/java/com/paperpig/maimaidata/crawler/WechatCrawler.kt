@@ -158,14 +158,15 @@ object WechatCrawler {
 
         val response = client!!.newCall(request).execute()
         response.body?.string()
-        Log.d(TAG, "登陆成功")
         val code = response.code
         writeLog("登陆状态 $code")
         if (code >= 400) {
             val exception = Exception("登陆时出现错误，请重试！")
             onError(exception)
+            Log.e(TAG, "登陆状态 $code")
             throw exception
         }
+        Log.d(TAG, "登陆成功")
 
         val location = response.headers["Location"]
         if (code >= 300 && location != null) {

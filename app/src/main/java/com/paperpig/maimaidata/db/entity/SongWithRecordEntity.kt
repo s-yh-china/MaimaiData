@@ -1,5 +1,6 @@
 package com.paperpig.maimaidata.db.entity
 
+import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.paperpig.maimaidata.model.DifficultyType
@@ -11,20 +12,19 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SongWithRecordEntity(
-    @Embedded override val songData: SongDataEntity,
+    @Embedded val songData: SongDataEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "song_id"
-    )
-    override val charts: List<ChartEntity>,
+    ) val charts: List<ChartEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "song_id"
     )
     val records: List<RecordEntity>
-) : SongDetailData {
+) : Parcelable {
     @IgnoredOnParcel
-    override val chartsMap: Map<DifficultyType, ChartEntity> by lazy {
+    val chartsMap: Map<DifficultyType, ChartEntity> by lazy {
         charts.associateBy { it.difficultyType }
     }
 
@@ -32,6 +32,9 @@ data class SongWithRecordEntity(
     val recordsMap: Map<DifficultyType, RecordEntity> by lazy {
         records.associateBy { it.difficultyType }
     }
+
+    fun getClosestChart(difficultyType: DifficultyType): ChartEntity =
+        chartsMap[if (charts.size <= difficultyType.difficultyIndex) DifficultyType.from(songData.type, charts.size - 1) else difficultyType]!!
 
     fun getRecordOrDef(
         difficultyType: DifficultyType,

@@ -27,7 +27,7 @@ import com.paperpig.maimaidata.model.SongData
 import com.paperpig.maimaidata.network.MaimaiDataRequests
 import com.paperpig.maimaidata.repository.ChartRepository
 import com.paperpig.maimaidata.repository.ChartStatsRepository
-import com.paperpig.maimaidata.repository.SongWithChartRepository
+import com.paperpig.maimaidata.repository.SongWithRecordRepository
 import com.paperpig.maimaidata.ui.rating.RatingFragment
 import com.paperpig.maimaidata.ui.songlist.SongListFragment
 import com.paperpig.maimaidata.utils.JsonConvertToDb
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                                     startDownload(it.songListUrl, "song_list_data.json") { task ->
                                         lifecycleScope.launch {
                                             val data = getSongListData(this@MainActivity)
-                                            if (SongWithChartRepository.getInstance().updateDatabase(data)) {
+                                            if (SongWithRecordRepository.getInstance().updateDatabase(data)) {
                                                 SpUtil.setDataVersion(it.version)
                                                 checkChartStatus(force = true)
                                             }
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
             if ((currentTime - SpUtil.getLastUpdateChartStats()) >= 5 * 24 * 60 * 60 * 1000L || force) {
                 checkChartStatusDisposable = MaimaiDataRequests.getChartStats(SpUtil.getDataVersion()).subscribe({
                     lifecycleScope.launch {
-                        val allSongs = withContext(Dispatchers.IO) { SongWithChartRepository.getInstance().getAllSong() }
+                        val allSongs = withContext(Dispatchers.IO) { SongWithRecordRepository.getInstance().getAllSong() }
                         val convertChatStats = JsonConvertToDb.convertChatStats(it, allSongs)
                         if (ChartStatsRepository.getInstance().replaceAllChartStats(convertChatStats)) {
                             SpUtil.saveLastUpdateChartStats(it.time * 1000L)
