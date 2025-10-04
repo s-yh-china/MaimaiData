@@ -3,26 +3,32 @@
         app:defaultValue="true"
         app:iconSpaceReserved="false"
         app:key="enable_show_alias"
-        app:title="@string/settings_enable_show_alias"/>
+        app:title="@string/settings_enable_show_alias" />
 
     <SwitchPreference
         app:defaultValue="true"
         app:iconSpaceReserved="false"
         app:key="enable_alias_search"
-        app:title="@string/settings_enable_alias_search"/>
+        app:title="@string/settings_enable_alias_search" />
 
     <SwitchPreference
         app:defaultValue="false"
         app:iconSpaceReserved="false"
         app:key="enable_charter_search"
-        app:title="@string/settings_enable_charter_search"/>
+        app:title="@string/settings_enable_charter_search" />
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:iconSpaceReserved="false"
+        app:key="version_check_skip_song"
+        app:title="@string/settings_version_check_skip_song" />
 
     <EditTextPreference
         app:key="nickname"
         app:title="@string/settings_nickname"
         app:dialogTitle="@string/settings_nickname_dialog_title"
         app:defaultValue=""
-        app:iconSpaceReserved="false"/>
+        app:iconSpaceReserved="false" />
 
     <MultiSelectListPreference
         app:iconSpaceReserved="false"
@@ -31,11 +37,11 @@
         app:dialogTitle="@string/settings_difficulty_pick"
         app:entries="@array/difficulty_options"
         app:entryValues="@array/difficulty_values"
-        app:defaultValue="@array/difficulty_default"/>
+        app:defaultValue="@array/difficulty_default" />
 
     <Preference
         app:fragment="com.paperpig.maimaidata.ui.about.AboutFragment"
         app:iconSpaceReserved="false"
         app:key="jump_to_about"
-        app:title="@string/about"/>
+        app:title="@string/about" />
 </PreferenceScreen>

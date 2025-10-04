@@ -14,8 +14,28 @@ import com.paperpig.maimaidata.databinding.ActivityVersionCheckBinding
 import com.paperpig.maimaidata.model.Version
 import com.paperpig.maimaidata.repository.SongWithRecordRepository
 import com.paperpig.maimaidata.utils.SpUtil
+import com.paperpig.maimaidata.widgets.Settings
 
 class VersionCheckActivity : AppCompatActivity() {
+
+    private val skipSongList = listOf(
+        44, 70, 146,
+        185, 189, 190,
+        341,
+        // ORANGE empty
+        419,
+        451, 455, 460,
+        524,
+        // MURASAKi empty
+        853,
+        687, 688, 712,
+        731,
+        792,
+        10146,
+        11213,
+        11253, 11267,
+        11484, 11497 // 如果这俩能复活
+    )
 
     private val versionList = listOf(
         Version("maimai", R.drawable.maimai),
@@ -98,7 +118,13 @@ class VersionCheckActivity : AppCompatActivity() {
     private fun getData() {
         SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(this@VersionCheckActivity) {
             (binding.versionCheckRecycler.adapter as VersionCheckAdapter).apply {
-                setData(it)
+                setData(
+                    if (Settings.getVersionCheckSkipSong()) {
+                        it.filter { song -> song.songData.id !in skipSongList }
+                    } else {
+                        it
+                    }
+                )
                 updateData(currentVersion)
             }
         }

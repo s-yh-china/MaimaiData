@@ -160,6 +160,7 @@
     <string name="settings_enable_show_alias">启用别名显示</string>
     <string name="settings_enable_alias_search">启用别名搜索</string>
     <string name="settings_enable_charter_search">启用谱师搜索</string>
+    <string name="settings_version_check_skip_song">版本进度忽略删除曲</string>
 
     <string name="song_id">歌曲ID</string>
     <string name="settings_nickname">全局用户昵称</string>
