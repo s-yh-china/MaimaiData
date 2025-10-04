@@ -99,6 +99,7 @@ class UpdateManager(val context: Context) {
                                 if (SongWithRecordRepository.getInstance().updateDatabase(data)) {
                                     SpUtil.setDataVersion(it.version)
                                     checkChartStatusUpdate(lifecycleOwner, force = true)
+                                    checkChartAliasUpdate(lifecycleOwner, force = true)
                                 }
                             }
                         }
@@ -117,16 +118,38 @@ class UpdateManager(val context: Context) {
         })
     }
 
+    private val updateCheckTime = 5 * 24 * 60 * 60 * 1000L
+
     fun checkChartStatusUpdate(lifecycleOwner: LifecycleOwner, force: Boolean = false): Disposable? {
         if (SpUtil.getDataVersion() != "0") {
             val currentTime = System.currentTimeMillis()
-            if ((currentTime - SpUtil.getLastUpdateChartStats()) >= 5 * 24 * 60 * 60 * 1000L || force) {
+            if ((currentTime - SpUtil.getLastUpdateChartStats()) >= updateCheckTime || force) {
                 return MaimaiDataRequests.getChartStats(SpUtil.getDataVersion()).subscribe({
                     lifecycleOwner.lifecycleScope.launch {
                         val allSongs = withContext(Dispatchers.IO) { SongWithRecordRepository.getInstance().getAllSong() }
-                        val convertChatStats = JsonConvertToDb.convertChatStats(it, allSongs)
-                        if (ChartStatsRepository.getInstance().replaceAllChartStats(convertChatStats)) {
+                        val convertChartStats = JsonConvertToDb.convertChartStats(it, allSongs)
+                        if (ChartStatsRepository.getInstance().replaceAllChartStats(convertChartStats)) {
                             SpUtil.saveLastUpdateChartStats(it.time * 1000L)
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                    Toast.makeText(context, context.getString(R.string.maimai_data_check_error), Toast.LENGTH_LONG).show()
+                })
+            }
+        }
+        return null
+    }
+
+    fun checkChartAliasUpdate(lifecycleOwner: LifecycleOwner, force: Boolean = false): Disposable? {
+        if (SpUtil.getDataVersion() != "0") {
+            val currentTime = System.currentTimeMillis()
+            if ((currentTime - SpUtil.getLastUpdateChartAlias()) >= updateCheckTime || force) {
+                return MaimaiDataRequests.getChartAlias(SpUtil.getDataVersion()).subscribe({
+                    lifecycleOwner.lifecycleScope.launch {
+                        val convertAlias = JsonConvertToDb.convertChartAlias(it)
+                        if (SongWithRecordRepository.getInstance().updateAlias(convertAlias)) {
+                            SpUtil.saveLastUpdateChartAlias(it.time * 1000L)
                         }
                     }
                 }, {

@@ -2,6 +2,7 @@ package com.paperpig.maimaidata.network
 
 import com.google.gson.Gson
 import com.paperpig.maimaidata.model.AppUpdateModel
+import com.paperpig.maimaidata.model.ChartAliasData
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DataVersionModel
 import com.paperpig.maimaidata.utils.JsonConvertToDb
@@ -42,6 +43,17 @@ object MaimaiDataRequests {
             .compose(MaimaiDataTransformer.handleResult())
             .flatMap {
                 val model = Gson().fromJson(it, ChartStatsData::class.java)
+                Observable.just(model)
+            }
+
+    fun getChartAlias(version: String): Observable<ChartAliasData> =
+        MaimaiDataClient
+            .instance
+            .getService()
+            .getChartAlias(version)
+            .compose(MaimaiDataTransformer.handleResult())
+            .flatMap {
+                val model = Gson().fromJson(it, ChartAliasData::class.java)
                 Observable.just(model)
             }
 }

@@ -16,7 +16,6 @@ data class SongData(
     val type: SongType,
     @SerializedName("release_time")
     val releaseTime: Int,
-    var alias: List<String>,
     @SerializedName("basic_info")
     val basicInfo: BasicInfo,
     val charts: List<Chart>,
@@ -55,7 +54,7 @@ data class SongData(
             val tap: Int,
             val hold: Int,
             val slide: Int,
-            val torch: Int?,
+            val touch: Int?,
             @SerializedName("break")
             val `break`: Int
         ) : Serializable

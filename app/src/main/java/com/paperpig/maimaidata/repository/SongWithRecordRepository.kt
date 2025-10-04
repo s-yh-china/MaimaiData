@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.dao.SongWithRecordDao
+import com.paperpig.maimaidata.db.entity.AliasEntity
 import com.paperpig.maimaidata.db.entity.SongDataEntity
 import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.model.DifficultyType
@@ -41,9 +42,14 @@ class SongWithRecordRepository private constructor(private val songWithRecordDao
             val convertToChartEntities = JsonConvertToDb.convertSongData(list)
             songWithRecordDao.replaceAllSongsAndCharts(
                 convertToChartEntities.songs,
-                convertToChartEntities.charts,
-                convertToChartEntities.aliases
+                convertToChartEntities.charts
             )
+        }
+    }
+
+    suspend fun updateAlias(list: List<AliasEntity>): Boolean {
+        return withContext(Dispatchers.IO) {
+            songWithRecordDao.replaceAllAlias(list)
         }
     }
 

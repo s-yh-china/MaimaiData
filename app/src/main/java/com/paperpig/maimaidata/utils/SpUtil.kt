@@ -41,7 +41,8 @@ object SpUtil {
 
     private const val KEY_VERSION = "db_version"
     private const val KEY_SKIP_VERSION = "skip_version"
-    private const val KEY_LAST_UPDATE_TIME = "chart_stats_db_last_update_time"
+    private const val KEY_LAST_STATS_UPDATE_TIME = "chart_stats_db_last_update_time"
+    private const val KEY_LAST_ALIAS_UPDATE_TIME = "chart_alias_db_last_update_time"
 
     private const val KEY_SEARCH_HISTORY = "search_history"
 
@@ -123,11 +124,16 @@ object SpUtil {
     }
 
     fun saveLastUpdateChartStats(time: Long) {
-        versionPrefs.edit { putLong(KEY_LAST_UPDATE_TIME, time) }
+        versionPrefs.edit { putLong(KEY_LAST_STATS_UPDATE_TIME, time) }
     }
 
-    fun getLastUpdateChartStats(): Long = versionPrefs.getLong(KEY_LAST_UPDATE_TIME, 0)
+    fun getLastUpdateChartStats(): Long = versionPrefs.getLong(KEY_LAST_STATS_UPDATE_TIME, 0)
 
+    fun saveLastUpdateChartAlias(time: Long) {
+        versionPrefs.edit { putLong(KEY_LAST_ALIAS_UPDATE_TIME, time) }
+    }
+
+    fun getLastUpdateChartAlias(): Long = versionPrefs.getLong(KEY_LAST_ALIAS_UPDATE_TIME, 0)
     // ================= SEARCH HISTORY =================
 
     fun saveSearchHistory(query: String) {

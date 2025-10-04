@@ -34,23 +34,19 @@ interface SongWithRecordDao : ChartDao, SongDao, RecordDao, AliasDao {
      * 批量替换所有歌曲、谱面和别名数据。
      * @param songDataList 歌曲列表
      * @param chartList 谱面列表
-     * @param aliasList 别名列表
      * @return 返回操作结果。
      */
     @Transaction
     fun replaceAllSongsAndCharts(
         songDataList: List<SongDataEntity>,
         chartList: List<ChartEntity>,
-        aliasList: List<AliasEntity>
     ): Boolean {
         return try {
             clearSongData()
             clearCharts()
-            clearAlias()
 
             insertAllSongs(songDataList)
             insertAllCharts(chartList)
-            insertAllAlias(aliasList)
             true
         } catch (e: Exception) {
             Log.e(
@@ -58,6 +54,18 @@ interface SongWithRecordDao : ChartDao, SongDao, RecordDao, AliasDao {
                 "Transaction replaceAllSongsAndCharts failed: ${e.message}"
             )
             false
+        }
+    }
+
+    @Transaction
+    fun replaceAllAlias(aliasList: List<AliasEntity>): Boolean {
+        try {
+            clearAlias()
+            insertAllAlias(aliasList)
+            return true
+        } catch (e: Exception) {
+            Log.e(AppDataBase.DATABASE_NAME, "Transaction replaceAllAlias failed: ${e.message}")
+            return false
         }
     }
 

@@ -8,5 +8,7 @@ data class DataVersionModel(
     @SerializedName("song_list_url")
     val songListUrl: String,
     @SerializedName("chart_stats_url")
-    val chartStatsUrl: String
+    val chartStatsUrl: String,
+    @SerializedName("chart_alias_url")
+    val chartAliasUrl: String
 ) : Serializable

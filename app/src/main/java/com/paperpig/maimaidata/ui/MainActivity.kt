@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarLayout.toolbar)
 
         updateManager.checkChartStatusUpdate(this)
+        updateManager.checkChartAliasUpdate(this)
         queryMaxNotes()
 
         if (savedInstanceState != null) {

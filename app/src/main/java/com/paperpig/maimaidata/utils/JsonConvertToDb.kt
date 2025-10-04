@@ -4,13 +4,14 @@ import com.paperpig.maimaidata.db.entity.AliasEntity
 import com.paperpig.maimaidata.db.entity.ChartEntity
 import com.paperpig.maimaidata.db.entity.ChartStatsEntity
 import com.paperpig.maimaidata.db.entity.SongDataEntity
+import com.paperpig.maimaidata.model.ChartAliasData
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongData
 
 object JsonConvertToDb {
 
-    const val DATA_STRUCTURE_VERSION = 2
+    const val DATA_STRUCTURE_VERSION = 3
 
     fun convertSongData(list: List<SongData>): ConversionResult {
         val songList = list.map { song ->
@@ -47,23 +48,17 @@ object JsonConvertToDb {
                     noteTap = notes.tap,
                     noteHold = notes.hold,
                     noteSlide = notes.slide,
-                    noteTouch = notes.torch ?: 0,
+                    noteTouch = notes.touch ?: 0,
                     noteBreak = notes.`break`,
-                    noteTotal = notes.tap + notes.hold + notes.slide + notes.`break` + (notes.torch ?: 0)
+                    noteTotal = notes.tap + notes.hold + notes.slide + notes.`break` + (notes.touch ?: 0)
                 )
             }
         }
 
-        val aliasList = list.flatMap { song ->
-            song.alias.map { alias ->
-                AliasEntity(0, song.id, alias)
-            }
-        }
-
-        return ConversionResult(songList, chartList, aliasList)
+        return ConversionResult(songList, chartList)
     }
 
-    fun convertChatStats(data: ChartStatsData, allSongs: List<SongDataEntity>): List<ChartStatsEntity> {
+    fun convertChartStats(data: ChartStatsData, allSongs: List<SongDataEntity>): List<ChartStatsEntity> {
         return data.stats.flatMap { song ->
             allSongs.firstOrNull { it.id == song.id }?.let { songData ->
                 song.fitDifficulty.mapIndexed { i, it ->
@@ -73,9 +68,12 @@ object JsonConvertToDb {
         }
     }
 
+    fun convertChartAlias(data: ChartAliasData): List<AliasEntity> {
+        return data.aliases.flatMap { (id, alias) -> alias.map { AliasEntity(songId = id, alias = it) } }
+    }
+
     data class ConversionResult(
         val songs: List<SongDataEntity>,
-        val charts: List<ChartEntity>,
-        val aliases: List<AliasEntity>
+        val charts: List<ChartEntity>
     )
 }

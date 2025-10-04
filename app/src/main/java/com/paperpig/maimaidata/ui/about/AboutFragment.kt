@@ -11,6 +11,7 @@ import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.UpdateManager
 import com.paperpig.maimaidata.utils.setQuickClick
+import io.reactivex.disposables.Disposable
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -23,6 +24,7 @@ class AboutFragment : PreferenceFragmentCompat() {
     private val updateManager by lazy {
         UpdateManager(requireContext())
     }
+    private var checkDisposable: Disposable? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.abot_preferences, rootKey)
@@ -31,14 +33,16 @@ class AboutFragment : PreferenceFragmentCompat() {
             summary = BuildConfig.VERSION_NAME
             setQuickClick {
                 Toast.makeText(context, getString(R.string.maimai_data_apk_check), Toast.LENGTH_SHORT).show()
-                updateManager.checkAppUpdate(true) {}
+                checkDisposable?.dispose()
+                checkDisposable = updateManager.checkAppUpdate(true) {}
             }
         }
         findPreference<Preference>("base_data_version")?.apply {
             summary = SpUtil.getDataVersion()
             setQuickClick {
                 Toast.makeText(context, getString(R.string.maimai_data_data_check), Toast.LENGTH_SHORT).show()
-                updateManager.checkDataUpdate(requireActivity()) {}
+                checkDisposable?.dispose()
+                checkDisposable = updateManager.checkDataUpdate(requireActivity()) {}
             }
         }
         findPreference<Preference>("last_time_update_chart_stats")?.apply {
@@ -47,7 +51,18 @@ class AboutFragment : PreferenceFragmentCompat() {
             }
             setQuickClick {
                 Toast.makeText(context, getString(R.string.maimai_data_chart_stats_check), Toast.LENGTH_SHORT).show()
-                updateManager.checkChartStatusUpdate(requireActivity(), true)
+                checkDisposable?.dispose()
+                checkDisposable = updateManager.checkChartStatusUpdate(requireActivity(), true)
+            }
+        }
+        findPreference<Preference>("last_time_update_chart_alias")?.apply {
+            summary = SpUtil.getLastUpdateChartStats().let {
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
+            }
+            setQuickClick {
+                Toast.makeText(context, getString(R.string.maimai_data_chart_alias_check), Toast.LENGTH_SHORT).show()
+                checkDisposable?.dispose()
+                checkDisposable = updateManager.checkChartAliasUpdate(requireActivity(), true)
             }
         }
         findPreference<Preference>("project_url")?.apply {

@@ -14,4 +14,7 @@ interface MaimaiDataService {
 
     @GET("/data/chart_stats/{version}.json")
     fun getChartStatus(@Path("version") version: String): Observable<JsonElement>
+
+    @GET("/data/chart_alias/{version}.json")
+    fun getChartAlias(@Path("version") version: String): Observable<JsonElement>
 }
