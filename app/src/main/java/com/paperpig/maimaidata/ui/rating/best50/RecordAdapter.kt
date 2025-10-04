@@ -64,7 +64,7 @@ class RecordAdapter(val version: Int) : RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolder.songAcc.text = String.format(context.getString(R.string.maimaidx_achievement_desc), songObject.record?.achievements)
                 viewHolder.songRating.text = String.format(context.getString(R.string.rating_scope), rating, (songObject.chart.internalLevel * 22.512).toInt())
 
-                viewHolder.itemView.setOnClickListener { SongDetailActivity.actionStart(viewHolder.itemView.context, data.second) }
+                viewHolder.itemView.setOnClickListener { SongDetailActivity.actionStart(viewHolder.itemView.context, data.second, songObject.chart.difficultyType) }
                 GlideApp.with(context)
                     .load(MaimaiDataClient.IMAGE_BASE_URL + songObject.song.imageUrl)
                     .transition(DrawableTransitionOptions.withCrossFade()).apply(

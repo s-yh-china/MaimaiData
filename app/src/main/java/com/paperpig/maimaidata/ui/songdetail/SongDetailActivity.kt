@@ -27,6 +27,7 @@ import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.ActivitySongDetailBinding
 import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
+import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val EXTRA_DATA_KEY = "data"
+private const val EXTRA_INITIAL_DIFFICULTY_KEY = "initial_difficulty"
 
 class SongDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySongDetailBinding
@@ -212,27 +214,33 @@ class SongDetailActivity : AppCompatActivity() {
                 }
             }
 
-            setupFragments()
+            val initialDifficulty = intent.getSerializableExtra(EXTRA_INITIAL_DIFFICULTY_KEY)!! as DifficultyType
+            setupFragments(initialDifficulty)
         }
     }
 
-    private fun setupFragments() {
-        val list = (if (data.songData.type == SongType.UTAGE) {
+    private fun setupFragments(initialDifficulty: DifficultyType) {
+        var initialPage: Int
+        val sortedCharts = if (data.songData.type == SongType.UTAGE) {
             data.charts.sortedBy { it.difficultyType.difficultyIndex }
         } else {
             data.charts.sortedByDescending { it.difficultyType.difficultyIndex }
-        }).map { chart ->
+        }
+
+        initialPage = sortedCharts.indexOfFirst { it.difficultyType == initialDifficulty }
+
+        val list = sortedCharts.map { chart ->
             SongLevelFragment.newInstance(
-                GameSongObject(
-                    song = data.songData,
-                    chart = chart,
-                    record = data.recordsMap[chart.difficultyType]
-                )
+                GameSongObject.formSongWithRecord(data, chart.difficultyType)!!
             )
         }
 
         binding.viewPager.adapter = LevelDataFragmentAdapter(supportFragmentManager, -1, list)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        if (initialPage != -1) {
+            binding.viewPager.setCurrentItem(initialPage, false)
+        }
     }
 
     class LevelDataFragmentAdapter(
@@ -324,9 +332,10 @@ class SongDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun actionStart(context: Context, detailData: SongWithRecordEntity) {
+        fun actionStart(context: Context, detailData: SongWithRecordEntity, initialDifficulty: DifficultyType = DifficultyType.UNKNOWN) {
             val intent = Intent(context, SongDetailActivity::class.java).apply {
                 putExtra(EXTRA_DATA_KEY, detailData)
+                putExtra(EXTRA_INITIAL_DIFFICULTY_KEY, initialDifficulty)
             }
             context.startActivity(intent)
         }

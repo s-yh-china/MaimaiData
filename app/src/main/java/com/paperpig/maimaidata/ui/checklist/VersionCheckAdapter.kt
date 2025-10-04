@@ -115,7 +115,7 @@ class VersionCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerV
 
             is ViewHolder -> {
                 val data = getSongAt(position)
-                holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data) }
+                holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data, DifficultyType.MASTER) }
 
                 holder.songJacket.apply {
                     setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.master))

@@ -120,7 +120,7 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             is ViewHolder -> {
                 val data = getSongAt(position)
                 val songObject = data.first
-                holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data.second) }
+                holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data.second, songObject.chart.difficultyType) }
 
                 holder.songJacket.apply {
                     setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songObject.chart.difficultyType.color))
