@@ -12,7 +12,6 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -112,9 +111,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * check update
-     */
     private fun checkUpdate() {
         updateDisposable = MaimaiDataRequests.fetchUpdateInfo().subscribe({
             if (it.version > BuildConfig.VERSION_NAME && it.url.isNotBlank()) {
@@ -123,60 +119,61 @@ class MainActivity : AppCompatActivity() {
                     .content((it.info ?: this@MainActivity.getString(R.string.maimai_data_update_default_content)).replace("\\n", "\n"))
                     .positiveText(R.string.maimai_data_update_download)
                     .negativeText(R.string.common_cancel)
-                    .onPositive { _, which ->
-                        if (DialogAction.POSITIVE == which) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {
-                                val uri = ("package:$packageName").toUri()
-                                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, uri)
+                    .onPositive { _, _ ->
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {
+                            startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, ("package:$packageName").toUri()))
+                            return@onPositive
+                        } else {
+                            startDownload(it.url, "new_version.apk") { task ->
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                val fileProviderUri = FileProvider.getUriForFile(
+                                    this, "${application.packageName}.fileprovider", task.file!!
+                                )
+                                intent.setDataAndType(fileProviderUri, "application/vnd.android.package-archive")
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                 startActivity(intent)
-                                return@onPositive
-                            } else {
-                                startDownload(it.url, "new_version.apk") { task ->
-                                    val intent = Intent(Intent.ACTION_VIEW)
-                                    val fileProviderUri = FileProvider.getUriForFile(
-                                        this, "${application.packageName}.fileprovider", task.file!!
-                                    )
-                                    intent.setDataAndType(fileProviderUri, "application/vnd.android.package-archive")
-                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                    startActivity(intent)
+                            }
+                        }
+                    }
+                    .onNegative { d, _ -> d.dismiss() }
+                    .onAny { _, _ -> checkDataVersion() }
+                    .cancelable(false)
+                    .show()
+            } else {
+                checkDataVersion()
+            }
+        }, {
+            Toast.makeText(this, "版本检查失败", Toast.LENGTH_LONG).show()
+            it.printStackTrace()
+        })
+    }
+
+    private fun checkDataVersion() {
+        updateDisposable = MaimaiDataRequests.getDataVersion().subscribe({ it ->
+            isUpdateChecked = true
+            if (SpUtil.getDataVersion() < it.version) {
+                MaterialDialog.Builder(this)
+                    .title(this@MainActivity.getString(R.string.maimai_data_data_update_title))
+                    .content(String.format(this@MainActivity.getString(R.string.maimai_data_data_update_info), SpUtil.getDataVersion(), it.version))
+                    .positiveText(R.string.maimai_data_update_download)
+                    .negativeText(R.string.common_cancel)
+                    .onPositive { _, _ ->
+                        startDownload(it.songListUrl, "song_list_data.json") { task ->
+                            lifecycleScope.launch {
+                                val data = getSongListData(this@MainActivity)
+                                if (SongWithRecordRepository.getInstance().updateDatabase(data)) {
+                                    SpUtil.setDataVersion(it.version)
+                                    checkChartStatus(force = true)
                                 }
                             }
                         }
                     }
                     .onNegative { d, _ -> d.dismiss() }
-                    .autoDismiss(true).cancelable(true).show()
-            } else {
-                updateDisposable = MaimaiDataRequests.getDataVersion().subscribe({ it ->
-                    isUpdateChecked = true
-                    if (SpUtil.getDataVersion() < it.version) {
-                        MaterialDialog.Builder(this)
-                            .title(this@MainActivity.getString(R.string.maimai_data_data_update_title))
-                            .content(String.format(this@MainActivity.getString(R.string.maimai_data_data_update_info), SpUtil.getDataVersion(), it.version))
-                            .positiveText(R.string.maimai_data_update_download)
-                            .negativeText(R.string.common_cancel)
-                            .onPositive { _, which ->
-                                if (DialogAction.POSITIVE == which) {
-                                    startDownload(it.songListUrl, "song_list_data.json") { task ->
-                                        lifecycleScope.launch {
-                                            val data = getSongListData(this@MainActivity)
-                                            if (SongWithRecordRepository.getInstance().updateDatabase(data)) {
-                                                SpUtil.setDataVersion(it.version)
-                                                checkChartStatus(force = true)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .onNegative { d, _ -> d.dismiss() }
-                            .autoDismiss(true).cancelable(true).show()
-                    }
-                }, { it ->
-                    Toast.makeText(this, "数据版本检查失败", Toast.LENGTH_LONG).show()
-                    it.printStackTrace()
-                })
+                    .cancelable(true)
+                    .show()
             }
-        }, {
-            Toast.makeText(this, "版本检查失败", Toast.LENGTH_LONG).show()
+        }, { it ->
+            Toast.makeText(this, "数据版本检查失败", Toast.LENGTH_LONG).show()
             it.printStackTrace()
         })
     }
