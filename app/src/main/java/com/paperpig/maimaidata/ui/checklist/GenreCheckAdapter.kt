@@ -20,8 +20,6 @@ import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
-import com.paperpig.maimaidata.model.SongType.DX
-import com.paperpig.maimaidata.model.SongType.SD
 import com.paperpig.maimaidata.model.SongType.UTAGE
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
@@ -121,20 +119,21 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
             is ViewHolder -> {
                 val data = getSongAt(position)
+                val songObject = data.first
                 holder.itemView.setOnClickListener { SongDetailActivity.actionStart(holder.itemView.context, data.second) }
 
                 holder.songJacket.apply {
-                    setBackgroundColor(ContextCompat.getColor(holder.itemView.context, data.first.chart.difficultyType.color))
-                    GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + data.first.song.imageUrl).into(this)
+                    setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songObject.chart.difficultyType.color))
+                    GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + songObject.song.imageUrl).into(this)
                 }
 
-                when (data.first.song.type) {
-                    DX -> GlideApp.with(holder.itemView.context).load(R.drawable.ic_deluxe).into(holder.songType)
-                    SD -> GlideApp.with(holder.itemView.context).load(R.drawable.ic_standard).into(holder.songType)
-                    UTAGE -> holder.songType.setImageDrawable(null)
+                if (songObject.song.type != UTAGE) {
+                    GlideApp.with(holder.itemView.context).load(songObject.song.type.icon).into(holder.songType)
+                } else {
+                    holder.songType.setImageDrawable(null)
                 }
 
-                data.first.record?.let {
+                songObject.record?.let {
                     holder.songJacket.colorFilter = PorterDuffColorFilter(Color.argb(128, 128, 128, 128), PorterDuff.Mode.SRC_ATOP)
                     when (displayMode) {
                         0 -> {

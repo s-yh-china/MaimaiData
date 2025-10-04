@@ -34,6 +34,7 @@ import com.paperpig.maimaidata.ui.checklist.GenreCheckActivity
 import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionClearCheckActivity
+import com.paperpig.maimaidata.ui.rating.best50.ProberActivity
 import com.paperpig.maimaidata.utils.ConvertUtils
 import com.paperpig.maimaidata.utils.getInt
 import com.paperpig.maimaidata.widgets.Settings
@@ -56,9 +57,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
         Intent(requireContext(), HttpServerService::class.java)
     }
 
-    private val vpnActivityResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
+    private val vpnActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             startProxyServices()
         }
@@ -103,6 +102,10 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
         binding.proberGenreCheckBtn.setOnClickListener {
             startActivity(Intent(context, GenreCheckActivity::class.java))
+        }
+
+        binding.proberBest50Btn.setOnClickListener {
+            startActivity(Intent(context, ProberActivity::class.java))
         }
 
         binding.calculateBtn.setOnClickListener {

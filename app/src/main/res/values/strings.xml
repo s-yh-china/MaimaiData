@@ -58,13 +58,14 @@
     <string name="genre">歌曲分类</string>
     <string name="add_version">添加版本</string>
 
+    <string name="wait_dialog">少女祈祷中…</string>
+
     <string name="maimai_achievement_format">%.2f%%</string>
     <string name="maimaidx_achievement_desc">%.4f%%</string>
     <string name="design">谱面作者</string>
     <string name="status">达成状态</string>
     <string name="no_record">暂无成绩</string>
     <string name="no_record_tips">尚未游玩过当前难度的谱面，或者你需要更新本地数据库</string>
-    <string name="song_find_wait_dialog">少女祈祷中…</string>
     <string name="song_find_dialog_title">如何找到这首歌</string>
     <string name="song_find_dialog_content">选择按%s分类-按%s排序，在%s中选择%s难度后，找到%s第%d首歌</string>
     <string name="song_find_fronted">正序</string>
@@ -72,8 +73,14 @@
     <string name="inner_level_up">%.1f↑</string>
     <string name="inner_level_down">%.1f↓</string>
     <string name="inner_level_old">(%.1f)</string>
-    <string name="download_cover_error">下载图片失败</string>
-    <string name="share_cover">分享图片</string>
+
+    <string name="share_image">分享图片</string>
+    <string name="share_image_error">分享图片准备失败</string>
+    <string name="save_image">保存图片</string>
+    <string name="download_image_error">下载图片失败</string>
+    <string name="image_generation_error">图片生成失败</string>
+    <string name="storage_permission_denied">保存失败，没有获取储存权限</string>
+    <string name="file_saved_to_path">文件已保存至%1$s目录</string>
 
     <string name="total">TOTAL</string>
     <string name="tap">TAP</string>
@@ -105,15 +112,18 @@
     <string name="coefficient">系数</string>
     <string name="rate">倍率(达成率*系数)</string>
 
+    <string name="best50">Best50</string>
+    <string name="old_version_35">历史版本：%d</string>
+    <string name="new_version_15">现行版本：%d</string>
+    <string name="rating_scope">%d/%d</string>
+    <string name="best50_empty">当前Best50为空</string>
+    <string name="best50_create_dialog">Best50创建中 %s</string>
+
     <string name="song_level">歌曲定数</string>
     <string name="target_rating">目标rating</string>
     <string name="single_rating">单曲rating</string>
     <string name="total_rating">合计rating</string>
     <string name="calculate">计算</string>
-    <string name="save_best">保存图片</string>
-    <string name="image_generation_error">图片生成失败</string>
-    <string name="storage_permission_denied">保存失败，没有获取储存权限</string>
-    <string name="file_saved_to_path">文件已保存至%1$s目录</string>
     <string name="version_query">版本进度</string>
     <string name="level_query">等级进度</string>
     <string name="genre_query">分类进度</string>

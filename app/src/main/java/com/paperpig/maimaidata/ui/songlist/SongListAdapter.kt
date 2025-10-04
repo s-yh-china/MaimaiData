@@ -115,11 +115,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             holder.difficultyMaster.text = charts[DifficultyType.MASTER]?.internalLevel.toString()
             holder.difficultyRemaster.text = charts[DifficultyType.REMASTER]?.internalLevel?.toString() ?: ""
 
-            if (songData.type == SongType.DX) {
-                holder.songType.setImageResource(R.drawable.ic_deluxe)
-            } else {
-                holder.songType.setImageResource(R.drawable.ic_standard)
-            }
+            holder.songType.setImageResource(songData.type.icon)
         } else if (holder is UtageViewHolder) {
             holder.songGenre.text = songData.genre
             val genreBg = ((holder.songGenre.background as LayerDrawable)

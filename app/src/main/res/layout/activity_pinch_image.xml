@@ -6,7 +6,7 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:background="@color/black"
-                                                   tools:context=".ui.songdetail.PinchImageActivity">
+                                                   tools:context=".ui.PinchImageActivity">
 
     <com.paperpig.maimaidata.widgets.PinchImageView
         android:id="@+id/pinch_image_view"
@@ -16,28 +16,28 @@
 
     <androidx.constraintlayout.widget.Group
         android:visibility="gone"
-        android:id="@+id/cover_button_group"
-        app:constraint_referenced_ids="save_cover_btn,share_cover_btn"
+        android:id="@+id/image_button_group"
+        app:constraint_referenced_ids="save_image_btn,share_image_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <ImageView
-        android:id="@+id/save_cover_btn"
+        android:id="@+id/save_image_btn"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="50dp"
-        android:src="@drawable/mmd_cover_save"
+        android:src="@drawable/image_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
-        android:id="@+id/share_cover_btn"
+        android:id="@+id/share_image_btn"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="50dp"
-        android:src="@drawable/mmd_cover_share"
+        android:src="@drawable/image_share"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/save_cover_btn"/>
+        app:layout_constraintEnd_toStartOf="@+id/save_image_btn"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,6 +32,8 @@ import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.repository.AliasRepository
 import com.paperpig.maimaidata.repository.SongWithRecordRepository
+import com.paperpig.maimaidata.ui.PinchImageActivity
+import com.paperpig.maimaidata.utils.PictureUtils
 import com.paperpig.maimaidata.utils.SongSortHelper
 import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.setCopyOnLongClick
@@ -91,10 +93,8 @@ class SongDetailActivity : AppCompatActivity() {
             songBpm.text = songData.bpm.toString()
             songGenre.text = songData.genre
             GlideApp.with(this@SongDetailActivity).apply {
-                when (songData.type) {
-                    SongType.DX -> load(R.drawable.ic_deluxe).into(binding.songType)
-                    SongType.SD -> load(R.drawable.ic_standard).into(binding.songType)
-                    SongType.UTAGE -> {}
+                if (songData.type != SongType.UTAGE) {
+                    load(songData.type.icon).into(binding.songType)
                 }
             }
             setVersionImage(songAddVersion, songData.jpVersion)
@@ -149,11 +149,15 @@ class SongDetailActivity : AppCompatActivity() {
                         binding.songJacket,
                         "shared_image"
                     )
+                val largeImageId = songData.id.toString().padStart(5, '0')
                 PinchImageActivity.actionStart(
-                    this@SongDetailActivity,
-                    MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl,
-                    songData.id.toString(),
-                    options.toBundle()
+                    context = this@SongDetailActivity,
+                    mode = 1,
+                    imageUrl = "${MaimaiDataClient.DIVING_FISH_COVER_URL}$largeImageId.png",
+                    thumbnailUrl = "${MaimaiDataClient.IMAGE_BASE_URL}${songData.imageUrl}",
+                    saveFilename = largeImageId,
+                    saveFolder = PictureUtils.coverPath,
+                    bundle = options.toBundle()
                 )
             }
 
@@ -174,7 +178,7 @@ class SongDetailActivity : AppCompatActivity() {
 
                     val progressDialog = MaterialDialog.Builder(this@SongDetailActivity)
                         .progress(true, 0)
-                        .content(getString(R.string.song_find_wait_dialog))
+                        .content(getString(R.string.wait_dialog))
                         .cancelable(false)
                         .build()
                     progressDialog.show()

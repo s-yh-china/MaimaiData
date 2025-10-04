@@ -25,11 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.songdetail.PinchImageActivity" />
+        <activity android:name=".ui.PinchImageActivity" />
         <activity
             android:name=".ui.about.SettingsActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.songdetail.SongDetailActivity" />
+        <activity android:name=".ui.rating.best50.ProberActivity" />
         <activity android:name=".ui.checklist.VersionCheckActivity" />
         <activity android:name=".ui.checklist.VersionClearCheckActivity" />
         <activity android:name=".ui.checklist.LevelCheckActivity" />

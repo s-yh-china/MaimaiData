@@ -5,6 +5,7 @@ import com.paperpig.maimaidata.db.entity.ChartEntity
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.db.entity.SongDataEntity
 import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
+import com.paperpig.maimaidata.utils.ConvertUtils
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -28,6 +29,14 @@ data class GameSongObject(
         )
     }
 
+    fun withRating(): GameSongObjectWithRating = GameSongObjectWithRating(
+        obj = this,
+        rating = ConvertUtils.achievementToRating(
+            (chart.internalLevel * 10).toInt(),
+            (recordOrDef.achievements * 10000).toInt()
+        )
+    )
+
     companion object {
         fun formSongWithRecord(song: SongWithRecordEntity, difficultyType: DifficultyType): GameSongObject? {
             return song.chartsMap[difficultyType]?.let { chart ->
@@ -48,3 +57,8 @@ data class GameSongObject(
         }
     }
 }
+
+data class GameSongObjectWithRating(
+    val obj: GameSongObject,
+    val rating: Int
+)

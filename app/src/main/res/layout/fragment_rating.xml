@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                                       xmlns:app="http://schemas.android.com/apk/res-auto"
-                                       xmlns:tools="http://schemas.android.com/tools"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="match_parent"
-                                       tools:ignore="HardcodedText,TooManyViews">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText,TooManyViews">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +27,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/account_label"
@@ -37,7 +38,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@+id/prober_label"
                 app:layout_constraintStart_toStartOf="@+id/prober_label"
-                app:layout_constraintTop_toBottomOf="@id/prober_label"/>
+                app:layout_constraintTop_toBottomOf="@id/prober_label" />
 
             <TextView
                 android:id="@+id/account_text"
@@ -47,7 +48,17 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@+id/prober_label"
                 app:layout_constraintStart_toStartOf="@+id/prober_label"
-                app:layout_constraintTop_toBottomOf="@id/account_label"/>
+                app:layout_constraintTop_toBottomOf="@id/account_label" />
+
+            <Button
+                android:id="@+id/prober_best50_btn"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/best50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/account_text" />
 
             <Button
                 android:id="@+id/prober_version_check_btn"
@@ -59,7 +70,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/prober_level_check_btn"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/account_text"/>
+                app:layout_constraintTop_toBottomOf="@id/prober_best50_btn" />
 
             <Button
                 android:id="@+id/prober_level_check_btn"
@@ -69,7 +80,7 @@
                 android:text="@string/level_query"
                 app:layout_constraintEnd_toStartOf="@+id/prober_genre_check_btn"
                 app:layout_constraintStart_toEndOf="@id/prober_version_check_btn"
-                app:layout_constraintTop_toTopOf="@id/prober_version_check_btn"/>
+                app:layout_constraintTop_toTopOf="@id/prober_version_check_btn" />
 
             <Button
                 android:id="@+id/prober_genre_check_btn"
@@ -79,7 +90,7 @@
                 android:text="@string/genre_query"
                 app:layout_constraintStart_toEndOf="@id/prober_level_check_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/prober_version_check_btn"/>
+                app:layout_constraintTop_toTopOf="@id/prober_version_check_btn" />
 
             <Button
                 android:id="@+id/prober_proxy_update_btn"
@@ -89,7 +100,7 @@
                 android:text="@string/start_proxy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/prober_version_check_btn"/>
+                app:layout_constraintTop_toBottomOf="@id/prober_version_check_btn" />
 
             <ImageView
                 android:id="@+id/prober_proxy_update_help_iv"
@@ -99,14 +110,14 @@
                 android:src="@drawable/ic_tips"
                 app:layout_constraintBottom_toBottomOf="@+id/prober_proxy_update_btn"
                 app:layout_constraintStart_toEndOf="@+id/prober_proxy_update_btn"
-                app:layout_constraintTop_toTopOf="@id/prober_proxy_update_btn"/>
+                app:layout_constraintTop_toTopOf="@id/prober_proxy_update_btn" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/prober_proxy_status_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
-                app:constraint_referenced_ids="prober_proxy_indicator,prober_proxy_simple_text"/>
+                app:constraint_referenced_ids="prober_proxy_indicator,prober_proxy_simple_text" />
 
             <TextView
                 android:id="@+id/prober_proxy_simple_text"
@@ -118,7 +129,7 @@
                 android:lines="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/prober_proxy_update_btn"/>
+                app:layout_constraintTop_toBottomOf="@id/prober_proxy_update_btn" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/prober_proxy_indicator"
@@ -128,7 +139,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/prober_proxy_simple_text"
                 app:layout_constraintStart_toStartOf="@+id/prober_proxy_simple_text"
-                app:layout_constraintTop_toBottomOf="@id/prober_proxy_simple_text"/>
+                app:layout_constraintTop_toBottomOf="@id/prober_proxy_simple_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -144,7 +155,7 @@
                 android:text="@string/target_rating"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/target_rating_edit"
@@ -155,14 +166,14 @@
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="5"
-                tools:ignore="LabelFor"/>
+                tools:ignore="LabelFor" />
 
             <Button
                 android:id="@+id/calculate_btn"
                 style="@style/ButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/calculate"/>
+                android:text="@string/calculate" />
 
         </LinearLayout>
 
@@ -179,7 +190,7 @@
                 android:gravity="center"
                 android:text="@string/song_level"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
@@ -188,7 +199,7 @@
                 android:gravity="center"
                 android:text="@string/achievement"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
@@ -197,7 +208,7 @@
                 android:gravity="center"
                 android:text="@string/single_rating"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
@@ -206,14 +217,14 @@
                 android:gravity="center"
                 android:text="@string/total_rating"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rating_result_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -227,17 +238,17 @@
                 android:text="@string/rating_sheet"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="单曲rating = 歌曲定数 x 系数 x 达成率(取整，不计小数)"/>
+                android:text="单曲rating = 歌曲定数 x 系数 x 达成率(取整，不计小数)" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="歌曲rating = 15个最高单曲rating(舞萌2025分类) + 35个最高单曲rating(舞萌2025以外分类)"/>
+                android:text="歌曲rating = 15个最高单曲rating(舞萌2025分类) + 35个最高单曲rating(舞萌2025以外分类)" />
         </LinearLayout>
 
         <TextView
@@ -247,7 +258,7 @@
             android:text="计算单曲rating"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -263,7 +274,7 @@
                 android:gravity="center"
                 android:hint="定数"
                 android:importantForAutofill="no"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
 
             <EditText
                 android:id="@+id/input_song_achievement"
@@ -275,7 +286,7 @@
                 android:gravity="center"
                 android:hint="达成率"
                 android:importantForAutofill="no"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:id="@+id/output_single_rating"
@@ -283,7 +294,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0"/>
+                android:text="0" />
         </LinearLayout>
 
         <LinearLayout
@@ -305,7 +316,7 @@
                     android:gravity="center"
                     android:text="@string/rank"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -314,7 +325,7 @@
                     android:gravity="center"
                     android:text="@string/achievement"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -323,7 +334,7 @@
                     android:gravity="center"
                     android:text="@string/coefficient"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -332,7 +343,7 @@
                     android:gravity="center"
                     android:text="@string/rate"
                     android:textColor="@color/white"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -345,28 +356,28 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="SSS+"/>
+                    android:text="SSS+" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="100.5000%"/>
+                    android:text="100.5000%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="22.4"/>
+                    android:text="22.4" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="22.512"/>
+                    android:text="22.512" />
             </LinearLayout>
 
             <LinearLayout
@@ -379,28 +390,28 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="SSS"/>
+                    android:text="SSS" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="100.4999%"/>
+                    android:text="100.4999%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="22.2"/>
+                    android:text="22.2" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="22.310"/>
+                    android:text="22.310" />
             </LinearLayout>
 
             <LinearLayout
@@ -412,95 +423,28 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:gravity="center"/>
+                    android:gravity="center" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="100.0000%"/>
+                    android:text="100.0000%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="21.6"/>
+                    android:text="21.6" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="21.707-21.600"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:text="SS+"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="99.9999%"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="21.4"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:text="21.399"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="99.5000%"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="21.1"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:text="21.099-20.994"/>
+                    android:text="21.707-21.600" />
             </LinearLayout>
 
             <LinearLayout
@@ -513,28 +457,61 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="SS"/>
+                    android:text="SS+" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="99.0000%"/>
+                    android:text="99.9999%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="20.8"/>
+                    android:text="21.4" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="20.695-20.592"/>
+                    android:text="21.399" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="99.5000%" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="21.1" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="21.099-20.994" />
             </LinearLayout>
 
             <LinearLayout
@@ -547,28 +524,28 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="S+"/>
+                    android:text="SS" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="98.0000%"/>
+                    android:text="99.0000%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="20.3"/>
+                    android:text="20.8" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="20.096-19.894"/>
+                    android:text="20.695-20.592" />
             </LinearLayout>
 
             <LinearLayout
@@ -581,28 +558,62 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center"
-                    android:text="S"/>
+                    android:text="S+" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="97.0000%"/>
+                    android:text="98.0000%" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="20.0"/>
+                    android:text="20.3" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="19.599-19.400"/>
+                    android:text="20.096-19.894" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="S" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="97.0000%" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="20.0" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="19.599-19.400" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

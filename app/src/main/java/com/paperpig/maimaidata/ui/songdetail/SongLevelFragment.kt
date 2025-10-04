@@ -66,11 +66,11 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
 
         chart.oldInternalLevel?.let {
             if (it < chart.internalLevel) {
-                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_red))
+                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_red))
                 binding.songLevel.text = getString(R.string.inner_level_up, chart.internalLevel)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else if (it > chart.internalLevel) {
-                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.mmd_color_green))
+                binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_green))
                 binding.songLevel.text = getString(R.string.inner_level_down, chart.internalLevel)
                 binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else {
