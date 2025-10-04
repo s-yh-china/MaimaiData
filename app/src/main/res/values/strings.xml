@@ -133,14 +133,17 @@
 
     <string name="maimai_data_update_title">新版本：%s</string>
     <string name="maimai_data_update_default_content">BUG修复</string>
+    <string name="maimai_data_version_skip">跳过本版本</string>
     <string name="maimai_data_update_download">下载</string>
     <string name="maimai_data_data_update_title">数据更新</string>
     <string name="maimai_data_data_update_info">本地数据版本:%s，检测到数据版本:%s，需要现在更新吗？</string>
     <string name="maimai_data_download_title">正在下载</string>
     <string name="maimai_data_start_download">开始下载</string>
     <string name="maimai_data_download_error">下载出错，请重新下载</string>
-    <string name="select_account_hint">请选择账号</string>
-    <string name="type_in_account_pwd_hint">请输入用户名或密码</string>
+    <string name="maimai_data_apk_check">正在检查版本</string>
+    <string name="maimai_data_data_check">正在检查数据版本</string>
+    <string name="maimai_data_chart_stats_check">正在检查拟合定数版本</string>
+    <string name="maimai_data_check_error">检查失败</string>
 
     <string name="start_proxy">开始录入</string>
     <string name="stop_proxy">关闭代理</string>

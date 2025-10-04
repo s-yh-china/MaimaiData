@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.preference.Preference
 
 fun String.getInt(): Int {
     return if (this.isEmpty()) {
@@ -80,6 +81,30 @@ fun View.setCopyOnLongClick(
         } else {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
+        true
+    }
+}
+
+fun Preference.setQuickClick(duration: Long = 300, clicks: Int = 3, onQuickClick: () -> Unit) {
+    var clickCount = 0
+    var lastClickTime: Long = 0
+
+    setOnPreferenceClickListener {
+        val now = System.currentTimeMillis()
+
+        if (now - lastClickTime < duration) {
+            clickCount++
+        } else {
+            clickCount = 1
+        }
+
+        lastClickTime = now
+
+        if (clickCount >= clicks) {
+            clickCount = 0
+            onQuickClick.invoke()
+        }
+
         true
     }
 }

@@ -40,6 +40,7 @@ object SpUtil {
     private const val KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY = "last_query_version_clear_difficulty"
 
     private const val KEY_VERSION = "db_version"
+    private const val KEY_SKIP_VERSION = "skip_version"
     private const val KEY_LAST_UPDATE_TIME = "chart_stats_db_last_update_time"
 
     private const val KEY_SEARCH_HISTORY = "search_history"
@@ -108,6 +109,12 @@ object SpUtil {
     }
 
     // ================= VERSION INFO =================
+
+    fun getSkipVersion(): String = versionPrefs.getString(KEY_SKIP_VERSION, "0") ?: "0"
+
+    fun saveSkipVersion(version: String) {
+        versionPrefs.edit { putString(KEY_SKIP_VERSION, version) }
+    }
 
     fun getDataVersion(): String = versionPrefs.getString(KEY_VERSION, "0") ?: "0"
 
