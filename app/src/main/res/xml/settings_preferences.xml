@@ -23,6 +23,12 @@
         app:key="version_check_skip_song"
         app:title="@string/settings_version_check_skip_song" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="song_find_disable_rank"
+        app:title="@string/settings_song_find_disable_rank" />
+
     <EditTextPreference
         app:key="nickname"
         app:title="@string/settings_nickname"

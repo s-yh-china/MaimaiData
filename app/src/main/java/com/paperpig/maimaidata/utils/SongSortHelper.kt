@@ -19,6 +19,7 @@ import com.paperpig.maimaidata.utils.SortType.NAME
 import com.paperpig.maimaidata.utils.SortType.RANK
 import com.paperpig.maimaidata.utils.SortType.RECOMMENDATION
 import com.paperpig.maimaidata.utils.SortType.RELEASE_TIME
+import com.paperpig.maimaidata.widgets.Settings
 
 data class ClosestLocation(
     val index: Int,
@@ -30,6 +31,7 @@ data class ClosestLocation(
 )
 
 object SongSortHelper {
+    private val disableRankSortType = listOf(RECOMMENDATION, NAME, LEVEL_INDEX, RELEASE_TIME, BPM)
     private val enabledGroupTypes = listOf(LEVEL, VERSION)
 
     private val levelList = listOf("1", "2", "3", "4", "5", "6", "7", "7+", "8", "8+", "9", "9+", "10", "10+", "11", "11+", "12", "12+", "13", "13+", "14", "14+", "15")
@@ -50,7 +52,7 @@ object SongSortHelper {
 
                 if (currentGroupIndex != -1) {
                     val groupSongs = getGroupSongs(group, currentGroupIndex, difficultyType, allSongs)
-                    SortType.entries
+                    (if (Settings.getSongFindDisableRank()) disableRankSortType else SortType.entries)
                         .associateWith { sortType -> sortSong(sortType, group, groupSongs) }
                         .forEach { (sortType, sortedGroup) ->
                             val targetSongObject = GameSongObject(

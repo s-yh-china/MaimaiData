@@ -28,6 +28,9 @@ object Settings {
     private const val KEY_VERSION_CHECK_SKIP_SONG = "version_check_skip_song"
     private const val DEFAULT_VERSION_CHECK_SKIP_SONG = true
 
+    private const val KEY_SONG_FIND_DISABLE_RANK = "song_find_disable_rank"
+    private const val DEFAULT_SONG_FIND_DISABLE_RANK = false
+
     private const val KEY_NICKNAME = "nickname"
     private const val DEFAULT_NICKNAME = "maimai"
 
@@ -41,6 +44,8 @@ object Settings {
     fun getVersionCheckSkipSong() = settingsPre.getBoolean(KEY_VERSION_CHECK_SKIP_SONG, DEFAULT_VERSION_CHECK_SKIP_SONG)
 
     fun getEnableShowAlias() = settingsPre.getBoolean(KEY_SHOW_ALIAS, DEFAULT_SHOW_ALIAS)
+
+    fun getSongFindDisableRank() = settingsPre.getBoolean(KEY_SONG_FIND_DISABLE_RANK, DEFAULT_SONG_FIND_DISABLE_RANK)
 
     fun getNickname(): String = settingsPre.getString(KEY_NICKNAME, DEFAULT_NICKNAME).takeIf { !it.isNullOrBlank() } ?: DEFAULT_NICKNAME
 
