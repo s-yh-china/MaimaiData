@@ -173,6 +173,9 @@ class SongDetailActivity : AppCompatActivity() {
             }
 
             searchButton.apply {
+                if (data.songData.type == SongType.UTAGE) {
+                    visibility = View.GONE
+                }
                 setOnClickListener {
                     this.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100)
                         .withEndAction { this.animate().scaleX(1f).scaleY(1f).setDuration(100).start() }
