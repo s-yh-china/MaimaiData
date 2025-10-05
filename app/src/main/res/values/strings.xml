@@ -98,6 +98,7 @@
     <string name="miss">MISS</string>
     <string name="down50">50落</string>
     <string name="down100">100落</string>
+    <string name="low_dxstar_score">最低DX分数</string>
 
     <string name="rating_sheet">RANK 系数表</string>
     <string name="maimaidx_prober">舞萌DX查分器</string>

@@ -115,6 +115,19 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         notesAchievementStoke.setStroke(4.toDp().toInt(), ContextCompat.getColor(requireContext(), song.strokeColor))
         notesAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), song.bgColor))
 
+        val dxstarAchievementStoke = (binding.dxScoreLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_stroke) as GradientDrawable
+        val dxstarAchievementInnerStoke = (binding.dxScoreLayout.background as LayerDrawable).findDrawableByLayerId(R.id.note_achievement_inner_stroke) as GradientDrawable
+
+        dxstarAchievementStoke.setStroke(4.toDp().toInt(), ContextCompat.getColor(requireContext(), song.strokeColor))
+        dxstarAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), song.bgColor))
+
+        val maxDxScore = data.chart.noteTotal * 3
+        binding.minDxScore1.text = (maxDxScore * 0.85).toInt().toString()
+        binding.minDxScore2.text = (maxDxScore * 0.9).toInt().toString()
+        binding.minDxScore3.text = (maxDxScore * 0.93).toInt().toString()
+        binding.minDxScore4.text = (maxDxScore * 0.95).toInt().toString()
+        binding.minDxScore5.text = (maxDxScore * 0.97).toInt().toString()
+
         if (!song.version.contains("舞萌")) {
             binding.finaleGroup.visibility = View.VISIBLE
             binding.finaleAchievement.text =
