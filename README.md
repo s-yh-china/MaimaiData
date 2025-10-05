@@ -19,7 +19,7 @@ MaimaiData Local是一款为舞萌DX玩家开发的Android App
 ## 更新规划
 
 - [x] 如何找到一首歌
-- [ ] 重新添加b50页面
+- [x] 重新添加b50页面
 
 ## 感谢
 
