@@ -56,7 +56,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             }
         }
         findPreference<Preference>("last_time_update_chart_alias")?.apply {
-            summary = SpUtil.getLastUpdateChartStats().let {
+            summary = SpUtil.getLastUpdateChartAlias().let {
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
             }
             setQuickClick {
