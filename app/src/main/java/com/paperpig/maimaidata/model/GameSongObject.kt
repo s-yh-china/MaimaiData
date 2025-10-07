@@ -49,10 +49,11 @@ data class GameSongObject(
         }
 
         fun formSongWithRecordClosest(song: SongWithRecordEntity, difficultyType: DifficultyType): GameSongObject {
+            val closestDifficulty = song.getClosestDifficulty(difficultyType)
             return GameSongObject(
                 song = song.songData,
-                chart = song.getClosestChart(difficultyType),
-                record = song.recordsMap[difficultyType]
+                chart = song.chartsMap[closestDifficulty]!!,
+                record = song.recordsMap[closestDifficulty]
             )
         }
     }

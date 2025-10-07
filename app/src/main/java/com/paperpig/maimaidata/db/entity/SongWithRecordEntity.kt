@@ -33,8 +33,12 @@ data class SongWithRecordEntity(
         records.associateBy { it.difficultyType }
     }
 
-    fun getClosestChart(difficultyType: DifficultyType): ChartEntity =
-        chartsMap[if (charts.size <= difficultyType.difficultyIndex) DifficultyType.from(songData.type, charts.size - 1) else difficultyType]!!
+    fun getClosestDifficulty(difficultyType: DifficultyType): DifficultyType =
+        if (charts.size <= difficultyType.difficultyIndex) {
+            DifficultyType.from(songData.type, charts.size - 1)
+        } else {
+            difficultyType
+        }
 
     fun getRecordOrDef(
         difficultyType: DifficultyType,
