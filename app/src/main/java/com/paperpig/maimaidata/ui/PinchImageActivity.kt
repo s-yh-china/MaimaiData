@@ -15,6 +15,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -133,6 +134,8 @@ class PinchImageActivity : AppCompatActivity() {
 
         GlideApp.with(this)
             .load(imageStringUri)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
             .addListener(coverLoadListener())
             .into(binding.pinchImageView)
     }
