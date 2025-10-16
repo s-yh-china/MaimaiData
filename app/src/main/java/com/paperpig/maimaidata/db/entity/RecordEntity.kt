@@ -43,6 +43,9 @@ data class RecordEntity(
     @ColumnInfo(name = "fs")
     val fs: SongFS,
 
+    @ColumnInfo(name = "play_count")
+    val playCount: Int,
+
     @ColumnInfo(name = "difficulty_type")
     val difficultyType: DifficultyType,
 ) : Parcelable

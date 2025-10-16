@@ -1,14 +1,12 @@
 package com.paperpig.maimaidata.db.dao
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.paperpig.maimaidata.db.AppDataBase
 import com.paperpig.maimaidata.db.entity.RecordEntity
-import com.paperpig.maimaidata.model.DifficultyType
 
 @Dao
 interface RecordDao {
@@ -29,25 +27,6 @@ interface RecordDao {
             return false
         }
     }
-
-    @Query("SELECT * FROM record")
-    fun getAllRecords(): LiveData<List<RecordEntity>>
-
-    /**
-     * 根据难度索引查询记录表
-     * @param index 难度索引
-     * @return 记录列表
-     */
-    @Query("SELECT * FROM record WHERE difficulty_type = :difficultyType")
-    fun getRecordsByDifficulty(difficultyType: DifficultyType): LiveData<List<RecordEntity>>
-
-    /**
-     * 根据歌曲ID获取记录表
-     * @param songId 歌曲ID
-     * @return 记录列表
-     */
-    @Query("SELECT * FROM record WHERE song_id = :songId")
-    fun getRecordsBySongId(songId: Int): LiveData<List<RecordEntity>>
 
     @Insert
     fun insertAllRecord(list: List<RecordEntity>)

@@ -23,17 +23,4 @@ public class DnsFlags {
         flags.Rcode = ((m_Flags >> 8) & 0xF);
         return flags;
     }
-
-    public short ToShort() {
-        int m_Flags = 0;
-        m_Flags |= (this.QR ? 1 : 0) << 7;
-        m_Flags |= (this.OpCode & 0x0F) << 3;
-        m_Flags |= (this.AA ? 1 : 0) << 2;
-        m_Flags |= (this.TC ? 1 : 0) << 1;
-        m_Flags |= this.RD ? 1 : 0;
-        m_Flags |= (this.RA ? 1 : 0) << 15;
-        m_Flags |= (this.Zero & 0x07) << 12;
-        m_Flags |= (this.Rcode & 0x0F) << 8;
-        return (short) m_Flags;
-    }
 }

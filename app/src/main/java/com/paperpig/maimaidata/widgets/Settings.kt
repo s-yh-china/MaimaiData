@@ -31,6 +31,9 @@ object Settings {
     private const val KEY_SONG_FIND_DISABLE_RANK = "song_find_disable_rank"
     private const val DEFAULT_SONG_FIND_DISABLE_RANK = false
 
+    private const val KEY_PROBER_UPDATE_USE_API = "prober_update_use_api"
+    private const val DEFAULT_PROBER_UPDATE_USE_API = false
+
     private const val KEY_NICKNAME = "nickname"
     private const val DEFAULT_NICKNAME = "maimai"
 
@@ -46,6 +49,8 @@ object Settings {
     fun getEnableShowAlias() = settingsPre.getBoolean(KEY_SHOW_ALIAS, DEFAULT_SHOW_ALIAS)
 
     fun getSongFindDisableRank() = settingsPre.getBoolean(KEY_SONG_FIND_DISABLE_RANK, DEFAULT_SONG_FIND_DISABLE_RANK)
+
+    fun getProberUpdateUseAPI() = settingsPre.getBoolean(KEY_PROBER_UPDATE_USE_API, DEFAULT_PROBER_UPDATE_USE_API)
 
     fun getNickname(): String = settingsPre.getString(KEY_NICKNAME, DEFAULT_NICKNAME).takeIf { !it.isNullOrBlank() } ?: DEFAULT_NICKNAME
 

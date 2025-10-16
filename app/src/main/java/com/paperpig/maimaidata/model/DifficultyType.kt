@@ -94,6 +94,7 @@ enum class DifficultyType(
                 when (index) {
                     UTAGE.difficultyIndex -> UTAGE
                     UTAGE_PLAYER2.difficultyIndex -> UTAGE_PLAYER2
+                    UTAGE.webDifficultyIndex -> UTAGE
                     else -> UNKNOWN
                 }
             } else {

@@ -23,10 +23,9 @@ public class TunnelFactory {
         if (destAddress.getAddress() != null) {
             Log.d(TAG, destAddress.getAddress().toString());
         }
-        if (destAddress.getHostName().endsWith("wahlap.com") && destAddress.getPort() == 80) {
-            Log.d(TAG, "Request for wahlap.com caught");
-            return new HttpCapturerTunnel(
-                new InetSocketAddress("127.0.0.1", HttpRedirectServer.Port), selector);
+        if ((destAddress.getHostName().endsWith("wahlap.com") || destAddress.getHostName().endsWith("sys-allnet.cn")) && destAddress.getPort() == 80) {
+            Log.d(TAG, "Request for wahlap.com | sys-allnet.cn caught");
+            return new HttpCapturerTunnel(new InetSocketAddress("127.0.0.1", HttpRedirectServer.Port), selector);
         } else {
             if (destAddress.isUnresolved()) {
                 return new RawTunnel(new InetSocketAddress(destAddress.getHostName(), destAddress.getPort()), selector);

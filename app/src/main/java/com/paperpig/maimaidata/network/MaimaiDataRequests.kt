@@ -5,14 +5,20 @@ import com.paperpig.maimaidata.model.AppUpdateModel
 import com.paperpig.maimaidata.model.ChartAliasData
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DataVersionModel
+import com.paperpig.maimaidata.model.api.QrCodeBindModel
+import com.paperpig.maimaidata.model.api.UserMusicDataModel
 import com.paperpig.maimaidata.utils.JsonConvertToDb
 import io.reactivex.Observable
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * @author BBS
  * @since  2021/5/13
  */
 object MaimaiDataRequests {
+    private val JSON = "application/json; charset=utf-8".toMediaType()
+
     fun fetchUpdateInfo(): Observable<AppUpdateModel> =
         MaimaiDataClient
             .instance
@@ -54,6 +60,28 @@ object MaimaiDataRequests {
             .compose(MaimaiDataTransformer.handleResult())
             .flatMap {
                 val model = Gson().fromJson(it, ChartAliasData::class.java)
+                Observable.just(model)
+            }
+
+    fun qrCodeBind(qrCode: String): Observable<QrCodeBindModel> =
+        MaimaiDataClient
+            .instance
+            .getService()
+            .apiQrBind("{\"qr_code\":\"$qrCode\"}".toRequestBody(JSON))
+            .compose(MaimaiDataTransformer.handleResult())
+            .flatMap {
+                val model = Gson().fromJson(it, QrCodeBindModel::class.java)
+                Observable.just(model)
+            }
+
+    fun getUserMusicData(userId: String): Observable<UserMusicDataModel> =
+        MaimaiDataClient
+            .instance
+            .getService()
+            .apiGetUserMusicData("{\"user_id\":\"$userId\"}".toRequestBody(JSON))
+            .compose(MaimaiDataTransformer.handleResult())
+            .flatMap {
+                val model = Gson().fromJson(it, UserMusicDataModel::class.java)
                 Observable.just(model)
             }
 }

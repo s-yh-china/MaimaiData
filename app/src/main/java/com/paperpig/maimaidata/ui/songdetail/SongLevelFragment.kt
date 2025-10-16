@@ -48,6 +48,12 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.rate.icon))
             binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fc.icon))
             binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fs.icon))
+            if (it.playCount == -1) {
+                binding.chartPlayCountGroup.visibility = View.GONE
+            } else {
+                binding.chartPlayCountGroup.visibility = View.VISIBLE
+                binding.playCount.text = it.playCount.toString()
+            }
         } ?: run {
             binding.chartStatusGroup.visibility = View.GONE
             binding.chartNoStatusGroup.visibility = View.VISIBLE

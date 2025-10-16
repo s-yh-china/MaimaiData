@@ -34,15 +34,6 @@ public class DnsHeader {
         return header;
     }
 
-    public void ToBytes(ByteBuffer buffer) {
-        buffer.putShort(this.ID);
-        buffer.putShort(this.Flags.ToShort());
-        buffer.putShort(this.QuestionCount);
-        buffer.putShort(this.ResourceCount);
-        buffer.putShort(this.AResourceCount);
-        buffer.putShort(this.EResourceCount);
-    }
-
     public void setID(short value) {
         CommonMethods.writeShort(Data, Offset + offset_ID, value);
     }

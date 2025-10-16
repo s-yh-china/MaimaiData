@@ -25,4 +25,8 @@ class SongRepository private constructor(private val songDao: SongDao) {
     fun searchSongsWithTitle(songTitle: String): List<SongDataEntity> {
         return songDao.searchSongsByTitle(songTitle)
     }
+
+    fun getSongWithId(songId: Int): SongDataEntity? {
+        return songDao.getSongWithId(songId)
+    }
 }

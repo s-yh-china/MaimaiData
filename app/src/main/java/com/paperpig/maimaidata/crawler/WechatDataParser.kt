@@ -25,83 +25,77 @@ object WechatDataParser {
     private val songRepository: SongRepository = SongRepository.getInstance()
 
     fun parsePageToRecordList(pageData: String, difficulty: DifficultyType): List<RecordEntity> {
-        val records = mutableListOf<RecordEntity>()
-        for (nameElement in Jsoup.parse(pageData).select("div.music_name_block.t_l.f_13.break")) {
-            try {
-                var title = nameElement.text().ifEmpty { "　" }
-                val isUtage = difficulty == DifficultyType.UTAGE
-                val siblings = nameElement.parent()?.children() ?: continue
+        return Jsoup.parse(pageData).select("div.music_name_block.t_l.f_13.break")
+            .flatMap { nameElement ->
+                runCatching {
+                    val siblings = nameElement.parent()?.children() ?: return@runCatching emptyList()
 
-                val achievements = findText(siblings, "music_score_block") { it.contains("%") }?.replace("%", "")?.toDouble() ?: continue
-                val typeImg = nameElement.parent()?.parent()?.parent()?.select("img.music_kind_icon")?.firstOrNull()
-                val type = when {
-                    isUtage -> SongType.UTAGE
-                    typeImg?.attr("src")?.contains("standard") == true -> SongType.SD
-                    typeImg?.attr("src")?.contains("dx") == true -> SongType.DX
-                    else -> SongType.DX.also {
-                        Log.w(TAG, "无法获取铺面类型，推测为DX铺面")
+                    val achievements = findText(siblings, "music_score_block") { it.contains("%") }
+                        ?.replace("%", "")?.toDouble() ?: return@runCatching emptyList()
+
+                    val isUtage = difficulty == DifficultyType.UTAGE
+                    val typeImg = nameElement.parent()?.parent()?.parent()?.select("img.music_kind_icon")?.firstOrNull()
+                    val type = when {
+                        isUtage -> SongType.UTAGE
+                        typeImg?.attr("src")?.contains("standard") == true -> SongType.SD
+                        typeImg?.attr("src")?.contains("dx") == true -> SongType.DX
+                        else -> SongType.DX.also { Log.w(TAG, "无法获取铺面类型，推测为DX铺面") }
                     }
-                }
 
-                val dxScoreText = findText(siblings, "music_score_block") { it.contains("/") } ?: continue
-                val dxScoreParts = dxScoreText.replace(",", "").replace(" ", "").split("/")
-                val dxScore = dxScoreParts[0].toInt()
-                val dxMaxScore = dxScoreParts[1].toInt()
-                if (title == "Link" && dxMaxScore == linkCofDxScore[difficulty]) {
-                    title = "Link(Cof)"
-                }
+                    val (dxScore, dxMaxScore) = findText(siblings, "music_score_block") { it.contains("/") }
+                        ?.replace(",", "")?.replace(" ", "")?.split("/")
+                        ?.takeIf { it.size == 2 }
+                        ?.let { it[0].toInt() to it[1].toInt() } ?: return@runCatching emptyList()
 
-                val songEntity = songRepository.searchSongsWithTitle(title).firstOrNull { it.type == type }
-                if (songEntity == null) {
-                    Log.w(TAG, "无法获取 $title($type) ${difficulty.displayName} 的歌曲数据")
-                    continue
-                }
+                    var title = nameElement.text().ifEmpty { "　" }
+                    if (title == "Link" && dxMaxScore == linkCofDxScore[difficulty]) {
+                        title = "Link(Cof)"
+                    }
 
-                val isBuddy = isUtage && songEntity.buddy == true
-                val rate = SongRank.fromAchievement(if (isBuddy) achievements / 2 else achievements)
+                    val songEntity = songRepository.searchSongsWithTitle(title).firstOrNull { it.type == type }
+                    if (songEntity == null) {
+                        Log.w(TAG, "无法获取 $title($type) ${difficulty.displayName} 的歌曲数据")
+                        return@runCatching emptyList()
+                    }
 
-                var fc = SongFC.NONE
-                var fs = SongFS.NONE
-                for (sibling in siblings) {
-                    val img = sibling.select("img[src*=_icon_]").firstOrNull() ?: continue
-                    val matcher = icoPattern.matcher(img.attr("src"))
-                    if (matcher.find()) {
-                        matcher.group(1)?.let {
-                            fc = if (fc == SongFC.NONE) SongFC.fromCode(it) else fc
-                            fs = if (fs == SongFS.NONE) SongFS.fromCode(it) else fs
+                    var fc = SongFC.NONE
+                    var fs = SongFS.NONE
+                    siblings.forEach { sibling ->
+                        val img = sibling.select("img[src*=_icon_]").firstOrNull() ?: return@forEach
+                        val matcher = icoPattern.matcher(img.attr("src"))
+                        if (matcher.find()) {
+                            matcher.group(1)?.let { code ->
+                                fc = if (fc == SongFC.NONE) SongFC.fromCode(code) else fc
+                                fs = if (fs == SongFS.NONE) SongFS.fromCode(code) else fs
+                            }
                         }
                     }
-                }
 
-                records.add(
-                    RecordEntity(
+                    val isBuddy = isUtage && songEntity.buddy == true
+                    val rateValue = if (isBuddy) achievements / 2 else achievements
+                    val rate = SongRank.fromAchievement(rateValue)
+
+                    val record = RecordEntity(
                         songId = songEntity.id,
                         achievements = achievements,
                         dxScore = dxScore,
                         fc = fc,
                         fs = fs,
                         difficultyType = difficulty,
-                        rate = rate
+                        rate = rate,
+                        playCount = -1
                     )
-                )
-                if (isBuddy) {
-                    records.add(
-                        RecordEntity(
-                            songId = songEntity.id,
-                            achievements = achievements,
-                            dxScore = dxScore,
-                            fc = fc,
-                            fs = fs,
-                            difficultyType = DifficultyType.UTAGE_PLAYER2,
-                            rate = rate
-                        )
-                    )
+
+                    if (isBuddy) {
+                        listOf(record, record.copy(difficultyType = DifficultyType.UTAGE_PLAYER2))
+                    } else {
+                        listOf(record)
+                    }
+                }.getOrElse { e ->
+                    Log.w(TAG, "解析记录时出错: ${e.javaClass.simpleName}: ${e.message}")
+                    emptyList()
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "解析记录时出错: ${e.javaClass.simpleName}: ${e.message}")
             }
-        }
-        return records
     }
 
     private fun findText(siblings: Elements, clazz: String, predicate: ((String) -> Boolean)?): String? {

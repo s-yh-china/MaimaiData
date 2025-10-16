@@ -32,7 +32,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun chartStatsDao(): ChartStatsDao
 
     companion object {
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
         const val DATABASE_NAME = "maimaidata_db"
 
         @Volatile

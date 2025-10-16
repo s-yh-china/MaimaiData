@@ -3,6 +3,7 @@ package com.paperpig.maimaidata.network.vpn.tunnel;
 import android.util.Log;
 
 import com.paperpig.maimaidata.crawler.CrawlerCaller;
+import com.paperpig.maimaidata.crawler.QrCodeBindCrawler;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -54,6 +55,10 @@ public class HttpCapturerTunnel extends Tunnel {
         if (url.startsWith("http://tgk-wcaime.wahlap.com/wc_auth/oauth/callback/maimai-dx")) {
             Log.d(TAG, "Auth request caught!");
             CrawlerCaller.INSTANCE.fetchData(url);
+        }
+        if (url.startsWith("http://wq.sys-allnet.cn/qrcode/req")) {
+            Log.d(TAG, "Qr code caught!");
+            QrCodeBindCrawler.INSTANCE.startBind(url);
         }
     }
 

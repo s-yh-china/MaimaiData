@@ -7,5 +7,5 @@ interface WechatCrawlerListener {
 
     fun onFinishUpdate()
 
-    fun onError(e: Exception)
+    fun onError(e: Throwable)
 }

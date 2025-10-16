@@ -38,6 +38,7 @@ object SpUtil {
     private const val KEY_LAST_QUERY_GENRE_DIFFICULTY = "last_query_genre_difficulty"
     private const val KEY_LAST_QUERY_VERSION_CLEAR = "last_query_version_clear"
     private const val KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY = "last_query_version_clear_difficulty"
+    private const val KEY_USER_ID = "user_id"
 
     private const val KEY_VERSION = "db_version"
     private const val KEY_SKIP_VERSION = "skip_version"
@@ -97,6 +98,11 @@ object SpUtil {
 
     fun getLastQueryVersionClearDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY, 0)
 
+    fun saveUserId(userId: String) {
+        userInfoPrefs.edit { putString(KEY_USER_ID, userId) }
+    }
+
+    fun getUserId(): String? = userInfoPrefs.getString(KEY_USER_ID, null)
     // ================= SONG INFO =================
 
     fun isFavorite(id: String): Boolean = songInfoPrefs.getBoolean(id, false)

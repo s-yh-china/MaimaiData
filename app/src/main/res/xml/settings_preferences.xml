@@ -29,6 +29,19 @@
         app:key="song_find_disable_rank"
         app:title="@string/settings_song_find_disable_rank" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="prober_update_use_api"
+        app:title="@string/settings_prober_update_use_api" />
+
+    <Preference
+        app:key="clear_user_id_and_rebind"
+        app:title="@string/settings_clear_user_id"
+        app:summary="@string/settings_clear_user_id_not_bind"
+        app:iconSpaceReserved="false"
+        app:isPreferenceVisible="false" />
+
     <EditTextPreference
         app:key="nickname"
         app:title="@string/settings_nickname"

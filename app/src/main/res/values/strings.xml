@@ -64,6 +64,7 @@
     <string name="maimaidx_achievement_desc">%.4f%%</string>
     <string name="design">谱面作者</string>
     <string name="status">达成状态</string>
+    <string name="play_count">游玩次数</string>
     <string name="no_record">暂无成绩</string>
     <string name="no_record_tips">尚未游玩过当前难度的谱面，或者你需要更新本地数据库</string>
     <string name="song_find_dialog_title">如何找到这首歌</string>
@@ -103,11 +104,6 @@
     <string name="rating_sheet">RANK 系数表</string>
     <string name="maimaidx_prober">舞萌DX查分器</string>
     <string name="current_user">你好</string>
-    <string name="prober_update_help">数据录入帮助</string>
-    <string name="prober_update_content_step1">①.打开“开始录入”，App会自动打开代理（第一次使用请同意VPN创建请求）、复制链接、跳转微信</string>
-    <string name="prober_update_content_step2">②.在微信中将复制的链接发送至聊天窗口（如文件传输助手）</string>
-    <string name="prober_update_content_step3">③.点击发送的链接，等待网页提示“登录信息以获取”后，即可关闭页面返回App</string>
-    <string name="prober_update_content_step4">④.App开始获取分数信息，并根据设置中的难度选择将对应难度的成绩载入数据库</string>
     <string name="rank">RANK</string>
     <string name="achievement">达成率</string>
     <string name="coefficient">系数</string>
@@ -147,8 +143,33 @@
     <string name="maimai_data_chart_alias_check">正在检查别名库版本</string>
     <string name="maimai_data_check_error">检查失败</string>
 
-    <string name="start_proxy">开始录入</string>
-    <string name="stop_proxy">关闭代理</string>
+    <string name="update_prober">数据录入</string>
+    <string name="update_prober_api_user_id_bind">绑定账号</string>
+    <string name="update_prober_stop_proxy">关闭代理</string>
+    <string name="update_prober_disable">服务器维护中，无法录入数据</string>
+
+    <string name="prober_update_api_warning_title">⚠不安全的功能⚠</string>
+    <string name="prober_update_api_warning_content">使用本功能将使开发者可以获取到你的userid，并可能导致账号被封禁等后果。我们将不为此功能导致的任何后果负责，开启此功能视为同意以上内容。</string>
+    <string name="prober_update_api_warning_wait_button">我已知悉（%ds）</string>
+    <string name="prober_update_api_warning_ok_button">无视风险继续启用</string>
+
+    <string name="prober_update_help">数据录入帮助</string>
+    <string name="prober_update_content_step1">①.打开“数据录入”，App会自动打开代理（第一次使用请同意VPN创建请求）、复制链接、跳转微信</string>
+    <string name="prober_update_content_step2">②.在微信中将复制的链接发送至聊天窗口（如文件传输助手）</string>
+    <string name="prober_update_content_step3">③.点击发送的链接，等待网页提示“登录信息以获取”后，即可关闭页面返回App</string>
+    <string name="prober_update_content_step4">④.App开始获取分数信息，并根据设置中的难度选择将对应难度的成绩载入数据库</string>
+
+    <string name="prober_update_api_user_id_bind_help">绑定账号帮助</string>
+    <string name="prober_update_api_user_id_bind_content_step1">①.打开“绑定账号”，App会自动打开代理（第一次使用请同意VPN创建请求）、跳转微信</string>
+    <string name="prober_update_api_user_id_bind_content_step2">②.在微信中打开公众号舞萌/中二后，点击玩家二维码</string>
+    <string name="prober_update_api_user_id_bind_content_step3">③.打开新获取的玩家二维码，等待网页提示“登录信息以获取”后，即可关闭页面返回App</string>
+    <string name="prober_update_api_user_id_bind_content_step4">④.App开始尝试绑定账号，等待“数据录入”重新出现</string>
+
+    <string name="prober_update_api_help_content_step1">①.点击“数据录入”，等待数据加载</string>
+
+    <string name="prober_update_disable_help">为什么不能录入</string>
+    <string name="prober_update_disable_content">舞萌服务器及公众号正在维护，目前无获取数据手段，因此不能录入新的数据</string>
+
 
     <string name="about">关于</string>
     <string name="local_data_version">本地数据版本</string>
@@ -163,6 +184,10 @@
     <string name="settings_enable_charter_search">启用谱师搜索</string>
     <string name="settings_version_check_skip_song">版本进度忽略删除曲</string>
     <string name="settings_song_find_disable_rank">歌曲定位不依赖用户数据</string>
+    <string name="settings_prober_update_use_api">数据录入使用API</string>
+    <string name="settings_clear_user_id">清除UserID</string>
+    <string name="settings_clear_user_id_bind">已绑定</string>
+    <string name="settings_clear_user_id_not_bind">未绑定，无需清除</string>
 
     <string name="song_id">歌曲ID</string>
     <string name="settings_nickname">全局用户昵称</string>

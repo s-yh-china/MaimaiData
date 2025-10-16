@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
  * @author BBS
  * @since  2021-05-13
  */
-class MaimaiDataClient private constructor() {
+class   MaimaiDataClient private constructor() {
 
     companion object {
         val instance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {

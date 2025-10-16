@@ -21,8 +21,7 @@ public class CommonMethods {
     }
 
     public static String ipIntToString(int ip) {
-        return String.format("%s.%s.%s.%s", (ip >> 24) & 0x00FF,
-            (ip >> 16) & 0x00FF, (ip >> 8) & 0x00FF, ip & 0x00FF);
+        return String.format("%s.%s.%s.%s", (ip >> 24) & 0x00FF, (ip >> 16) & 0x00FF, (ip >> 8) & 0x00FF, ip & 0x00FF);
     }
 
     public static int ipStringToInt(String ip) {
@@ -36,7 +35,8 @@ public class CommonMethods {
     public static int readInt(byte[] data, int offset) {
         return ((data[offset] & 0xFF) << 24)
             | ((data[offset + 1] & 0xFF) << 16)
-            | ((data[offset + 2] & 0xFF) << 8) | (data[offset + 3] & 0xFF);
+            | ((data[offset + 2] & 0xFF) << 8)
+            | (data[offset + 3] & 0xFF);
     }
 
     public static short readShort(byte[] data, int offset) {
@@ -80,8 +80,7 @@ public class CommonMethods {
     public static boolean ComputeIPChecksum(IPHeader ipHeader) {
         short oldCrc = ipHeader.getCrc();
         ipHeader.setCrc((short) 0);
-        short newCrc = CommonMethods.checksum(0, ipHeader.m_Data,
-            ipHeader.m_Offset, ipHeader.getHeaderLength());
+        short newCrc = CommonMethods.checksum(0, ipHeader.m_Data, ipHeader.m_Offset, ipHeader.getHeaderLength());
         ipHeader.setCrc(newCrc);
         return oldCrc == newCrc;
     }
@@ -92,8 +91,7 @@ public class CommonMethods {
         if (ipData_len < 0) {
             return false;
         }
-        long sum = getsum(ipHeader.m_Data, ipHeader.m_Offset
-            + IPHeader.offset_src_ip, 8);
+        long sum = getsum(ipHeader.m_Data, ipHeader.m_Offset + IPHeader.offset_src_ip, 8);
         sum += ipHeader.getProtocol() & 0xFF;
         sum += ipData_len;
 
@@ -112,8 +110,7 @@ public class CommonMethods {
         if (ipData_len < 0) {
             return false;
         }
-        long sum = getsum(ipHeader.m_Data, ipHeader.m_Offset
-            + IPHeader.offset_src_ip, 8);
+        long sum = getsum(ipHeader.m_Data, ipHeader.m_Offset + IPHeader.offset_src_ip, 8);
         sum += ipHeader.getProtocol() & 0xFF;
         sum += ipData_len;
 

@@ -37,7 +37,7 @@ object CrawlerCaller {
         }
     }
 
-    fun onError(e: Exception) {
+    fun onError(e: Throwable) {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onError(e)
         }

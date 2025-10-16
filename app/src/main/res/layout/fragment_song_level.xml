@@ -101,11 +101,37 @@
             app:layout_constraintStart_toStartOf="@id/song_level"
             app:layout_constraintTop_toTopOf="@id/chart_status_label" />
 
+        <TextView
+            android:id="@+id/play_count_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/play_count"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@id/chart_status_label"
+            app:layout_constraintTop_toBottomOf="@id/chart_status_label" />
+
+        <TextView
+            android:id="@+id/play_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/play_count_label"
+            app:layout_constraintStart_toStartOf="@id/chart_achievement"
+            app:layout_constraintTop_toTopOf="@id/play_count_label" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/chart_play_count_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="play_count,play_count_label" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/chart_status_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="chart_rank,chart_fcap,chart_fsfsd" />
+            app:constraint_referenced_ids="chart_rank,chart_fcap,chart_fsfsd,play_count,play_count_label" />
 
         <ImageView
             android:id="@+id/chart_rank"
@@ -168,7 +194,7 @@
             android:paddingEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chart_status_label" />
+            app:layout_constraintTop_toBottomOf="@+id/play_count_label" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/note_achievement_layout"

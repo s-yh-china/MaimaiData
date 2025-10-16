@@ -49,7 +49,8 @@ data class SongWithRecordEntity(
             dxScore = 0,
             fc = SongFC.NONE,
             fs = SongFS.NONE,
-            difficultyType = difficultyType
+            difficultyType = difficultyType,
+            playCount = -1
         )
     ): RecordEntity = recordsMap[difficultyType] ?: def
 }
