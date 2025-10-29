@@ -81,7 +81,7 @@ class VersionCheckActivity : AppCompatActivity() {
 
     private fun initView() {
         val lastSelectedPosition = SpUtil.getLastQueryVersion()
-        currentVersion = versionList[lastSelectedPosition].versionName
+        currentVersion = versionList.getOrElse(lastSelectedPosition) { versionList[0] }.versionName
 
         binding.versionSpn.apply {
             adapter = VersionArrayAdapter(this@VersionCheckActivity, R.layout.item_spinner_version, versionList).apply {
