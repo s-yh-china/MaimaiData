@@ -31,7 +31,7 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
     private var dataList: List<SongWithRecordEntity> = listOf()
 
-    private var genreSelect: String? = null
+    private var genreSelect: String = ""
     private var difficultySelect: DifficultyType = DifficultyType.MASTER
     private var groupData: Map<String, List<Pair<GameSongObject, SongWithRecordEntity>>> = mapOf()
 
@@ -200,9 +200,9 @@ class GenreCheckAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(genre: String?, difficulty: DifficultyType) {
+    fun updateData(genre: String, difficulty: DifficultyType) {
         genreSelect = genre
-        difficultySelect = difficulty
+        difficultySelect = if (genre != "宴·会·场") difficulty else DifficultyType.UTAGE
         groupData = getFormatData()
         notifyDataSetChanged()
     }

@@ -77,11 +77,7 @@ class VersionClearCheckActivity : AppCompatActivity() {
                         SpUtil.saveLastQueryVersionClear(position)
                         currentVersion = (parent?.getItemAtPosition(position) as Version).versionName
                         (binding.versionClearCheckRecycler.adapter as VersionClearCheckAdapter).updateData(currentVersion, currentDifficulty)
-                        if (currentVersion == "霸者") {
-                            binding.difficultySpn.isVisible = false
-                        } else {
-                            binding.difficultySpn.isVisible = true
-                        }
+                        binding.difficultySpn.isVisible = currentVersion != "霸者"
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {

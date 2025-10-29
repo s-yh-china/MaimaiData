@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -25,6 +26,7 @@ class GenreCheckActivity : AppCompatActivity() {
         "其他游戏",
         "舞萌",
         "音击&中二节奏",
+        "宴·会·场"
     )
 
     private var currentGenre = ""
@@ -63,6 +65,7 @@ class GenreCheckActivity : AppCompatActivity() {
                     SpUtil.saveLastQueryGenre(position)
                     currentGenre = genreList[position]
                     (binding.genreCheckRecycler.adapter as GenreCheckAdapter).updateData(currentGenre, currentDifficulty)
+                    binding.difficultySpn.isVisible = currentGenre != "宴·会·场"
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -105,7 +108,7 @@ class GenreCheckActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(this@GenreCheckActivity) {
+        SongWithRecordRepository.getInstance().getAllSongWithRecord(includeUtage = true).observe(this@GenreCheckActivity) {
             (binding.genreCheckRecycler.adapter as GenreCheckAdapter).apply {
                 setData(it)
                 updateData(currentGenre, currentDifficulty)
