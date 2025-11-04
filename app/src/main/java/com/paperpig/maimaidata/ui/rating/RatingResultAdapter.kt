@@ -1,5 +1,6 @@
 package com.paperpig.maimaidata.ui.rating
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -30,7 +31,7 @@ class RatingResultAdapter : RecyclerView.Adapter<RatingResultAdapter.ViewHolder>
         val ratingModel = data[position]
 
         holder.innerLevel.text = ratingModel.innerLevel.toString()
-        holder.achievement.text = ratingModel.achi
+        holder.achievement.text = ratingModel.achievement
         holder.rating.text = ratingModel.rating.toString()
         holder.totalRating.text = ratingModel.total.toString()
     }
@@ -39,6 +40,7 @@ class RatingResultAdapter : RecyclerView.Adapter<RatingResultAdapter.ViewHolder>
         return data.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(list: List<Rating>) {
         data = list
         notifyDataSetChanged()

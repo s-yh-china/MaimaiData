@@ -29,7 +29,7 @@ class RecordAdapter(val version: Int) : RecyclerView.Adapter<RecyclerView.ViewHo
 
     var recordList = listOf<Pair<GameSongObjectWithRating, SongWithRecordEntity>>()
 
-    inner class RecordHolder(binding: ItemPlayerRtsongLayoutBinding) :
+    class RecordHolder(binding: ItemPlayerRtsongLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val songLevel: TextView = binding.songLevel
         val songDiff: View = binding.songDiff

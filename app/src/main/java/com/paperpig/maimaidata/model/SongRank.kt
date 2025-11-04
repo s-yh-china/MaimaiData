@@ -38,5 +38,31 @@ enum class SongRank(@DrawableRes val icon: Int, val displayName: String) {
                 else -> SSSP
             }
         }
+
+        fun achievementToRating(level: Double, achievements: Double) = achievementToRating((level * 10).toInt(), (achievements * 10000).toInt());
+
+        fun achievementToRating(level: Int, achievements: Int): Int {
+            val i = when {
+                achievements >= 1005000 -> 22.4
+                achievements == 1004999 -> 22.2
+                achievements >= 1000000 -> 21.6
+                achievements == 999999 -> 21.4
+                achievements >= 995000 -> 21.1
+                achievements >= 990000 -> 20.8
+                achievements >= 980000 -> 20.3
+                achievements >= 970000 -> 20.0
+                achievements >= 940000 -> 16.8
+                achievements >= 900000 -> 15.2
+                achievements >= 800000 -> 13.6
+                achievements >= 750000 -> 12.0
+                achievements >= 700000 -> 11.2
+                achievements >= 600000 -> 9.6
+                achievements >= 500000 -> 8.0
+                else -> 0.0
+            }
+
+            val temp = achievements.coerceAtMost(1005000) * level * i
+            return (temp / 10000000).toInt()
+        }
     }
 }

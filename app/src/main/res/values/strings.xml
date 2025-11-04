@@ -170,7 +170,6 @@
     <string name="prober_update_disable_help">为什么不能录入</string>
     <string name="prober_update_disable_content">舞萌服务器及公众号正在维护，目前无获取数据手段，因此不能录入新的数据</string>
 
-
     <string name="about">关于</string>
     <string name="local_data_version">本地数据版本</string>
     <string name="fit_diff_update_date">拟合定数更新日期</string>

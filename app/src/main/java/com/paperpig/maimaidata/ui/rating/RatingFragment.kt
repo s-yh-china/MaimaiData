@@ -30,6 +30,7 @@ import com.paperpig.maimaidata.crawler.CrawlerCaller.writeLog
 import com.paperpig.maimaidata.crawler.WechatCrawlerListener
 import com.paperpig.maimaidata.databinding.FragmentRatingBinding
 import com.paperpig.maimaidata.model.Rating
+import com.paperpig.maimaidata.model.SongRank
 import com.paperpig.maimaidata.network.MaimaiDataRequests
 import com.paperpig.maimaidata.network.server.HttpServerService
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
@@ -41,7 +42,6 @@ import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionClearCheckActivity
 import com.paperpig.maimaidata.ui.rating.best50.ProberActivity
-import com.paperpig.maimaidata.utils.ConvertUtils
 import com.paperpig.maimaidata.utils.JsonConvertToDb
 import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.getInt
@@ -55,7 +55,6 @@ import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.math.floor
 import kotlin.random.Random
 
 class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListener, LocalVpnService.onStatusChangedListener {
@@ -137,9 +136,8 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                 val songLevel = binding.inputSongLevel.text.toString()
                 val songAchievement = binding.inputSongAchievement.text.toString()
                 if (songAchievement.isNotEmpty() && songAchievement != "." && songLevel.isNotEmpty() && songLevel != ".") {
-                    binding.outputSingleRating.text = ConvertUtils.achievementToRating(
-                        (binding.inputSongLevel.text.toString().toFloat() * 10).toInt(),
-                        (binding.inputSongAchievement.text.toString().toFloat() * 10000).toInt()
+                    binding.outputSingleRating.text = SongRank.achievementToRating(
+                        binding.inputSongLevel.text.toString().toDouble(), binding.inputSongAchievement.text.toString().toDouble()
                     ).toString()
                 } else {
                     binding.outputSingleRating.text = "0"
@@ -277,30 +275,32 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
             return
         }
         val rating = targetRating / 50
+        val minLevel = getReachableLevel(rating)
 
-        val minLv = getReachableLevel(rating)
-        val map = mutableMapOf<Int, Int>()
-        val list = mutableListOf<Rating>()
-
-        for (i in 150 downTo minLv) {
-            when (val reachableAchievement = getReachableAchievement(i, rating)) {
-                800000, 900000, 940000 -> map[reachableAchievement] = i
-                in 970000..1010000 -> map[reachableAchievement] = i
+        val results = (150 downTo minLevel)
+            .map { it to getReachableAchievement(it, rating) }
+            .filter { (_, achievement) ->
+                when (achievement) {
+                    800000, 900000, 940000 -> true
+                    in 970000..1010000 -> true
+                    else -> false
+                }
             }
-        }
+            .groupBy { (_, achievement) -> achievement }
+            .mapValues { (_, pairs) -> pairs.minByOrNull { (level, _) -> level }?.first }
+            .mapNotNull { (achievement, minLevel) ->
+                if (minLevel == null) return@mapNotNull null
 
-        map.forEach {
-            list.add(
+                val ratingValue = SongRank.achievementToRating(minLevel, achievement)
                 Rating(
-                    (it.value / 10f),
-                    String.format(Locale.getDefault(), "%.4f%%", it.key / 10000f),
-                    ConvertUtils.achievementToRating(it.value, it.key),
-                    ConvertUtils.achievementToRating(it.value, it.key) * 50
+                    innerLevel = minLevel / 10f,
+                    achievement = String.format(Locale.getDefault(), "%.4f%%", achievement / 10000f),
+                    rating = ratingValue,
+                    total = ratingValue * 50
                 )
-            )
-        }
+            }
 
-        resultAdapter.setData(list)
+        resultAdapter.setData(results)
     }
 
     override fun onStatusChanged(status: String, isRunning: Boolean) {
@@ -424,29 +424,26 @@ fun isServerMaintenance(): Boolean {
     }
 }
 
-private fun getReachableLevel(rating: Int): Int {
-    for (i in 10..150) {
-        if (rating < ConvertUtils.achievementToRating(i, 1005000)) {
-            return i
-        }
-    }
-    return 0
-}
+private fun getReachableLevel(rating: Int): Int = (10..150).firstOrNull { rating < SongRank.achievementToRating(it, 1005000) } ?: 0
 
 private fun getReachableAchievement(level: Int, rating: Int): Int {
+    if (SongRank.achievementToRating(level, 1005000) < rating) {
+        return 1010001
+    }
+
     var maxAchi = 1010000
     var minAchi = 0
-    var tempAchi: Int
+    var midAchi: Int
 
-    if (ConvertUtils.achievementToRating(level, 1005000) < rating)
-        return 1010001
-    for (n in 0..20) {
+    repeat(21) {
         if (maxAchi - minAchi >= 2) {
-            tempAchi = floor((maxAchi.toDouble() + minAchi) / 2).toInt()
+            midAchi = (maxAchi + minAchi) / 2
 
-            if (ConvertUtils.achievementToRating(level, tempAchi) < rating)
-                minAchi = tempAchi
-            else maxAchi = tempAchi
+            if (SongRank.achievementToRating(level, midAchi) < rating) {
+                minAchi = midAchi
+            } else {
+                maxAchi = midAchi
+            }
         }
     }
     return maxAchi
