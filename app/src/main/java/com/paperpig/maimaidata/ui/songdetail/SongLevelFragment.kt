@@ -19,6 +19,7 @@ import com.paperpig.maimaidata.utils.toDp
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import kotlin.math.ceil
 
 private const val ARG_SONG_DATA = "song_data"
 
@@ -66,7 +67,6 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.songFitDiff.text = it?.fitDifficulty?.toString() ?: "-"
         }
 
-        val totalScore = (chart.noteTap + chart.noteTouch) + chart.noteHold * 2 + chart.noteSlide * 3 + chart.noteBreak * 5
         val format = DecimalFormat("0.#####%")
         format.roundingMode = RoundingMode.DOWN
 
@@ -98,6 +98,8 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         binding.chartView.setValues(noteValueList)
         binding.chartView.setBarColor(song.bgColor)
 
+        val totalScore = (chart.noteTap + chart.noteTouch) + chart.noteHold * 2 + chart.noteSlide * 3 + chart.noteBreak * 5
+
         binding.tapGreatScore.text = format.format(1f / totalScore * 0.2)
         binding.tapGoodScore.text = format.format(1f / totalScore * 0.5)
         binding.tapMissScore.text = format.format(1f / totalScore)
@@ -128,11 +130,11 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         dxstarAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), song.bgColor))
 
         val maxDxScore = data.chart.noteTotal * 3
-        binding.minDxScore1.text = (maxDxScore * 0.85).toInt().toString()
-        binding.minDxScore2.text = (maxDxScore * 0.9).toInt().toString()
-        binding.minDxScore3.text = (maxDxScore * 0.93).toInt().toString()
-        binding.minDxScore4.text = (maxDxScore * 0.95).toInt().toString()
-        binding.minDxScore5.text = (maxDxScore * 0.97).toInt().toString()
+        binding.minDxScore1.text = ceil(maxDxScore * 0.85).toInt().toString()
+        binding.minDxScore2.text = ceil(maxDxScore * 0.9).toInt().toString()
+        binding.minDxScore3.text = ceil(maxDxScore * 0.93).toInt().toString()
+        binding.minDxScore4.text = ceil(maxDxScore * 0.95).toInt().toString()
+        binding.minDxScore5.text = ceil(maxDxScore * 0.97).toInt().toString()
 
         if (!song.version.contains("舞萌")) {
             binding.finaleGroup.visibility = View.VISIBLE
