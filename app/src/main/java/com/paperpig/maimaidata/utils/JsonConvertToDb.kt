@@ -9,12 +9,13 @@ import com.paperpig.maimaidata.model.ChartAliasData
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongData
+import com.paperpig.maimaidata.model.SongDxRank
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
 import com.paperpig.maimaidata.model.SongType
 import com.paperpig.maimaidata.model.api.UserMusicDataModel
-import com.paperpig.maimaidata.repository.SongRepository
+import com.paperpig.maimaidata.repository.SongWithRecordRepository
 
 object JsonConvertToDb {
 
@@ -81,15 +82,18 @@ object JsonConvertToDb {
 
     fun convertUserRecordData(data: UserMusicDataModel, selectDifficulties: Set<DifficultyType>): List<RecordEntity> {
         return data.music.flatMap { record ->
-            SongRepository.getInstance().getSongWithId(record.musicId)?.let { song ->
+            SongWithRecordRepository.getInstance().getSongWithId(record.musicId)?.let { entity ->
+                val song = entity.songData
                 val difficultyType = DifficultyType.from(song.type, record.level)
-                if (difficultyType in selectDifficulties) {
+                if (difficultyType in selectDifficulties && difficultyType in entity.chartsMap) {
+                    val chart = entity.chartsMap[difficultyType]!!
                     val isBuddy = song.type == SongType.UTAGE && song.buddy == true
 
                     val record = RecordEntity(
                         songId = record.musicId,
                         achievements = record.achievement,
                         dxScore = record.dxScore,
+                        dxRank = SongDxRank.fromDxScore(dxScore = record.dxScore, maxDxScore = if (isBuddy) entity.chartsMap[DifficultyType.UTAGE_PLAYER2]!!.noteTotal * 3 + chart.noteTotal * 3 else chart.noteTotal * 3),
                         fc = SongFC.entries[record.fc],
                         fs = SongFS.entries[if (record.fs == 5) 0 else record.fs],
                         rate = SongRank.fromAchievement(if (isBuddy) record.achievement / 2 else record.achievement),

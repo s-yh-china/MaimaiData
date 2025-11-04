@@ -11,6 +11,7 @@ import com.paperpig.maimaidata.MaimaiDataApplication
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.FragmentSongLevelBinding
 import com.paperpig.maimaidata.model.GameSongObject
+import com.paperpig.maimaidata.model.SongDxRank
 import com.paperpig.maimaidata.repository.ChartStatsRepository
 import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.utils.setCopyOnLongClick
@@ -42,18 +43,23 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val song = data.song
+        val chart = data.chart
+
         data.record?.let {
             binding.chartStatusGroup.visibility = View.VISIBLE
             binding.chartNoStatusGroup.visibility = View.GONE
             binding.chartAchievement.text = getString(R.string.maimaidx_achievement_desc, it.achievements)
+            binding.chartDxScore.text = getString(R.string.maimaidx_dx_score_desc, it.dxScore, chart.noteTotal * 3)
             binding.chartRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.rate.icon))
             binding.chartFcap.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fc.icon))
             binding.chartFsfsd.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.fs.icon))
-            if (it.playCount == -1) {
-                binding.chartPlayCountGroup.visibility = View.GONE
-            } else {
+            binding.chartDxRank.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.dxRank.icon))
+            it.playCount?.let { count ->
                 binding.chartPlayCountGroup.visibility = View.VISIBLE
-                binding.playCount.text = it.playCount.toString()
+                binding.playCount.text = count.toString()
+            } ?: run {
+                binding.chartPlayCountGroup.visibility = View.GONE
             }
         } ?: run {
             binding.chartStatusGroup.visibility = View.GONE
@@ -61,8 +67,6 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             binding.recordTips.setOnClickListener { Toast.makeText(context, R.string.no_record_tips, Toast.LENGTH_LONG).show() }
         }
 
-        val song = data.song
-        val chart = data.chart
         ChartStatsRepository.getInstance().getChartStatsBySongIdAndDifficulty(song.id, chart.difficultyType).observe(requireActivity()) {
             binding.songFitDiff.text = it?.fitDifficulty?.toString() ?: "-"
         }
@@ -74,15 +78,13 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
             if (it < chart.internalLevel) {
                 binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_red))
                 binding.songLevel.text = getString(R.string.inner_level_up, chart.internalLevel)
-                binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else if (it > chart.internalLevel) {
                 binding.songLevel.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_green))
                 binding.songLevel.text = getString(R.string.inner_level_down, chart.internalLevel)
-                binding.oldLevel.text = getString(R.string.inner_level_old, it)
             } else {
-                binding.songLevel.text = "${chart.internalLevel}"
-                binding.oldLevel.text = getString(R.string.inner_level_old, it)
+                binding.songLevel.text = chart.internalLevel.toString()
             }
+            binding.oldLevel.text = getString(R.string.inner_level_old, it)
         } ?: run {
             binding.songLevel.text = chart.internalLevel.toString()
         }
@@ -130,11 +132,11 @@ class SongLevelFragment : BaseFragment<FragmentSongLevelBinding>() {
         dxstarAchievementInnerStoke.setStroke(3.toDp().toInt(), ContextCompat.getColor(requireContext(), song.bgColor))
 
         val maxDxScore = data.chart.noteTotal * 3
-        binding.minDxScore1.text = ceil(maxDxScore * 0.85).toInt().toString()
-        binding.minDxScore2.text = ceil(maxDxScore * 0.9).toInt().toString()
-        binding.minDxScore3.text = ceil(maxDxScore * 0.93).toInt().toString()
-        binding.minDxScore4.text = ceil(maxDxScore * 0.95).toInt().toString()
-        binding.minDxScore5.text = ceil(maxDxScore * 0.97).toInt().toString()
+        binding.minDxScore1.text = ceil(maxDxScore * SongDxRank.RANK1.achieve).toInt().toString()
+        binding.minDxScore2.text = ceil(maxDxScore * SongDxRank.RANK2.achieve).toInt().toString()
+        binding.minDxScore3.text = ceil(maxDxScore * SongDxRank.RANK3.achieve).toInt().toString()
+        binding.minDxScore4.text = ceil(maxDxScore * SongDxRank.RANK4.achieve).toInt().toString()
+        binding.minDxScore5.text = ceil(maxDxScore * SongDxRank.RANK5.achieve).toInt().toString()
 
         if (!song.version.contains("舞萌")) {
             binding.finaleGroup.visibility = View.VISIBLE

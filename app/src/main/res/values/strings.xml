@@ -62,8 +62,10 @@
 
     <string name="maimai_achievement_format">%.2f%%</string>
     <string name="maimaidx_achievement_desc">%.4f%%</string>
+    <string name="maimaidx_dx_score_desc">%d/%d</string>
     <string name="design">谱面作者</string>
     <string name="status">达成状态</string>
+    <string name="dx_score">DX分数</string>
     <string name="play_count">游玩次数</string>
     <string name="no_record">暂无成绩</string>
     <string name="no_record_tips">尚未游玩过当前难度的谱面，或者你需要更新本地数据库</string>

@@ -3,6 +3,7 @@ package com.paperpig.maimaidata.crawler
 import android.util.Log
 import com.paperpig.maimaidata.db.entity.RecordEntity
 import com.paperpig.maimaidata.model.DifficultyType
+import com.paperpig.maimaidata.model.SongDxRank
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
@@ -42,13 +43,13 @@ object WechatDataParser {
                         else -> SongType.DX.also { Log.w(TAG, "无法获取铺面类型，推测为DX铺面") }
                     }
 
-                    val (dxScore, dxMaxScore) = findText(siblings, "music_score_block") { it.contains("/") }
+                    val (dxScore, maxDxScore) = findText(siblings, "music_score_block") { it.contains("/") }
                         ?.replace(",", "")?.replace(" ", "")?.split("/")
                         ?.takeIf { it.size == 2 }
                         ?.let { it[0].toInt() to it[1].toInt() } ?: return@runCatching emptyList()
 
                     var title = nameElement.text().ifEmpty { "　" }
-                    if (title == "Link" && dxMaxScore == linkCofDxScore[difficulty]) {
+                    if (title == "Link" && maxDxScore == linkCofDxScore[difficulty]) {
                         title = "Link(Cof)"
                     }
 
@@ -74,16 +75,17 @@ object WechatDataParser {
                     val isBuddy = isUtage && songEntity.buddy == true
                     val rateValue = if (isBuddy) achievements / 2 else achievements
                     val rate = SongRank.fromAchievement(rateValue)
+                    val dxRank = SongDxRank.fromDxScore(dxScore = dxScore, maxDxScore = maxDxScore)
 
                     val record = RecordEntity(
                         songId = songEntity.id,
                         achievements = achievements,
                         dxScore = dxScore,
+                        dxRank = dxRank,
                         fc = fc,
                         fs = fs,
                         difficultyType = difficulty,
                         rate = rate,
-                        playCount = -1
                     )
 
                     if (isBuddy) {

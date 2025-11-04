@@ -24,8 +24,8 @@ data class GameSongObject(
             fc = SongFC.NONE,
             fs = SongFS.NONE,
             dxScore = 0,
+            dxRank = SongDxRank.RANK0,
             difficultyType = chart.difficultyType,
-            playCount = -1
         )
     }
 

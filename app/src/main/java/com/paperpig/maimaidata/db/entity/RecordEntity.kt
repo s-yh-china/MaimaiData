@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.paperpig.maimaidata.model.DifficultyType
+import com.paperpig.maimaidata.model.SongDxRank
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
@@ -37,6 +38,9 @@ data class RecordEntity(
     @ColumnInfo(name = "dx_score")
     val dxScore: Int,
 
+    @ColumnInfo(name = "dx_rank")
+    val dxRank: SongDxRank,
+
     @ColumnInfo(name = "fc")
     val fc: SongFC,
 
@@ -44,7 +48,7 @@ data class RecordEntity(
     val fs: SongFS,
 
     @ColumnInfo(name = "play_count")
-    val playCount: Int,
+    val playCount: Int? = null,
 
     @ColumnInfo(name = "difficulty_type")
     val difficultyType: DifficultyType,

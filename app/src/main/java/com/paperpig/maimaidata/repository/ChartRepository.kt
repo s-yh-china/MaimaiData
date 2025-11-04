@@ -16,9 +16,6 @@ class ChartRepository private constructor(private val chartDao: ChartDao) {
         }
     }
 
-    /**
-     * 获取最大音符数据，用于展示图表
-     */
     fun getMaxNotes(): LiveData<MaxNotesStats> {
         return chartDao.getMaxNotes()
     }

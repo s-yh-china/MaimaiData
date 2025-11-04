@@ -31,7 +31,4 @@ interface SongDao {
         """
     )
     fun searchSongsByTitle(songTitle: String): List<SongDataEntity>
-
-    @Query("SELECT * FROM song_data WHERE id = :songId")
-    fun getSongWithId(songId: Int): SongDataEntity?
 }

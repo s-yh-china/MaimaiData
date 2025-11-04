@@ -3,7 +3,7 @@ package com.paperpig.maimaidata.model
 import androidx.annotation.DrawableRes
 import com.paperpig.maimaidata.R
 
-enum class SongRank(@DrawableRes val icon: Int, val displayName: String) {
+enum class SongRank(@field:DrawableRes val icon: Int, val displayName: String) {
     D(R.drawable.rank_d, "D"),
     C(R.drawable.rank_c, "C"),
     B(R.drawable.rank_b, "B"),

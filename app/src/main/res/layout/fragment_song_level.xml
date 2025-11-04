@@ -102,6 +102,35 @@
             app:layout_constraintTop_toTopOf="@id/chart_status_label" />
 
         <TextView
+            android:id="@+id/chart_dx_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/dx_score"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@id/chart_status_label"
+            app:layout_constraintTop_toBottomOf="@id/chart_status_label" />
+
+        <TextView
+            android:id="@+id/chart_dx_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/chart_dx_status_label"
+            app:layout_constraintStart_toStartOf="@id/song_level"
+            app:layout_constraintTop_toTopOf="@id/chart_dx_status_label" />
+
+        <ImageView
+            android:id="@+id/chart_dx_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/chart_dx_score"
+            app:layout_constraintStart_toEndOf="@id/chart_dx_score"
+            app:layout_constraintTop_toTopOf="@id/chart_dx_score" />
+
+        <TextView
             android:id="@+id/play_count_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,8 +138,8 @@
             android:text="@string/play_count"
             android:textColor="@color/black"
             android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="@id/chart_status_label"
-            app:layout_constraintTop_toBottomOf="@id/chart_status_label" />
+            app:layout_constraintStart_toStartOf="@id/chart_dx_status_label"
+            app:layout_constraintTop_toBottomOf="@id/chart_dx_status_label" />
 
         <TextView
             android:id="@+id/play_count"
@@ -131,7 +160,7 @@
             android:id="@+id/chart_status_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="chart_rank,chart_fcap,chart_fsfsd,play_count,play_count_label" />
+            app:constraint_referenced_ids="chart_rank,chart_fcap,chart_fsfsd,play_count,play_count_label,chart_dx_status_label,chart_dx_score,chart_dx_rank" />
 
         <ImageView
             android:id="@+id/chart_rank"

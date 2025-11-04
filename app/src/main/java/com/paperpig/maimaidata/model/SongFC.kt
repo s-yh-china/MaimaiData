@@ -3,7 +3,7 @@ package com.paperpig.maimaidata.model
 import androidx.annotation.DrawableRes
 import com.paperpig.maimaidata.R
 
-enum class SongFC(@DrawableRes val icon: Int) {
+enum class SongFC(@field:DrawableRes val icon: Int) {
     NONE(R.drawable.music_icon_back),
     FC(R.drawable.music_icon_fc),
     FCP(R.drawable.music_icon_fcp),

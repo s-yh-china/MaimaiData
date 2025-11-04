@@ -53,6 +53,10 @@ class SongWithRecordRepository private constructor(private val songWithRecordDao
         }
     }
 
+    fun getSongWithId(songId: Int): SongWithRecordEntity? {
+        return songWithRecordDao.getSongWithId(songId)
+    }
+
     /**
      * 根据搜索文本、歌曲类型、版本、难度等级、流派和 定数 值搜索歌曲及其谱面信息。
      *

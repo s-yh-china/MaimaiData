@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.paperpig.maimaidata.model.DifficultyType
+import com.paperpig.maimaidata.model.SongDxRank
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
 import com.paperpig.maimaidata.model.SongRank
@@ -47,10 +48,10 @@ data class SongWithRecordEntity(
             achievements = 0.0,
             rate = SongRank.D,
             dxScore = 0,
+            dxRank = SongDxRank.RANK0,
             fc = SongFC.NONE,
             fs = SongFS.NONE,
             difficultyType = difficultyType,
-            playCount = -1
         )
     ): RecordEntity = recordsMap[difficultyType] ?: def
 }
