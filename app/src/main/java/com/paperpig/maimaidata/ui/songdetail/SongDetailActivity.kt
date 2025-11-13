@@ -303,13 +303,18 @@ class SongDetailActivity : AppCompatActivity() {
                 equals("FESTiVAL PLUS") -> R.drawable.maimaidx_festival_plus
                 equals("BUDDiES") -> R.drawable.maimaidx_buddies
                 equals("BUDDiES PLUS") -> R.drawable.maimaidx_buddies_plus
+                equals("PRiSM") -> R.drawable.maimaidx_prism
                 else -> 0
             }
         }
-        Glide.with(view.context)
-            .load(versionDrawable)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(view)
+        if (versionDrawable != 0) {
+            Glide.with(view.context)
+                .load(versionDrawable)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(view)
+        } else {
+            view.isVisible = false
+        }
     }
 
     private fun setCnVersionImage(view: ImageView, addVersion: String) {
