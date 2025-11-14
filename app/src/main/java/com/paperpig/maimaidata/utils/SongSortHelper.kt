@@ -149,7 +149,6 @@ object SongSortHelper {
                     song.charts
                         .filter { chart ->
                             val record = song.getRecordOrDef(chart.difficultyType)
-                            @Suppress("KotlinConstantConditions") // Android Studio bug
                             when (targetRank) {
                                 SongRank.BBB -> record.rate <= SongRank.BBB
                                 SongRank.AAA -> record.rate >= SongRank.A && record.rate <= SongRank.AAA
@@ -235,8 +234,8 @@ object SongSortHelper {
                     val bRecord = b.record
 
                     when {
-                        aRecord != null && bRecord == null -> -1
-                        aRecord == null && bRecord != null -> 1
+                        aRecord == null && bRecord != null -> -1
+                        aRecord != null && bRecord == null -> 1
 
                         aRecord == null -> {
                             val diffComp = a.chart.difficultyType.compareTo(b.chart.difficultyType)
@@ -244,7 +243,9 @@ object SongSortHelper {
                         }
 
                         else -> {
-                            val scoreComp = aRecord.achievements.compareTo(bRecord!!.achievements)
+                            val rankComp = aRecord.rate.compareTo(bRecord!!.rate)
+                            if (rankComp != 0) return@Comparator rankComp
+                            val scoreComp = aRecord.achievements.compareTo(bRecord.achievements)
                             if (scoreComp != 0) scoreComp else a.song.sortId.compareTo(b.song.sortId)
                         }
                     }
