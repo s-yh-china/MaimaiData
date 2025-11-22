@@ -67,7 +67,7 @@ object MaimaiDataRequests {
         MaimaiDataClient
             .instance
             .getService()
-            .apiQrBind("{\"qr_code\":\"$qrCode\"}".toRequestBody(JSON))
+            .apiQrBind("{\"qrCode\":\"$qrCode\"}".toRequestBody(JSON))
             .compose(MaimaiDataTransformer.handleResult())
             .flatMap {
                 val model = Gson().fromJson(it, QrCodeBindModel::class.java)
@@ -78,7 +78,7 @@ object MaimaiDataRequests {
         MaimaiDataClient
             .instance
             .getService()
-            .apiGetUserMusicData("{\"user_id\":\"$userId\"}".toRequestBody(JSON))
+            .apiGetUserMusicData("{\"userId\":\"$userId\"}".toRequestBody(JSON))
             .compose(MaimaiDataTransformer.handleResult())
             .flatMap {
                 val model = Gson().fromJson(it, UserMusicDataModel::class.java)
