@@ -15,8 +15,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.databinding.FragmentSongListBinding
+import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.repository.SongWithRecordRepository
 import com.paperpig.maimaidata.ui.BaseFragment
+import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.widgets.AnimationHelper
 import com.paperpig.maimaidata.widgets.SearchLayout
 import com.paperpig.maimaidata.widgets.Settings
@@ -50,6 +52,7 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     }
 
     private var isShowingSearchLayout = false
+    private var isSongListEmpty = true
 
     companion object {
         @JvmStatic
@@ -81,6 +84,10 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {
                 menu.findItem(R.id.search).isVisible = !isHidden
+
+                val shuffleItem = menu.findItem(R.id.shuffle)
+                shuffleItem.isVisible = !isHidden
+                shuffleItem.isEnabled = !isSongListEmpty
             }
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -92,6 +99,11 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                     R.id.search -> {
                         showOrHideSearchBar()
                         hideKeyboard(view)
+                        return true
+                    }
+
+                    R.id.shuffle -> {
+                        randomSong()
                         return true
                     }
                 }
@@ -132,14 +144,20 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
                     Settings.getEnableCharterSearch(),
                     true
                 ).observe(requireActivity()) {
-                    songAdapter.setData(it)
+                    updateSongData(it)
                     showOrHideSearchBar()
                     hideKeyboard(view)
                 }
             }
         })
 
-        SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(requireActivity()) { songAdapter.setData(it) }
+        SongWithRecordRepository.getInstance().getAllSongWithRecord().observe(requireActivity()) { updateSongData(it) }
+    }
+
+    private fun updateSongData(data: List<SongWithRecordEntity>) {
+        songAdapter.setData(data)
+        isSongListEmpty = data.isEmpty()
+        requireActivity().invalidateMenu()
     }
 
     private fun showOrHideSearchBar() {
@@ -158,6 +176,12 @@ class SongListFragment : BaseFragment<FragmentSongListBinding>() {
             }
         }
         isShowingSearchLayout = !isShowingSearchLayout
+    }
+
+    private fun randomSong() {
+        songAdapter.getSongRandom()?.let {
+            SongDetailActivity.actionStart(requireContext(), it)
+        }
     }
 
     override fun onResume() {

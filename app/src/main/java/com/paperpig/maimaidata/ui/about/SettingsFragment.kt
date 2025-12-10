@@ -30,10 +30,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
             cleanUserIdPreference?.isEnabled = true
         }
         cleanUserIdPreference?.setOnPreferenceClickListener { preference ->
-            SpUtil.saveUserId("")
-            Toast.makeText(requireContext(), "UserID已清除", Toast.LENGTH_SHORT).show()
-            preference.summary = getString(R.string.settings_clear_user_id_not_bind)
-            preference.isEnabled = false
+            MaterialDialog.Builder(requireContext())
+                .title(R.string.settings_clear_user_id)
+                .content(R.string.clear_user_id_waring_content)
+                .positiveText(R.string.common_confirm)
+                .onPositive { dialog, _ ->
+                    SpUtil.saveUserId("")
+                    Toast.makeText(requireContext(), "UserID已清除", Toast.LENGTH_SHORT).show()
+                    preference.summary = getString(R.string.settings_clear_user_id_not_bind)
+                    preference.isEnabled = false
+                    dialog.dismiss()
+                }
+                .negativeText(R.string.common_cancel)
+                .onNegative { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .build()
+                .show()
             true
         }
 
@@ -46,13 +59,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         .title(R.string.prober_update_api_warning_title)
                         .content(R.string.prober_update_api_warning_content)
                         .positiveText(getString(R.string.prober_update_api_warning_wait_button, 9999))
-                        .onPositive { dialog, which ->
+                        .onPositive { dialog, _ ->
                             preference.isChecked = true
                             cleanUserIdPreference?.isVisible = true
                             dialog.dismiss()
                         }
                         .negativeText(R.string.common_cancel)
-                        .onNegative { dialog, which ->
+                        .onNegative { dialog, _ ->
                             dialog.dismiss()
                         }
                         .cancelable(false)

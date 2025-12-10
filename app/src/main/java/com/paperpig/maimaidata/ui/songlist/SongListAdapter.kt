@@ -19,7 +19,6 @@ import com.paperpig.maimaidata.db.entity.SongWithRecordEntity
 import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.SongType
-import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.setCopyOnLongClick
 import com.paperpig.maimaidata.utils.toDp
@@ -103,7 +102,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             genreBg.setColor(ContextCompat.getColor(holder.itemView.context, songData.bgColor))
 
             GlideApp.with(holder.itemView.context)
-                .load(MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl)
+                .load(songData.imageUri)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.songJacket)
             holder.songJacket.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songData.strokeColor))
@@ -124,7 +123,7 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
             genreBg.setColor(ContextCompat.getColor(holder.itemView.context, songData.bgColor))
 
             GlideApp.with(holder.itemView.context)
-                .load(MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl)
+                .load(songData.imageUri)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.songJacket)
             holder.songJacket.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songData.strokeColor))
@@ -142,5 +141,9 @@ class SongListAdapter : RecyclerView.Adapter<ViewHolder>() {
     fun setData(list: List<SongWithRecordEntity>) {
         this.list = list
         notifyDataSetChanged()
+    }
+
+    fun getSongRandom(): SongWithRecordEntity? {
+        return list.randomOrNull()
     }
 }

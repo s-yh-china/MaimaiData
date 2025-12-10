@@ -76,7 +76,7 @@ class SongDetailActivity : AppCompatActivity() {
                 setTabTextColors(Color.BLACK, ContextCompat.getColor(this@SongDetailActivity, songData.bgColor))
             }
             toolbarLayout.setContentScrimResource(songData.bgColor)
-            GlideApp.with(this@SongDetailActivity).load(MaimaiDataClient.IMAGE_BASE_URL + songData.imageUrl).into(songJacket)
+            GlideApp.with(this@SongDetailActivity).load(songData.imageUri).into(songJacket)
             songJacket.setBackgroundColor(ContextCompat.getColor(this@SongDetailActivity, songData.strokeColor))
 
             songTitle.apply {
@@ -156,7 +156,7 @@ class SongDetailActivity : AppCompatActivity() {
                     context = this@SongDetailActivity,
                     mode = 1,
                     imageUrl = "${MaimaiDataClient.DIVING_FISH_COVER_URL}$largeImageId.png",
-                    thumbnailUrl = "${MaimaiDataClient.IMAGE_BASE_URL}${songData.imageUrl}",
+                    thumbnailUrl = songData.imageUri.toString(),
                     saveFilename = largeImageId,
                     saveFolder = PictureUtils.coverPath,
                     bundle = options.toBundle()

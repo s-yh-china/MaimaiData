@@ -21,7 +21,6 @@ import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.GameSongObjectWithRating
 import com.paperpig.maimaidata.model.SongType.UTAGE
-import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
 
@@ -66,7 +65,7 @@ class RecordAdapter(val version: Int) : RecyclerView.Adapter<RecyclerView.ViewHo
 
                 viewHolder.itemView.setOnClickListener { SongDetailActivity.actionStart(viewHolder.itemView.context, data.second, songObject.chart.difficultyType) }
                 GlideApp.with(context)
-                    .load(MaimaiDataClient.IMAGE_BASE_URL + songObject.song.imageUrl)
+                    .load(songObject.song.imageUri)
                     .transition(DrawableTransitionOptions.withCrossFade()).apply(
                         RequestOptions.bitmapTransform(
                             RoundedCorners(5.toDp().toInt())

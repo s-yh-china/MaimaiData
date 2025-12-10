@@ -34,6 +34,9 @@ object Settings {
     private const val KEY_PROBER_UPDATE_USE_API = "prober_update_use_api"
     private const val DEFAULT_PROBER_UPDATE_USE_API = false
 
+    private const val KEY_IMAGE_URL_USE_CN = "image_url_use_cn"
+    private const val DEFAULT_IMAGE_URL_USE_CN = false
+
     private const val KEY_NICKNAME = "nickname"
     private const val DEFAULT_NICKNAME = "maimai"
 
@@ -51,6 +54,8 @@ object Settings {
     fun getSongFindDisableRank() = settingsPre.getBoolean(KEY_SONG_FIND_DISABLE_RANK, DEFAULT_SONG_FIND_DISABLE_RANK)
 
     fun getProberUpdateUseAPI() = settingsPre.getBoolean(KEY_PROBER_UPDATE_USE_API, DEFAULT_PROBER_UPDATE_USE_API)
+
+    fun getImageUrlUseCN() = settingsPre.getBoolean(KEY_IMAGE_URL_USE_CN, DEFAULT_IMAGE_URL_USE_CN)
 
     fun getNickname(): String = settingsPre.getString(KEY_NICKNAME, DEFAULT_NICKNAME).takeIf { !it.isNullOrBlank() } ?: DEFAULT_NICKNAME
 

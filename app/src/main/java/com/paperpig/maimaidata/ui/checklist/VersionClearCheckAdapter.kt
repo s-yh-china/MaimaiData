@@ -18,7 +18,6 @@ import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.DifficultyType
 import com.paperpig.maimaidata.model.GameSongObject
 import com.paperpig.maimaidata.model.SongRank
-import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.songdetail.SongDetailActivity
 import com.paperpig.maimaidata.utils.toDp
 
@@ -139,7 +138,7 @@ class VersionClearCheckAdapter(val context: Context) : RecyclerView.Adapter<Recy
 
                 holder.songJacket.apply {
                     setBackgroundColor(ContextCompat.getColor(holder.itemView.context, songObject.chart.difficultyType.color))
-                    GlideApp.with(holder.itemView.context).load(MaimaiDataClient.IMAGE_BASE_URL + songObject.song.imageUrl).into(this)
+                    GlideApp.with(holder.itemView.context).load(songObject.song.imageUri).into(this)
                 }
 
                 songObject.record?.let {

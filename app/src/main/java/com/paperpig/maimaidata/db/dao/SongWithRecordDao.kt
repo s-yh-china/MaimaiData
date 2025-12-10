@@ -215,7 +215,6 @@ interface SongWithRecordDao : ChartDao, SongDao, RecordDao, AliasDao {
         isMatchSongId: Boolean
     ): LiveData<List<SongWithRecordEntity>>
 
-
     @Query("SELECT * FROM song_data WHERE id = :songId")
     fun getSongWithId(songId: Int): SongWithRecordEntity?
 }

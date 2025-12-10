@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
  * @author BBS
  * @since  2021-05-13
  */
-class   MaimaiDataClient private constructor() {
+class MaimaiDataClient private constructor() {
 
     companion object {
         val instance by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -18,6 +18,7 @@ class   MaimaiDataClient private constructor() {
 
         const val BASE_URL = "https://maimaidata.violetc.net"
         const val IMAGE_BASE_URL = "https://maimaidx.jp/maimai-mobile/img/Music/"
+        const val IMAGE_BASE_CN_URL = "https://maimai.wahlap.com/maimai-mobile/img/Music/"
         const val DIVING_FISH_COVER_URL = "https://www.diving-fish.com/covers/"
     }
 

@@ -8,6 +8,7 @@
     <string name="dx_song_list">曲目列表</string>
 
     <string name="search">搜索</string>
+    <string name="shuffle">随机</string>
     <string name="search_history">搜索历史</string>
     <string name="search_hint">输入关键字进行搜索</string>
     <string name="level_ds_select">定数筛选</string>
@@ -151,9 +152,10 @@
     <string name="update_prober_disable">服务器维护中，无法录入数据</string>
 
     <string name="prober_update_api_warning_title">⚠不安全的功能⚠</string>
-    <string name="prober_update_api_warning_content">使用本功能将使开发者可以获取到你的userid，并可能导致账号被封禁等后果。我们将不为此功能导致的任何后果负责，开启此功能视为同意以上内容。</string>
+    <string name="prober_update_api_warning_content">使用本功能将使开发者可以获取到你的 UserID，并可能导致账号被封禁等后果。我们将不为此功能导致的任何后果负责，开启此功能视为同意以上内容。</string>
     <string name="prober_update_api_warning_wait_button">我已知悉（%ds）</string>
     <string name="prober_update_api_warning_ok_button">无视风险继续启用</string>
+    <string name="clear_user_id_waring_content">是否清除 UserID，清除后需要重新进行绑定流程。</string>
 
     <string name="prober_update_help">数据录入帮助</string>
     <string name="prober_update_content_step1">①.打开“数据录入”，App会自动打开代理（第一次使用请同意VPN创建请求）、复制链接、跳转微信</string>
@@ -188,7 +190,8 @@
     <string name="settings_prober_update_use_api">数据录入使用API</string>
     <string name="settings_clear_user_id">清除UserID</string>
     <string name="settings_clear_user_id_bind">已绑定</string>
-    <string name="settings_clear_user_id_not_bind">未绑定，无需清除</string>
+    <string name="settings_clear_user_id_not_bind">未绑定</string>
+    <string name="settings_image_url_use_cn">歌曲封面使用华立源</string>
 
     <string name="song_id">歌曲ID</string>
     <string name="settings_nickname">全局用户昵称</string>

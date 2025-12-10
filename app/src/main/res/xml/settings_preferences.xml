@@ -42,6 +42,12 @@
         app:iconSpaceReserved="false"
         app:isPreferenceVisible="false" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="image_url_use_cn"
+        app:title="@string/settings_image_url_use_cn" />
+
     <EditTextPreference
         app:key="nickname"
         app:title="@string/settings_nickname"

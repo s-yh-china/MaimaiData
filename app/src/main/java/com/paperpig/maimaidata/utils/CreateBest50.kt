@@ -18,7 +18,6 @@ import com.paperpig.maimaidata.glide.GlideApp
 import com.paperpig.maimaidata.model.GameSongObjectWithRating
 import com.paperpig.maimaidata.model.SongFC
 import com.paperpig.maimaidata.model.SongFS
-import com.paperpig.maimaidata.network.MaimaiDataClient
 import com.paperpig.maimaidata.ui.PinchImageActivity
 import com.paperpig.maimaidata.widgets.Settings
 import kotlinx.coroutines.Dispatchers
@@ -204,7 +203,7 @@ class CreateBest50(val callback: ProgressCallback) {
         // 绘制曲封
         val jacketBitmap: Bitmap = try {
             GlideApp.with(context).asBitmap().override(158, 155).centerCrop()
-                .load(MaimaiDataClient.IMAGE_BASE_URL + data.song.imageUrl).submit()
+                .load(data.song.imageUri).submit()
                 .get()
         } catch (_: Exception) {
             GlideApp.with(context).asBitmap().override(158, 155).centerCrop()

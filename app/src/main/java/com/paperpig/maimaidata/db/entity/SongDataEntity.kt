@@ -1,13 +1,17 @@
 package com.paperpig.maimaidata.db.entity
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.ColorRes
+import androidx.core.net.toUri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.model.SongType
+import com.paperpig.maimaidata.network.MaimaiDataClient
+import com.paperpig.maimaidata.widgets.Settings
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -80,6 +84,10 @@ data class SongDataEntity(
         "音击&中二节奏" -> R.color.gekichuni_stroke
         else -> R.color.white
     }
+
+    @IgnoredOnParcel
+    @Ignore
+    val imageUri: Uri = ((if (Settings.getImageUrlUseCN()) MaimaiDataClient.IMAGE_BASE_CN_URL else MaimaiDataClient.IMAGE_BASE_URL) + imageUrl).toUri()
 }
 
 
