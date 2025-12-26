@@ -31,7 +31,7 @@ interface SongWithRecordDao : ChartDao, SongDao, RecordDao, AliasDao {
     ): LiveData<List<SongWithRecordEntity>>
 
     /**
-     * 批量替换所有歌曲、谱面和别名数据。
+     * 批量替换所有歌曲、谱面数据。
      * @param songDataList 歌曲列表
      * @param chartList 谱面列表
      * @return 返回操作结果。
@@ -42,11 +42,13 @@ interface SongWithRecordDao : ChartDao, SongDao, RecordDao, AliasDao {
         chartList: List<ChartEntity>,
     ): Boolean {
         return try {
+            val records = getAllRecord()
             clearSongData()
             clearCharts()
 
             insertAllSongs(songDataList)
             insertAllCharts(chartList)
+            insertAllRecord(records)
             true
         } catch (e: Exception) {
             Log.e(

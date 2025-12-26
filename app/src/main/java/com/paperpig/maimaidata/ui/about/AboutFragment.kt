@@ -42,7 +42,7 @@ class AboutFragment : PreferenceFragmentCompat() {
             setQuickClick {
                 Toast.makeText(context, getString(R.string.maimai_data_data_check), Toast.LENGTH_SHORT).show()
                 checkDisposable?.dispose()
-                checkDisposable = updateManager.checkDataUpdate(requireActivity()) {}
+                checkDisposable = updateManager.checkDataUpdate(requireActivity(), true) {}
             }
         }
         findPreference<Preference>("last_time_update_chart_stats")?.apply {

@@ -28,6 +28,9 @@ interface RecordDao {
         }
     }
 
+    @Query("SELECT * FROM record")
+    fun getAllRecord(): List<RecordEntity>
+
     @Insert
     fun insertAllRecord(list: List<RecordEntity>)
 

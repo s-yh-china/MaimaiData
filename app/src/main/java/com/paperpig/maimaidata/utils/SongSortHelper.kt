@@ -34,7 +34,7 @@ object SongSortHelper {
     private val disableRankSortType = listOf(RECOMMENDATION, NAME, LEVEL_INDEX, RELEASE_TIME, BPM)
     private val enabledGroupTypes = listOf(LEVEL, VERSION)
 
-    private val levelList = listOf("1", "2", "3", "4", "5", "6", "6+", "7", "7+", "8", "8+", "9", "9+", "10", "10+", "11", "11+", "12", "12+", "13", "13+", "14", "14+", "15")
+    private val levelList = listOf("1", "2", "3", "4", "5", "6", "7", "7+", "8", "8+", "9", "9+", "10", "10+", "11", "11+", "12", "12+", "13", "13+", "14", "14+", "15")
     private val genreList = listOf("流行&动漫", "niconico & VOCALOID", "东方Project", "其他游戏", "舞萌", "音击&中二节奏")
     private val versionList = listOf("maimai", "maimai PLUS", "GreeN", "GreeN PLUS", "ORANGE", "ORANGE PLUS", "PiNK", "PiNK PLUS", "MURASAKi", "MURASAKi PLUS", "MiLK", "MiLK PLUS", "FiNALE", "舞萌DX", "舞萌DX 2021", "舞萌DX 2022", "舞萌DX 2023", "舞萌DX 2024", "舞萌DX 2025")
 

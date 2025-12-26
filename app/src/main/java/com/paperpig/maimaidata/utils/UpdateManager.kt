@@ -84,16 +84,16 @@ class UpdateManager(val context: Context) {
         })
     }
 
-    fun checkDataUpdate(lifecycleOwner: LifecycleOwner, onCompleted: () -> Unit): Disposable {
-        return MaimaiDataRequests.getDataVersion().subscribe({ it ->
-            if (SpUtil.getDataVersion() < it.version) {
+    fun checkDataUpdate(lifecycleOwner: LifecycleOwner, force: Boolean = false, onCompleted: () -> Unit): Disposable {
+        return MaimaiDataRequests.getDataVersion().subscribe({
+            if (force || SpUtil.getDataVersion() < it.version) {
                 MaterialDialog.Builder(context)
                     .title(context.getString(R.string.maimai_data_data_update_title))
                     .content(String.format(context.getString(R.string.maimai_data_data_update_info), SpUtil.getDataVersion(), it.version))
                     .positiveText(R.string.maimai_data_update_download)
                     .negativeText(R.string.common_cancel)
                     .onPositive { _, _ ->
-                        startDownload(context, it.songListUrl, "song_list_data.json") { task ->
+                        startDownload(context, it.songListUrl, "song_list_data.json") { _ ->
                             lifecycleOwner.lifecycleScope.launch {
                                 val data = getSongListData(context)
                                 if (SongWithRecordRepository.getInstance().updateDatabase(data)) {
@@ -111,7 +111,7 @@ class UpdateManager(val context: Context) {
             } else {
                 onCompleted()
             }
-        }, { it ->
+        }, {
             Toast.makeText(context, context.getString(R.string.maimai_data_check_error), Toast.LENGTH_LONG).show()
             it.printStackTrace()
             onCompleted()
