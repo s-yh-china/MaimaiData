@@ -38,7 +38,7 @@ class VersionClearCheckActivity : AppCompatActivity() {
         Version("霸者", R.drawable.namep_clear),
     )
 
-    private val songIdNotIn = listOf(44, 146, 185, 189, 190, 341, 419, 451, 455, 460, 524, 687, 688, 712, 731, 792, 853)
+    private val songIdNotIn = listOf(44, 146, 185, 189, 190, 281, 341, 419, 451, 455, 460, 524, 687, 688, 712, 731, 792, 853)
 
     private var currentVersion = ""
     private var currentDifficulty = DifficultyType.BASIC
