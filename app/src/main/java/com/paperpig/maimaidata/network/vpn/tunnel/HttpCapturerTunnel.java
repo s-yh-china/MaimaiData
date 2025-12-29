@@ -56,10 +56,6 @@ public class HttpCapturerTunnel extends Tunnel {
             Log.d(TAG, "Auth request caught!");
             CrawlerCaller.INSTANCE.fetchData(url);
         }
-        if (url.startsWith("http://wq.sys-allnet.cn/qrcode/req")) {
-            Log.d(TAG, "Qr code caught!");
-            QrCodeBindCrawler.INSTANCE.startBind(url);
-        }
     }
 
     @Override

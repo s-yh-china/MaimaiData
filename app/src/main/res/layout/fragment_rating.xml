@@ -102,6 +102,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/prober_version_check_btn" />
 
+            <EditText
+                android:id="@+id/prober_url_paste_edit"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="在此粘贴登陆二维码链接"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/prober_proxy_update_btn" />
+
             <ImageView
                 android:id="@+id/prober_proxy_update_help_iv"
                 android:layout_width="24dp"

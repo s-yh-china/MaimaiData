@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.crawler.CrawlerCaller
 import com.paperpig.maimaidata.crawler.CrawlerCaller.writeLog
+import com.paperpig.maimaidata.crawler.QrCodeBindCrawler
 import com.paperpig.maimaidata.crawler.WechatCrawlerListener
 import com.paperpig.maimaidata.databinding.FragmentRatingBinding
 import com.paperpig.maimaidata.model.Rating
@@ -155,38 +156,66 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
             proberUpdateDialog.show()
         }
 
+        binding.proberUrlPasteEdit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val url = s.toString().trim()
+                if (url.startsWith("https://") && (url.contains("wahlap.net"))) {
+                    QrCodeBindCrawler.startBind(url)
+                    binding.proberUrlPasteEdit.setText("")
+                    binding.proberUrlPasteEdit.visibility = View.GONE
+                    hideKeyboard(view)
+                }
+            }
+        })
+
         binding.proberProxyUpdateBtn.setOnClickListener {
             if (LocalVpnService.IsRunning) {
                 LocalVpnService.IsRunning = false
                 stopHttpService()
             } else {
-                if (!Settings.getProberUpdateUseAPI() || SpUtil.getUserId().isNullOrEmpty()) {
+                if (Settings.getProberUpdateUseAPI()) {
+                    if (SpUtil.getUserId().isNullOrEmpty()) {
+                        val pastedUrl = binding.proberUrlPasteEdit.text.toString().trim()
+                        if (pastedUrl.isEmpty()) {
+                            binding.proberUrlPasteEdit.visibility = View.VISIBLE
+                            Toast.makeText(requireContext(), "请在微信中复制链接后在此粘贴", Toast.LENGTH_SHORT).show()
+                            getWechatApi()
+                        } else {
+                            QrCodeBindCrawler.startBind(pastedUrl)
+                            binding.proberUrlPasteEdit.setText("")
+                            binding.proberUrlPasteEdit.visibility = View.GONE
+                            hideKeyboard(view)
+                        }
+                    } else {
+                        onStartAuth()
+                        onMessageReceived("开始获取数据")
+                        MaimaiDataRequests.getUserMusicData(SpUtil.getUserId()!!).subscribe(
+                            { data ->
+                                onMessageReceived("已获取数据，正在载入")
+                                lifecycleScope.launch {
+                                    withContext(Dispatchers.IO) {
+                                        val records = JsonConvertToDb.convertUserRecordData(data, Settings.getUpdateDifficulty())
+                                        RecordRepository.getInstance().replaceAllRecord(records)
+                                        writeLog("maimai 数据更新完成，共加载了 ${records.size} 条数据")
+                                    }
+                                    onFinishUpdate()
+                                }
+                            },
+                            { e ->
+                                onError(e)
+                                onMessageReceived("因未知原因数据获取失败")
+                            }
+                        )
+                    }
+                } else {
                     val intent: Intent? = LocalVpnService.prepare(context)
                     if (intent == null) {
                         startProxyServices()
                     } else {
                         vpnActivityResultLauncher.launch(intent)
                     }
-                } else {
-                    onStartAuth()
-                    onMessageReceived("开始获取数据")
-                    MaimaiDataRequests.getUserMusicData(SpUtil.getUserId()!!).subscribe(
-                        { data ->
-                            onMessageReceived("已获取数据，正在载入")
-                            lifecycleScope.launch {
-                                withContext(Dispatchers.IO) {
-                                    val records = JsonConvertToDb.convertUserRecordData(data, Settings.getUpdateDifficulty())
-                                    RecordRepository.getInstance().replaceAllRecord(records)
-                                    writeLog("maimai 数据更新完成，共加载了 ${records.size} 条数据")
-                                }
-                                onFinishUpdate()
-                            }
-                        },
-                        { e ->
-                            onError(e)
-                            onMessageReceived("因未知原因数据获取失败")
-                        }
-                    )
                 }
             }
         }
@@ -220,11 +249,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
     private fun startProxyServices() {
         startVPNService()
         startHttpService()
-        if (!Settings.getProberUpdateUseAPI()) {
-            createLinkUrl()
-        } else {
-            Toast.makeText(requireContext(), "请在微信中打开登陆二维码", Toast.LENGTH_SHORT).show()
-        }
+        createLinkUrl()
         getWechatApi()
     }
 
@@ -328,6 +353,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
 
     override fun onFinishUpdate() {
         binding.proberProxyIndicator.visibility = View.INVISIBLE
+        binding.proberUrlPasteEdit.visibility = View.GONE
         stopHttpService()
         setProberUpdateButton(false)
     }

@@ -23,14 +23,6 @@ object QrCodeBindCrawler {
             return
         }
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                Thread.sleep(3000)
-                LocalVpnService.IsRunning = false
-                Thread.sleep(3000)
-            } catch (e: InterruptedException) {
-                onError(e)
-            }
-
             CrawlerCaller.startAuth()
             writeLog("开始尝试绑定用户")
             val qrCode = url.substringBefore('?').substringBeforeLast(".html").substringAfterLast('/')
