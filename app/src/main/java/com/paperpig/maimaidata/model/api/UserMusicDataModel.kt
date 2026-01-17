@@ -8,10 +8,12 @@ data class UserMusicDataModel(
     data class UserMusicDetail(
         val musicId: Int,
         val level: Int,
-        val achievement: Double,
-        val fc: Int,
-        val fs: Int,
-        val dxScore: Int,
-        val playCount: Int
+        val playCount: Int,
+        val achievement: Int,
+        val deluxscoreMax: Int,
+        val comboStatus: Int,
+        val syncStatus: Int,
+        val scoreRank: Int,
+        val extNum1: Int
     ) : Serializable
 }

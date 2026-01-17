@@ -3,7 +3,6 @@ package com.paperpig.maimaidata.network.vpn.tunnel;
 import android.util.Log;
 
 import com.paperpig.maimaidata.crawler.CrawlerCaller;
-import com.paperpig.maimaidata.crawler.QrCodeBindCrawler;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

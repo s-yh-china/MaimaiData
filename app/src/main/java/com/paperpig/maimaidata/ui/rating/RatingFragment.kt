@@ -21,21 +21,17 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.MenuProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.paperpig.maimaidata.R
 import com.paperpig.maimaidata.crawler.CrawlerCaller
-import com.paperpig.maimaidata.crawler.CrawlerCaller.writeLog
-import com.paperpig.maimaidata.crawler.QrCodeBindCrawler
+import com.paperpig.maimaidata.crawler.TitleCrawler
 import com.paperpig.maimaidata.crawler.WechatCrawlerListener
 import com.paperpig.maimaidata.databinding.FragmentRatingBinding
 import com.paperpig.maimaidata.model.Rating
 import com.paperpig.maimaidata.model.SongRank
-import com.paperpig.maimaidata.network.MaimaiDataRequests
 import com.paperpig.maimaidata.network.server.HttpServerService
 import com.paperpig.maimaidata.network.vpn.core.LocalVpnService
-import com.paperpig.maimaidata.repository.RecordRepository
 import com.paperpig.maimaidata.ui.BaseFragment
 import com.paperpig.maimaidata.ui.about.SettingsActivity
 import com.paperpig.maimaidata.ui.checklist.GenreCheckActivity
@@ -43,13 +39,8 @@ import com.paperpig.maimaidata.ui.checklist.LevelCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionCheckActivity
 import com.paperpig.maimaidata.ui.checklist.VersionClearCheckActivity
 import com.paperpig.maimaidata.ui.rating.best50.ProberActivity
-import com.paperpig.maimaidata.utils.JsonConvertToDb
-import com.paperpig.maimaidata.utils.SpUtil
 import com.paperpig.maimaidata.utils.getInt
 import com.paperpig.maimaidata.widgets.Settings
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.ZoneId
@@ -162,7 +153,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
             override fun afterTextChanged(s: Editable?) {
                 val url = s.toString().trim()
                 if (url.startsWith("https://") && (url.contains("wahlap.net"))) {
-                    QrCodeBindCrawler.startBind(url)
+                    TitleCrawler.startBind(url)
                     binding.proberUrlPasteEdit.setText("")
                     binding.proberUrlPasteEdit.visibility = View.GONE
                     hideKeyboard(view)
@@ -176,38 +167,16 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                 stopHttpService()
             } else {
                 if (Settings.getProberUpdateUseAPI()) {
-                    if (SpUtil.getUserId().isNullOrEmpty()) {
-                        val pastedUrl = binding.proberUrlPasteEdit.text.toString().trim()
-                        if (pastedUrl.isEmpty()) {
-                            binding.proberUrlPasteEdit.visibility = View.VISIBLE
-                            Toast.makeText(requireContext(), "请在微信中复制链接后在此粘贴", Toast.LENGTH_SHORT).show()
-                            getWechatApi()
-                        } else {
-                            QrCodeBindCrawler.startBind(pastedUrl)
-                            binding.proberUrlPasteEdit.setText("")
-                            binding.proberUrlPasteEdit.visibility = View.GONE
-                            hideKeyboard(view)
-                        }
+                    val pastedUrl = binding.proberUrlPasteEdit.text.toString().trim()
+                    if (pastedUrl.isEmpty()) {
+                        binding.proberUrlPasteEdit.visibility = View.VISIBLE
+                        Toast.makeText(requireContext(), "请在微信中复制链接后在此粘贴", Toast.LENGTH_SHORT).show()
+                        getWechatApi()
                     } else {
-                        onStartAuth()
-                        onMessageReceived("开始获取数据")
-                        MaimaiDataRequests.getUserMusicData(SpUtil.getUserId()!!).subscribe(
-                            { data ->
-                                onMessageReceived("已获取数据，正在载入")
-                                lifecycleScope.launch {
-                                    withContext(Dispatchers.IO) {
-                                        val records = JsonConvertToDb.convertUserRecordData(data, Settings.getUpdateDifficulty())
-                                        RecordRepository.getInstance().replaceAllRecord(records)
-                                        writeLog("maimai 数据更新完成，共加载了 ${records.size} 条数据")
-                                    }
-                                    onFinishUpdate()
-                                }
-                            },
-                            { e ->
-                                onError(e)
-                                onMessageReceived("因未知原因数据获取失败")
-                            }
-                        )
+                        TitleCrawler.startBind(pastedUrl)
+                        binding.proberUrlPasteEdit.setText("")
+                        binding.proberUrlPasteEdit.visibility = View.GONE
+                        hideKeyboard(view)
                     }
                 } else {
                     val intent: Intent? = LocalVpnService.prepare(context)
@@ -393,23 +362,16 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                 .build()
                 .show()
         } else {
-            if (!SpUtil.getUserId().isNullOrEmpty()) {
-                MaterialDialog.Builder(requireContext())
-                    .title(getString(R.string.prober_update_help))
-                    .content(R.string.prober_update_api_help_content_step1)
-                    .build()
-                    .show()
-            } else {
-                val helpStringBuilder = getString(R.string.prober_update_api_user_id_bind_content_step1) + "\n" +
-                    getString(R.string.prober_update_api_user_id_bind_content_step2) + "\n" +
-                    getString(R.string.prober_update_api_user_id_bind_content_step3) + "\n" +
-                    getString(R.string.prober_update_api_user_id_bind_content_step4) + "\n"
-                MaterialDialog.Builder(requireContext())
-                    .title(getString(R.string.prober_update_api_user_id_bind_help))
-                    .content(helpStringBuilder)
-                    .build()
-                    .show()
-            }
+            val helpStringBuilder = getString(R.string.prober_update_api_user_id_bind_content_step1) + "\n" +
+                getString(R.string.prober_update_api_user_id_bind_content_step2) + "\n" +
+                getString(R.string.prober_update_api_user_id_bind_content_step3) + "\n" +
+                getString(R.string.prober_update_api_user_id_bind_content_step4) + "\n" +
+                getString(R.string.prober_update_api_user_id_bind_content_step5) + "\n"
+            MaterialDialog.Builder(requireContext())
+                .title(getString(R.string.prober_update_help))
+                .content(helpStringBuilder)
+                .build()
+                .show()
         }
     }
 
@@ -421,11 +383,7 @@ class RatingFragment : BaseFragment<FragmentRatingBinding>(), WechatCrawlerListe
                 binding.proberProxyUpdateBtn.isEnabled = false
                 binding.proberProxyUpdateBtn.setText(R.string.update_prober_disable)
             } else {
-                if (!Settings.getProberUpdateUseAPI() || !SpUtil.getUserId().isNullOrEmpty()) {
-                    binding.proberProxyUpdateBtn.setText(R.string.update_prober)
-                } else {
-                    binding.proberProxyUpdateBtn.setText(R.string.update_prober_api_user_id_bind)
-                }
+                binding.proberProxyUpdateBtn.setText(R.string.update_prober)
             }
         }
     }

@@ -98,11 +98,6 @@ object SpUtil {
 
     fun getLastQueryVersionClearDifficulty(): Int = userInfoPrefs.getInt(KEY_LAST_QUERY_VERSION_CLEAR_DIFFICULTY, 0)
 
-    fun saveUserId(userId: String) {
-        userInfoPrefs.edit { putString(KEY_USER_ID, userId) }
-    }
-
-    fun getUserId(): String? = userInfoPrefs.getString(KEY_USER_ID, null)
     // ================= SONG INFO =================
 
     fun isFavorite(id: String): Boolean = songInfoPrefs.getBoolean(id, false)

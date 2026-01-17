@@ -5,7 +5,10 @@ import com.paperpig.maimaidata.model.AppUpdateModel
 import com.paperpig.maimaidata.model.ChartAliasData
 import com.paperpig.maimaidata.model.ChartStatsData
 import com.paperpig.maimaidata.model.DataVersionModel
-import com.paperpig.maimaidata.model.api.QrCodeBindModel
+import com.paperpig.maimaidata.model.api.LoginContextModel
+import com.paperpig.maimaidata.model.api.LogoutRequestModel
+import com.paperpig.maimaidata.model.api.LogoutResponseModel
+import com.paperpig.maimaidata.model.api.QrCodeLoginModel
 import com.paperpig.maimaidata.model.api.UserMusicDataModel
 import com.paperpig.maimaidata.utils.JsonConvertToDb
 import io.reactivex.Observable
@@ -63,23 +66,34 @@ object MaimaiDataRequests {
                 Observable.just(model)
             }
 
-    fun qrCodeBind(qrCode: String): Observable<QrCodeBindModel> =
+    fun qrCodeLogin(qrCode: QrCodeLoginModel): Observable<LoginContextModel> =
         MaimaiDataClient
             .instance
             .getService()
-            .apiQrBind("{\"qrCode\":\"$qrCode\"}".toRequestBody(JSON))
-            .compose(MaimaiDataTransformer.handleResult())
+            .apiQrCodeLogin(Gson().toJson(qrCode).toRequestBody(JSON))
+            .compose(MaimaiDataTransformer.handleApiResult())
             .flatMap {
-                val model = Gson().fromJson(it, QrCodeBindModel::class.java)
+                val model = Gson().fromJson(it, LoginContextModel::class.java)
                 Observable.just(model)
             }
 
-    fun getUserMusicData(userId: String): Observable<UserMusicDataModel> =
+    fun logout(loginContext: LoginContextModel): Observable<LogoutResponseModel> =
         MaimaiDataClient
             .instance
             .getService()
-            .apiGetUserMusicData("{\"userId\":\"$userId\"}".toRequestBody(JSON))
-            .compose(MaimaiDataTransformer.handleResult())
+            .apiLogout(Gson().toJson(LogoutRequestModel(2, loginContext)).toRequestBody(JSON))
+            .compose(MaimaiDataTransformer.handleApiResult())
+            .flatMap {
+                val model = Gson().fromJson(it, LogoutResponseModel::class.java)
+                Observable.just(model)
+            }
+
+    fun getUserMusicData(loginContext: LoginContextModel): Observable<UserMusicDataModel> =
+        MaimaiDataClient
+            .instance
+            .getService()
+            .apiGetUserMusicData(Gson().toJson(loginContext).toRequestBody(JSON))
+            .compose(MaimaiDataTransformer.handleApiResult())
             .flatMap {
                 val model = Gson().fromJson(it, UserMusicDataModel::class.java)
                 Observable.just(model)

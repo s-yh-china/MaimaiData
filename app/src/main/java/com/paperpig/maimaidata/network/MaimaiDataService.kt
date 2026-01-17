@@ -4,6 +4,7 @@ import com.google.gson.JsonElement
 import com.paperpig.maimaidata.BuildConfig
 import io.reactivex.Observable
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -27,13 +28,20 @@ interface MaimaiDataService {
         "AppID: 368059",
         "User-Agent: MaimaiData#${BuildConfig.VERSION_NAME}"
     )
-    @POST("/api/user/wc_aime/qr_code_bind")
-    fun apiQrBind(@Body body: RequestBody): Observable<JsonElement>
+    @POST("/api/title/user/login/qr_code_login")
+    fun apiQrCodeLogin(@Body body: RequestBody): Observable<Response<JsonElement>>
 
     @Headers(
         "AppID: 368059",
         "User-Agent: MaimaiData#${BuildConfig.VERSION_NAME}"
     )
-    @POST("/api/user/data/music")
-    fun apiGetUserMusicData(@Body body: RequestBody): Observable<JsonElement>
+    @POST("/api/title/user/login/logout")
+    fun apiLogout(@Body body: RequestBody): Observable<Response<JsonElement>>
+
+    @Headers(
+        "AppID: 368059",
+        "User-Agent: MaimaiData#${BuildConfig.VERSION_NAME}"
+    )
+    @POST("/api/title/user/data/music")
+    fun apiGetUserMusicData(@Body body: RequestBody): Observable<Response<JsonElement>>
 }

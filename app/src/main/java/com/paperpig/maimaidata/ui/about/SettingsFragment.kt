@@ -3,54 +3,19 @@ package com.paperpig.maimaidata.ui.about
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.TextView
-import android.widget.Toast
 import androidx.preference.EditTextPreference
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.paperpig.maimaidata.R
-import com.paperpig.maimaidata.utils.SpUtil
 
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_preferences, rootKey)
         findPreference<EditTextPreference>("nickname")?.summaryProvider = EditTextPreference.SimpleSummaryProvider.getInstance()
 
-        val cleanUserIdPreference = findPreference<Preference>("clear_user_id_and_rebind")
-        val proberUpdateUseApi = findPreference<SwitchPreference>("prober_update_use_api")
-
-        cleanUserIdPreference?.isVisible = proberUpdateUseApi?.isChecked == true
-        if (SpUtil.getUserId().isNullOrEmpty()) {
-            cleanUserIdPreference?.summary = getString(R.string.settings_clear_user_id_not_bind)
-            cleanUserIdPreference?.isEnabled = false
-        } else {
-            cleanUserIdPreference?.summary = getString(R.string.settings_clear_user_id_bind)
-            cleanUserIdPreference?.isEnabled = true
-        }
-        cleanUserIdPreference?.setOnPreferenceClickListener { preference ->
-            MaterialDialog.Builder(requireContext())
-                .title(R.string.settings_clear_user_id)
-                .content(R.string.clear_user_id_waring_content)
-                .positiveText(R.string.common_confirm)
-                .onPositive { dialog, _ ->
-                    SpUtil.saveUserId("")
-                    Toast.makeText(requireContext(), "UserID已清除", Toast.LENGTH_SHORT).show()
-                    preference.summary = getString(R.string.settings_clear_user_id_not_bind)
-                    preference.isEnabled = false
-                    dialog.dismiss()
-                }
-                .negativeText(R.string.common_cancel)
-                .onNegative { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .build()
-                .show()
-            true
-        }
-
-        proberUpdateUseApi?.setOnPreferenceChangeListener { preference, newValue ->
+        findPreference<SwitchPreference>("prober_update_use_api")?.setOnPreferenceChangeListener { preference, newValue ->
             if (newValue as Boolean) {
                 if (preference is SwitchPreference) {
                     var timer: CountDownTimer?
@@ -61,7 +26,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         .positiveText(getString(R.string.prober_update_api_warning_wait_button, 9999))
                         .onPositive { dialog, _ ->
                             preference.isChecked = true
-                            cleanUserIdPreference?.isVisible = true
                             dialog.dismiss()
                         }
                         .negativeText(R.string.common_cancel)
@@ -94,7 +58,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
                 false
             } else {
-                cleanUserIdPreference?.isVisible = false
                 true
             }
         }
