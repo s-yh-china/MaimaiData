@@ -91,7 +91,7 @@ object JsonConvertToDb {
 
                     val record = RecordEntity(
                         songId = record.musicId,
-                        achievements = record.achievement / 1000.0,
+                        achievements = record.achievement / 10000.0,
                         dxScore = record.deluxscoreMax,
                         dxRank = SongDxRank.fromDxScore(dxScore = record.deluxscoreMax, maxDxScore = if (isBuddy) entity.chartsMap[DifficultyType.UTAGE_PLAYER2]!!.noteTotal * 3 + chart.noteTotal * 3 else chart.noteTotal * 3),
                         fc = SongFC.entries[record.comboStatus],
