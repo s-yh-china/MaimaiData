@@ -304,6 +304,8 @@ class SongDetailActivity : AppCompatActivity() {
                 equals("BUDDiES") -> R.drawable.maimaidx_buddies
                 equals("BUDDiES PLUS") -> R.drawable.maimaidx_buddies_plus
                 equals("PRiSM") -> R.drawable.maimaidx_prism
+                equals("PRiSM PLUS") -> R.drawable.maimaidx_prism_plus
+                equals("CiRCLE") -> R.drawable.maimaidx_circle
                 else -> 0
             }
         }
