@@ -11,6 +11,7 @@ import com.paperpig.maimaidata.repository.RecordRepository
 import com.paperpig.maimaidata.widgets.Settings
 import okhttp3.Call
 import okhttp3.ConnectionSpec
+import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.TlsVersion
@@ -20,6 +21,9 @@ import java.util.regex.Pattern
 
 object WechatCrawler {
     private const val TAG = "Crawler"
+    private const val WX_WINDOWS_UA = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+        "Chrome/81.0.4044.138 Safari/537.36 NetType/WIFI " +
+        "MicroMessenger/7.0.20.1781(0x6700143B) WindowsWechat(0x6307001e)"
     private val jar = SimpleCookieJar()
     private var client: OkHttpClient? = null
 
@@ -140,18 +144,25 @@ object WechatCrawler {
     private fun loginWechat(wechatAuthUrl: String) {
         buildHttpClient(true)
         Log.d(TAG, wechatAuthUrl)
+        val headers = Headers.Builder()
+            .add("Connection", "keep-alive")
+            .add("Upgrade-Insecure-Requests", "1")
+            .add("User-Agent", WX_WINDOWS_UA)
+            .add(
+                "Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9," +
+                    "image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            )
+            .add("Sec-Fetch-Site", "none")
+            .add("Sec-Fetch-Mode", "navigate")
+            .add("Sec-Fetch-User", "?1")
+            .add("Sec-Fetch-Dest", "document")
+            .add("Accept-Encoding", "gzip, deflate, br")
+            .add("Accept-Language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+            .build()
+
         val request = Request.Builder()
-            .addHeader("Host", "tgk-wcaime.wahlap.com")
-            .addHeader("Upgrade-Insecure-Requests", "1")
-            .addHeader("User-Agent", "Mozilla/5.0 (Linux; Android 12; IN2010 Build/RKQ1.211119.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4317 MMWEBSDK/20220903 Mobile Safari/537.36 MMWEBID/363 MicroMessenger/8.0.28.2240(0x28001C57) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64")
-            .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/wxpic,image/tpg,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-            .addHeader("X-Requested-With", "com.tencent.mm")
-            .addHeader("Sec-Fetch-Site", "none")
-            .addHeader("Sec-Fetch-Mode", "navigate")
-            .addHeader("Sec-Fetch-User", "?1")
-            .addHeader("Sec-Fetch-Dest", "document")
-            .addHeader("Accept-Encoding", "gzip, deflate")
-            .addHeader("Accept-Language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+            .headers(headers)
             .get()
             .url(wechatAuthUrl)
             .build()
