@@ -306,6 +306,7 @@ class SongDetailActivity : AppCompatActivity() {
                 equals("PRiSM") -> R.drawable.maimaidx_prism
                 equals("PRiSM PLUS") -> R.drawable.maimaidx_prism_plus
                 equals("CiRCLE") -> R.drawable.maimaidx_circle
+                equals("CiRCLE PLUS") -> R.drawable.maimaidx_circle_plus
                 else -> 0
             }
         }
@@ -328,6 +329,7 @@ class SongDetailActivity : AppCompatActivity() {
                 equals("舞萌DX 2023") -> R.drawable.maimaidx_2023
                 equals("舞萌DX 2024") -> R.drawable.maimaidx_2024
                 equals("舞萌DX 2025") -> R.drawable.maimaidx_2025
+                equals("舞萌DX 2026") -> R.drawable.maimaidx_2026
                 else -> 0
             }
         }
